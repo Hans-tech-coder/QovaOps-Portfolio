@@ -1,0 +1,60 @@
+/* QovaOps by triqova — brand tokens for the portfolio website.
+   Official: black, white, lime, gray, light. The rest are derived web values (see BRAND_GUIDE.md). */
+
+:root {
+  /* Official palette (60 / 30 / 10) */
+  --qo-black: #101010;        /* 60% — page background */
+  --qo-white: #ffffff;        /* 30% — headlines, text */
+  --qo-lime: #c6ff00;         /* 10% — accent */
+  --qo-gray: #6b7280;         /* endorsement / large secondary text */
+  --qo-light: #f5f6f3;        /* light surface variant */
+
+  /* Derived web tokens */
+  --qo-lime-hover: #b3e600;
+  --qo-surface: #16191d;
+  --qo-border: #1f242b;
+  --qo-grid: #1a1d21;
+  --qo-muted: #9ca3af;        /* small secondary text on black (AA) */
+  --qo-body: #d1d5db;         /* long-form body text on black */
+  --qo-badge: #1f2937;
+
+  /* Semantic */
+  --qo-bg: var(--qo-black);
+  --qo-text: var(--qo-white);
+  --qo-text-muted: var(--qo-muted);
+  --qo-accent: var(--qo-lime);
+  --qo-on-accent: var(--qo-black);
+
+  /* Type */
+  --qo-font: "articulat-cf", "Articulat CF", "Inter", "Helvetica Neue", Arial, sans-serif;
+  --qo-weight-regular: 400;
+  --qo-weight-medium: 500;
+  --qo-weight-bold: 700;
+
+  /* Shape */
+  --qo-radius-card: 14px;
+  --qo-radius-pill: 9999px;
+  --qo-grid-size: 96px;
+}
+
+/* Light section variant: black text, lime only as a background behind black text */
+.qo-light {
+  --qo-bg: var(--qo-light);
+  --qo-text: var(--qo-black);
+  --qo-text-muted: #4b5563;
+}
+
+/* Background grid from the brand sheet */
+.qo-grid-bg {
+  background-color: var(--qo-bg);
+  background-image:
+    linear-gradient(var(--qo-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--qo-grid) 1px, transparent 1px);
+  background-size: var(--qo-grid-size) var(--qo-grid-size);
+}
+
+/* Thin divider with a lime tip */
+.qo-divider {
+  height: 2px;
+  background: linear-gradient(90deg, var(--qo-lime) 0 10%, var(--qo-border) 10% 100%);
+}

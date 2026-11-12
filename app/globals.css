@@ -1,0 +1,175 @@
+@import "tailwindcss";
+
+/* QovaOps brand tokens — source: brand/brand-tokens.css and PLAN.md §5.1.
+   Components use the semantic utilities (bg-bg, bg-surface, text-fg, text-body,
+   text-muted, border-line, text-accent-text, bg-accent, text-on-accent).
+   Raw brand colors (lime, brand-black…) are for the few places that must not
+   change with the theme, e.g. the lime CTA fill. */
+
+/* ---------- Theme sets ---------- */
+
+/* Dark is the default: it also applies when data-theme is missing. */
+:root,
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --qo-bg: #101010;
+  --qo-surface: #16191d;
+  --qo-border: #1f242b;
+  --qo-grid: #1a1d21;
+  --qo-text: #ffffff;
+  --qo-body: #d1d5db;
+  --qo-text-muted: #9ca3af;
+  --qo-endorse: #6b7280; /* "by triqova" — large text only on dark */
+  --qo-accent-text: #c6ff00; /* eyebrows, numbers, outlines */
+  --qo-accent: #c6ff00; /* fills: buttons, CTA band */
+  --qo-accent-hover: #b3e600;
+  --qo-on-accent: #101010;
+  --qo-badge: #1f2937;
+  --qo-ghost: #1f242b;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --qo-bg: #f5f6f3;
+  --qo-surface: #ffffff;
+  --qo-border: #e2e4df; /* derived */
+  --qo-grid: #e9ebe6; /* derived */
+  --qo-text: #101010;
+  --qo-body: #374151; /* derived */
+  --qo-text-muted: #4b5563;
+  --qo-endorse: #6b7280;
+  --qo-accent-text: #101010; /* lime is never text on light */
+  --qo-accent: #c6ff00; /* lime only as a fill behind black text */
+  --qo-accent-hover: #b3e600;
+  --qo-on-accent: #101010;
+  --qo-badge: #101010;
+  --qo-ghost: #e2e4df;
+}
+
+:root {
+  --qo-radius-card: 14px;
+  --qo-radius-pill: 9999px;
+  --qo-grid-size: 96px;
+}
+
+/* ---------- Tailwind v4 theme ---------- */
+
+@theme inline {
+  /* Semantic (switch with the theme) */
+  --color-bg: var(--qo-bg);
+  --color-surface: var(--qo-surface);
+  --color-line: var(--qo-border);
+  --color-grid: var(--qo-grid);
+  --color-fg: var(--qo-text);
+  --color-body: var(--qo-body);
+  --color-muted: var(--qo-text-muted);
+  --color-endorse: var(--qo-endorse);
+  --color-accent-text: var(--qo-accent-text);
+  --color-accent: var(--qo-accent);
+  --color-accent-hover: var(--qo-accent-hover);
+  --color-on-accent: var(--qo-on-accent);
+  --color-badge: var(--qo-badge);
+  --color-ghost: var(--qo-ghost);
+
+  /* Fonts: Articulat CF once licensed, Inter (next/font) until then */
+  --font-sans:
+    "articulat-cf", "Articulat CF", var(--font-inter), "Inter", "Helvetica Neue", Arial,
+    sans-serif;
+  --font-mono:
+    var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+@theme {
+  /* Fixed brand palette (does not switch) */
+  --color-brand-black: #101010;
+  --color-brand-white: #ffffff;
+  --color-lime: #c6ff00;
+  --color-lime-hover: #b3e600;
+  --color-brand-gray: #6b7280;
+  --color-brand-light: #f5f6f3;
+
+  --radius-card: 14px;
+}
+
+/* ---------- Base ---------- */
+
+@layer base {
+  html {
+    background-color: var(--qo-bg);
+  }
+
+  body {
+    background-color: var(--qo-bg);
+    color: var(--qo-text);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background-color: var(--qo-accent);
+    color: var(--qo-on-accent);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--qo-accent-text);
+    outline-offset: 3px;
+  }
+}
+
+/* ---------- Brand utilities ---------- */
+
+/* Background grid from the brand sheet */
+@utility qo-grid-bg {
+  background-color: var(--qo-bg);
+  background-image:
+    linear-gradient(var(--qo-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--qo-grid) 1px, transparent 1px);
+  background-size: var(--qo-grid-size) var(--qo-grid-size);
+  background-position: center top;
+}
+
+/* Thin divider with a lime tip (accent-text so it stays visible on light) */
+@utility qo-divider {
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--qo-accent-text) 0 10%,
+    var(--qo-border) 10% 100%
+  );
+}
+
+/* Outlined text, e.g. the "Ops" in the wordmark and ghost words */
+@utility text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--qo-accent-text);
+}
+
+@utility text-outline-ghost {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--qo-ghost);
+}
+
+/* Mono label: eyebrows, nav, small caps labels */
+@utility qo-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ---------- Reduced motion (CSS side; GSAP uses gsap.matchMedia) ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
