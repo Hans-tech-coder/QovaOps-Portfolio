@@ -23,7 +23,7 @@ function subscribe(onChange: () => void) {
   return () => observer.disconnect();
 }
 
-export function applyTheme(theme: Theme) {
+function setTheme(theme: Theme) {
   const root = document.documentElement;
   root.dataset.theme = theme;
   root.style.colorScheme = theme;
@@ -38,9 +38,32 @@ export function applyTheme(theme: Theme) {
 }
 
 /**
- * Minimal accessible toggle. Final styling and the sun/moon icon-swap transition
- * come in Phase 2 (PLAN.md §5.1). The icons are swapped with CSS on [data-theme],
- * so the right icon shows on first paint without waiting for hydration.
+ * Switch theme. Uses a short View Transitions cross-fade where supported
+ * (PLAN.md §5.1), and switches instantly under prefers-reduced-motion.
+ */
+export function applyTheme(theme: Theme) {
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (
+    !reduce &&
+    document.visibilityState === "visible" &&
+    typeof document.startViewTransition === "function"
+  ) {
+    // The theme still switches if the browser skips the animation; only the
+    // cross-fade is lost, so the rejections (e.g. tab hidden mid-switch) are ignored.
+    const t = document.startViewTransition(() => setTheme(theme));
+    const ignore = () => {};
+    t.ready.catch(ignore);
+    t.finished.catch(ignore);
+    t.updateCallbackDone.catch(ignore);
+  } else {
+    setTheme(theme);
+  }
+}
+
+/**
+ * Square icon button. Sun/moon cross-fade with the transitions-dev icon swap
+ * (09-icon-swap, CSS in globals.css). The visible icon is keyed on
+ * html[data-theme], so the right one shows on first paint, before hydration.
  */
 export function ThemeToggle({ className = "" }: { className?: string }) {
   const theme = useSyncExternalStore(subscribe, readTheme, () => DEFAULT_THEME);
@@ -52,11 +75,13 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
       onClick={() => applyTheme(next)}
       aria-label={`Switch to ${next} theme`}
       title={`Switch to ${next} theme`}
-      className={`inline-flex size-10 items-center justify-center rounded-lg border border-line bg-surface text-fg transition-colors hover:border-accent-text ${className}`}
+      className={`inline-flex size-10 shrink-0 items-center justify-center rounded-lg border border-line bg-surface text-fg transition-colors duration-150 hover:border-accent-text ${className}`}
     >
-      {/* Dark theme shows the moon, light theme shows the sun */}
-      <Moon aria-hidden="true" className="size-[18px] in-data-[theme=light]:hidden" />
-      <Sun aria-hidden="true" className="hidden size-[18px] in-data-[theme=light]:block" />
+      <span className="t-icon-swap qo-theme-swap" aria-hidden="true">
+        {/* Dark theme shows the moon, light theme shows the sun */}
+        <Moon className="t-icon size-[18px]" data-icon="moon" />
+        <Sun className="t-icon size-[18px]" data-icon="sun" />
+      </span>
     </button>
   );
 }

@@ -79,16 +79,16 @@ Nav order: About · Services · How I Work · Tools · Work · Experience · Con
 
 | # | Section | Content | Layout & motion | Status |
 |---|---|---|---|---|
-| 0 | Header | Qova**Ops** wordmark, "by triqova", socials (FB, IG, YT, LinkedIn), theme toggle, Book a call button | Wordmark letters reveal on load; sun/moon icon swap on toggle | [ ] |
+| 0 | Header | Qova**Ops** wordmark, "by triqova", socials (FB, IG, YT, LinkedIn), theme toggle, Book a call button | Wordmark letters reveal on load; sun/moon icon swap on toggle | [x] Phase 2 |
 | 1 | About / hero | Photo, "Hi, I'm Hans_" typer, H1 "Your Daily Operations." / "Our Execution." (white / lime), trait pill, tool chips, hero sub, stats | Hero entrance timeline; count-up on stats | [ ] |
 | 2 | Services | All 9 services from BRAND_GUIDE §1, numbered 01–09, icon, title, one line | Rows stagger in on scroll; hover lifts the row and lights the lime bar | [ ] |
 | 3 | How I Work | 4 steps: Discovery call → Audit & plan → Execute & own it → Report & improve | Cards with step numbers; line draws between steps on scroll | [ ] copy needs Hans review |
-| 4 | Tools | Grouped chips: Admin & Ops, Web & eCommerce, Automation & AI, Analytics & Hosting | Chips fade up in groups | [!] tool list needs Hans |
-| 5 | Work | Tabs: Websites · Automation · Operations; project rows with status badges and links | Sliding tab pill (transitions-dev); rows cross-fade on tab change | [!] no real projects yet; hidden until ≥1 |
-| 6 | Experience | Timeline: BS Computer Science (with Honors) + work history | Timeline line draws on scroll | [!] school, years, roles needed |
-| 7 | Testimonials | Carousel of real quotes | Two-up slider, arrow buttons | [!] hidden until real testimonials |
+| 4 | Tools | Grouped chips: Admin & Ops, Web & eCommerce, Automation & AI, Analytics & Hosting | Chips fade up in groups | [ ] data ready in `content/tools.ts` (from resume) |
+| 5 | Work | Tabs: Websites · Automation · Operations; project rows with status badges and links | Sliding tab pill (transitions-dev); rows cross-fade on tab change | [ ] data in `content/work.ts`: all 7 projects published (agency work + client names approved by Hans) |
+| 6 | Experience | Timeline: BS Computer Science (with Honors) + work history | Timeline line draws on scroll | [ ] data ready in `content/experience.ts` (from resume) |
+| 7 | Testimonials | Carousel of real quotes | Two-up slider, arrow buttons | [!] hidden until real testimonials (`content/testimonials.ts` is empty) |
 | 8 | Contact | "Let's work together", lime CTA band "Delegate Your Operations", pills: email, book a call, socials | CTA band reveal; button hover per brand | [ ] |
-| 9 | Footer | "QOVAOPS BY TRIQOVA \| HUMAN EXECUTION. POWERED BY SMARTER SYSTEMS." + © year | Static | [ ] |
+| 9 | Footer | "QOVAOPS BY TRIQOVA \| HUMAN EXECUTION. POWERED BY SMARTER SYSTEMS." + © year | Static | [x] Phase 2 |
 
 ### 5.1 Light / dark theme
 
@@ -202,10 +202,11 @@ public/brand/       logo SVGs, favicon, OG assets
 - [~] `git init`, first commit, GitHub repo — local repo + first commit done; [!] GitHub repo waits on Hans (private or public, which account)
 
 ### Phase 2 — Layout shell
-- [ ] Header (wordmark, socials, theme toggle, Book a call)
-- [ ] Sidebar with scrollspy; mobile top bar + menu
-- [ ] SectionCard and SectionHeading (eyebrow + ghost word)
-- [ ] Footer
+- [x] Header (wordmark, socials, theme toggle, Book a call) — `components/layout/Header.tsx`, `Wordmark.tsx` (GSAP letter reveal, pre-hidden via `qo-js` class from the head script so no flash; reduced-motion = static), `components/ui/SocialIcons.tsx` (Lucide v1 has no brand icons, so Lucide's old ISC brand glyphs are inlined), `ThemeToggle.tsx` restyled: square button, transitions-dev `09-icon-swap` keyed on `html[data-theme]`, View Transitions cross-fade (skipped under reduced motion / hidden tab)
+- [x] Sidebar with scrollspy; mobile top bar + menu — nav comes from one config, `content/sections.ts` (`published` flag; only published sections render and show in the nav). `ScrollSpy.tsx`: ScrollTrigger per section (active while crossing 40% of viewport, last section wins at page bottom) + `scrollToSection()` (ScrollToPlugin, top-bar offset, focus moves to the section H2, hash updated). `Sidebar.tsx` (≥1024px): dots + dashed accent ring that glides to the active item. `MobileNav.tsx` (<1024px): sticky top bar (wordmark, current section, toggle, menu) + native modal `<dialog>` sheet (Esc closes, Tab trapped, focus returns, page scroll locked, open 250ms / close 150ms)
+- [x] SectionCard and SectionHeading (eyebrow + ghost word) — `components/layout/SectionCard.tsx`, `SectionHeading.tsx`
+- [x] Footer — `components/layout/Footer.tsx` (year via `"use cache"` + `cacheLife("max")`, because `cacheComponents` forbids a bare `new Date()`; updates on each deploy)
+- [x] Shell page: `app/page.tsx` with skip link, header, sidebar and TODO cards for About, Services, How I Work, Tools, Contact. Work, Experience and Testimonials are `published: false` (no real data yet). Checked at 1440 / 1024 / 768 / 390, both themes, mouse + keyboard
 
 ### Phase 3 — Sections
 - [ ] About / hero
@@ -237,13 +238,13 @@ public/brand/       logo SVGs, favicon, OG assets
 - [!] **Real photo** of Hans (hero). Until then: Q mark in a dark rounded square.
 - [!] **Logo SVGs** exported from Canva `DAHaBth6Gns` page 2 → `public/brand/`, both the dark version and the light variant (black wordmark).
 - [!] **Articulat CF license** (Adobe Fonts kit ID or webfont files).
-- [!] **Tools list** to confirm for the Tools section.
-- [!] **Experience details:** school name and years, past roles/clients that can be named.
-- [!] **Projects / case studies** for Work (name, what you did, link, screenshots, allowed to show?).
+- [x] **Tools list** — from the resume (2026-11-12), in `content/tools.ts`.
+- [x] **Experience details** — from the resume (2026-11-12), in `content/experience.ts`: St. Paul Colleges Foundation Inc. 2015–2019 (BS CS, With Honors; Best in Web Development, Best Mobile Application), Skyrocket Studios PH (Nov 2022 – Jul 2026), DigitYza (Jun–Dec 2023), self-employed 2021–present, 5 certifications. The resume's phone number and personal Gmail are deliberately not used on the site.
+- [~] **Projects / case studies** — resume projects are in `content/work.ts`, all published. Hans approved (2026-11-12) showing the Skyrocket agency work and naming Kubota PH and the client Shopify stores. [!] Still needed: screenshots/links for projects; location "Tarlac, Philippines": show on the site or not?
 - [!] **Testimonials** (quote, name, role, permission to publish).
 - [!] **How I Work copy** review once drafted.
 - [!] Should the footer link to `www.triqova.com`?
-- [!] **GitHub repo:** private or public, and which GitHub account? (local repo is ready to push)
+- [!] **GitHub repo:** private, on Hans's account; Hans creates it himself in the browser. Push only when Hans says so (local repo is ready).
 
 ## 10. Session log
 
@@ -253,3 +254,6 @@ public/brand/       logo SVGs, favicon, OG assets
 | 2026-11-12 | Captured the reference's dark mode with REA (toggle, palette swap, `localStorage` persistence, light default). Added light/dark theme to the plan (§5.1): dark default, saved choice, light palette from the brand light variant. |
 | 2026-11-12 | Hans confirmed dark default and approved the plan. Phase 1 handed to a new session. |
 | 2026-11-12 | **Phase 1 done** (except GitHub repo). Scaffolded Next 16.4.6 + Tailwind 4.3 via a temp dir; brand tokens (dark + light) in `app/globals.css`; no-flash theme script + toggle (dark default even with OS light, choice saved in `localStorage.theme`, verified in browser); GSAP motion setup with reduced-motion; metadata from BRAND_GUIDE §7 in `app/layout.tsx`; `content/site.ts` holds copy and links; placeholder token-preview page. `npm run build` and `npm run lint` pass. Notes: template has `cacheComponents` on (kept); `next dev` maintains `AGENTS.md` (committed); added `.claude/launch.json` for the dev preview. Next: GitHub repo (Hans), then Phase 2. |
+| 2026-11-12 | **Phase 2 done.** Layout shell: header + wordmark reveal, socials, square theme toggle with icon swap, lime Book a call; sticky sidebar with ScrollTrigger scrollspy and gliding ring; <1024px top bar + `<dialog>` menu sheet; SectionCard/SectionHeading; footer strip. Sections driven by `content/sections.ts` (Work/Experience/Testimonials hidden until real data). `npm run build` + `npm run lint` pass; verified in browser at 1440/1024/768/390, dark + light, mouse + keyboard (scrollspy, smooth scroll + focus, Esc/Tab trap). Notes: Experience is hidden too because there's no data yet (flip `published` once Hans sends school/years/roles); "by triqova" Cool Gray on dark is below AA at small sizes but is part of the logo lockup (sr-only text carries the name); mobile shows the wordmark twice (top bar + header), revisit in Phase 4. Not committed. Next: Phase 3 sections. |
+| 2026-11-12 | Hans added his resume (`brand/Hans Christian A. Obena - Resume (General Virtual Assistant).pdf`). Pulled the facts into `content/experience.ts`, `content/tools.ts`, `content/work.ts` and an empty `content/testimonials.ts`. Experience and Work are now published in `content/sections.ts` (Work shows while ≥1 project is published; Testimonials shows only when real quotes exist). Real numbers now available for Phase 3: 4+ years agency experience, 10+ client websites (hosting/security), 200K+/year subscription replaced, RunAsOne 3 events / 244+ registrants (as of Oct 2026). Open: agency-work/client-name permissions, location. Not committed. |
+| 2026-11-12 | Hans approved showing the agency work and naming clients: all projects in `content/work.ts` published, Kubota PH named in `content/experience.ts`. Not committed. |

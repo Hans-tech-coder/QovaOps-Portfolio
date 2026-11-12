@@ -161,6 +161,128 @@
   text-transform: uppercase;
 }
 
+/* ---------- Motion tokens (transitions-dev _root.css, the ones we use) ---------- */
+
+:root {
+  --duration-quick: 150ms;
+  --duration-fast: 250ms;
+  --ease-smooth-out: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* 09-icon-swap */
+  --icon-swap-dur: 250ms;
+  --icon-swap-blur: 2px;
+  --icon-swap-start-scale: 0.25;
+  --icon-swap-ease: ease-in-out;
+
+  /* Menu sheet (06-modal timings: slower open, quicker close) */
+  --sheet-open-dur: 250ms;
+  --sheet-close-dur: 150ms;
+  --sheet-distance: 8px;
+
+  /* Height of the <1024px top bar; used for scroll offsets */
+  --qo-topbar-h: 64px;
+}
+
+html {
+  scroll-padding-top: 24px;
+}
+
+@media (width < 64rem) {
+  html {
+    scroll-padding-top: calc(var(--qo-topbar-h) + 16px);
+  }
+}
+
+/* ---------- transitions-dev 09-icon-swap (theme toggle) ---------- */
+/* State is keyed on html[data-theme] instead of data-state, so the right icon
+   is shown on first paint. Dark shows the moon, light shows the sun. */
+
+.t-icon-swap {
+  position: relative;
+  display: inline-grid;
+}
+.t-icon-swap .t-icon {
+  grid-area: 1 / 1;
+  transition:
+    opacity var(--icon-swap-dur) var(--icon-swap-ease),
+    filter var(--icon-swap-dur) var(--icon-swap-ease),
+    transform var(--icon-swap-dur) var(--icon-swap-ease);
+}
+.qo-theme-swap .t-icon[data-icon="moon"],
+:root[data-theme="light"] .qo-theme-swap .t-icon[data-icon="sun"] {
+  opacity: 1;
+  filter: blur(0);
+  transform: scale(1);
+}
+.qo-theme-swap .t-icon[data-icon="sun"],
+:root[data-theme="light"] .qo-theme-swap .t-icon[data-icon="moon"] {
+  opacity: 0;
+  filter: blur(var(--icon-swap-blur));
+  transform: scale(var(--icon-swap-start-scale));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-icon-swap .t-icon {
+    transition: none !important;
+  }
+}
+
+/* Theme change cross-fade (View Transitions, where supported) */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: var(--duration-fast);
+  animation-timing-function: ease-in-out;
+}
+
+/* ---------- Wordmark reveal: pre-hide letters only when JS runs ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .qo-js [data-wordmark-letter],
+  .qo-js [data-wordmark-endorse] {
+    opacity: 0;
+  }
+}
+
+/* ---------- Mobile menu sheet (<dialog>) ---------- */
+
+
+.qo-sheet {
+  opacity: 0;
+  transform: translateY(calc(var(--sheet-distance) * -1));
+  transition:
+    opacity var(--sheet-close-dur) var(--ease-smooth-out),
+    transform var(--sheet-close-dur) var(--ease-smooth-out),
+    overlay var(--sheet-close-dur) allow-discrete,
+    display var(--sheet-close-dur) allow-discrete;
+}
+.qo-sheet[open] {
+  opacity: 1;
+  transform: none;
+  transition-duration: var(--sheet-open-dur);
+}
+@starting-style {
+  .qo-sheet[open] {
+    opacity: 0;
+    transform: translateY(calc(var(--sheet-distance) * -1));
+  }
+}
+.qo-sheet::backdrop {
+  background: rgb(16 16 16 / 0);
+  transition:
+    background-color var(--sheet-close-dur) var(--ease-smooth-out),
+    overlay var(--sheet-close-dur) allow-discrete,
+    display var(--sheet-close-dur) allow-discrete;
+}
+.qo-sheet[open]::backdrop {
+  background: rgb(16 16 16 / 0.6);
+  transition-duration: var(--sheet-open-dur);
+}
+@starting-style {
+  .qo-sheet[open]::backdrop {
+    background: rgb(16 16 16 / 0);
+  }
+}
+
 /* ---------- Reduced motion (CSS side; GSAP uses gsap.matchMedia) ---------- */
 
 @media (prefers-reduced-motion: reduce) {

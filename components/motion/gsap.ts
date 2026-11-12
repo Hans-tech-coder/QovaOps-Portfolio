@@ -4,10 +4,11 @@
 // plugins are always registered once, before any animation code runs.
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
+import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger, useGSAP);
+  gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, useGSAP);
   gsap.defaults({ ease: "power3.out", duration: 0.6 });
 }
 
@@ -22,4 +23,12 @@ export const MOTION_CONDITIONS = {
 
 export type MotionConditions = { motionOK: boolean; reduceMotion: boolean };
 
-export { gsap, ScrollTrigger, useGSAP };
+/** True when the visitor asked for less motion (for one-off, non-matchMedia code). */
+export function prefersReducedMotion() {
+  return (
+    typeof window !== "undefined" &&
+    window.matchMedia(MOTION_CONDITIONS.reduceMotion).matches
+  );
+}
+
+export { gsap, ScrollToPlugin, ScrollTrigger, useGSAP };

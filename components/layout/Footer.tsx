@@ -1,0 +1,27 @@
+import { cacheLife } from "next/cache";
+import { site } from "@/content/site";
+
+// Cached at build time (cacheComponents forbids a bare new Date() in the
+// prerendered shell). The year updates on the next deploy.
+async function CopyrightYear() {
+  "use cache";
+  cacheLife("max");
+  return <>{new Date().getFullYear()}</>;
+}
+
+/** Footer strip from the brand sheet (BRAND_GUIDE §6). */
+export function Footer() {
+  return (
+    <footer className="mt-8 border-t border-dashed border-line py-8">
+      <div className="flex flex-col items-center gap-2 text-center sm:flex-row sm:justify-between sm:text-left">
+        <p className="qo-label text-muted">
+          {`${site.name} ${site.endorsement}`} <span aria-hidden="true">|</span>{" "}
+          {site.secondaryLine}
+        </p>
+        <p className="font-mono text-xs text-muted">
+          © <CopyrightYear /> {site.name}
+        </p>
+      </div>
+    </footer>
+  );
+}

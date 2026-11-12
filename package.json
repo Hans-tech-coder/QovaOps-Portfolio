@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "guardrails": "node scripts/guardrails.mjs",
+    "guardrails:msg": "node scripts/validate-commit-msg.mjs",
+    "prepare": "git config core.hooksPath .githooks"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

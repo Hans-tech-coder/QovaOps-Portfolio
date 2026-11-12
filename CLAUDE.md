@@ -11,4 +11,9 @@ Must-follow essentials:
 - Contacts: `qovaops@gmail.com`, book a call `https://bit.ly/3WlL3yg`. Don't use `triqova@gmail.com` or `info@triqova.com`.
 - Frame as a "virtual assistant with advanced technical skills", not a freelancer.
 - Never invent client results, testimonials or numbers; leave TODO placeholders.
+- **Never `git commit` or `git push` unless Hans explicitly says so in that moment** (e.g., "push the changes"). Leave changes uncommitted and tell him what's ready. Approval for one commit/push doesn't carry over to the next.
+- **Commit & Push Guardrails Workflow:** Whenever there are local changes and Hans explicitly says to commit/push (e.g., "push the changes"):
+  1. Run `npm run guardrails` (`node scripts/guardrails.mjs`) first — checks git working tree, secrets/conflict markers/forbidden brand emails, `tsc --noEmit`, `npm run lint`, and `npm run build`.
+  2. **Stop immediately** if any check fails; fix or report the failure and do not commit or push.
+  3. Only when `npm run guardrails` passes: craft the commit message strictly following [`.claude/skills/caveman-commit/SKILL.md`](.claude/skills/caveman-commit/SKILL.md) (validate via `npm run guardrails:msg -- --msg "<message>"` and enforced by `.githooks/commit-msg`), stage the changes, `git commit`, and `git push`.
 - Hans writes in Taglish; reply in Taglish.
