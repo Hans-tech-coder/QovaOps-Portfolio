@@ -24,9 +24,10 @@ const allSections: SectionConfig[] = [
     label: "About",
     eyebrow: "About",
     ghost: "About",
-    // TODO(Phase 3): real About/hero content
-    title: "A virtual assistant with advanced technical skills",
-    intro: "Executive support, websites, automation and day-to-day operations, handled by one person.",
+    // Rendered as the page H1 (two-tone tagline) by components/sections/About.tsx
+    title: "Your Daily Operations. Our Execution.",
+    intro:
+      "Tech-enabled virtual assistance and streamlined day-to-day operations, backed by Triqova systems and automation.",
     published: true,
   },
   {

@@ -20,3 +20,6 @@ export const toolGroups: ToolGroup[] = [
     tools: ["Google BigQuery", "DigitalOcean", "WHM / cPanel", "Vercel", "Google Cloud Run"],
   },
 ];
+
+/** Short highlight list for the About/hero chips (subset of the groups above). */
+export const heroTools = ["Google Workspace", "ClickUp", "Shopify", "WordPress", "Next.js", "n8n", "Make"];

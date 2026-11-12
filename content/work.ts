@@ -3,9 +3,19 @@
 
 export type WorkCategory = "websites" | "automation" | "operations";
 
+export type ProjectStatus = "Live" | "Agency work" | "Personal";
+
+export const workCategoryLabels: Record<WorkCategory, string> = {
+  websites: "Websites",
+  automation: "Automation",
+  operations: "Operations",
+};
+
 export type Project = {
   name: string;
   role: string;
+  /** Badge. Only set when the resume states it; otherwise leave undefined. */
+  status?: ProjectStatus;
   category: WorkCategory;
   summary: string;
   points: string[];
@@ -16,6 +26,7 @@ export type Project = {
 export const projects: Project[] = [
   {
     name: "RunAsOne",
+    status: "Live",
     role: "Founder and Developer",
     category: "websites",
     summary: "Live race-registration platform.",
@@ -28,7 +39,9 @@ export const projects: Project[] = [
     published: true,
   },
   {
+    // TODO(Hans): link or screenshot
     name: "Agency ad-reporting automation",
+    status: "Agency work",
     role: "Built at Skyrocket Studios PH",
     category: "automation",
     summary: "n8n pipeline that replaced a 200K+/year reporting subscription.",
@@ -39,7 +52,9 @@ export const projects: Project[] = [
     published: true,
   },
   {
+    // TODO(Hans): link or screenshot
     name: "AI voice agent",
+    status: "Agency work",
     role: "Built at Skyrocket Studios PH",
     category: "automation",
     summary: "Retell AI voice agent that answers service and hiring inquiries.",
@@ -47,7 +62,9 @@ export const projects: Project[] = [
     published: true,
   },
   {
+    // TODO(Hans): link or screenshot
     name: "Claude skills, agents & MCP servers",
+    status: "Personal",
     role: "Personal projects",
     category: "automation",
     summary: "AI tooling for code review and data access.",
@@ -58,6 +75,7 @@ export const projects: Project[] = [
     published: true,
   },
   {
+    // TODO(Hans): link or screenshot
     name: "Event RSVP app",
     role: "Developer",
     category: "websites",
@@ -78,6 +96,7 @@ export const projects: Project[] = [
     published: true,
   },
   {
+    // TODO(Hans): link or screenshot
     name: "Custom WordPress plugins",
     role: "Developer",
     category: "websites",

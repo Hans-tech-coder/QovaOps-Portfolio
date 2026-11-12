@@ -4,7 +4,7 @@ import { DEFAULT_THEME, THEME_COLORS, themeInitScript } from "@/components/layou
 import { site } from "@/content/site";
 import "./globals.css";
 
-// Inter is the fallback until the Articulat CF license is confirmed (PLAN.md §9).
+// Inter is the metric fallback while Articulat CF (Adobe Fonts kit, see <head>) loads.
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
@@ -59,8 +59,18 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        {/* Articulat CF via Hans's licensed Adobe Fonts web project (kit lsg5lvm).
+            The kit CSS sets font-display: swap, so Inter shows until it loads. */}
+        <link rel="preconnect" href="https://use.typekit.net" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://p.typekit.net" crossOrigin="anonymous" />
+        <link rel="stylesheet" href="https://use.typekit.net/lsg5lvm.css" />
       </head>
-      <body className="qo-grid-bg min-h-full flex flex-col">{children}</body>
+      {/* Browser extensions (e.g. ColorZilla's cz-shortcut-listen) add attributes to
+          <body> before React hydrates. This only ignores <body>'s own attributes,
+          not its children, so real mismatches in the page still surface. */}
+      <body className="qo-grid-bg min-h-full flex flex-col" suppressHydrationWarning>
+        {children}
+      </body>
     </html>
   );
 }

@@ -80,14 +80,14 @@ Nav order: About · Services · How I Work · Tools · Work · Experience · Con
 | # | Section | Content | Layout & motion | Status |
 |---|---|---|---|---|
 | 0 | Header | Qova**Ops** wordmark, "by triqova", socials (FB, IG, YT, LinkedIn), theme toggle, Book a call button | Wordmark letters reveal on load; sun/moon icon swap on toggle | [x] Phase 2 |
-| 1 | About / hero | Photo, "Hi, I'm Hans_" typer, H1 "Your Daily Operations." / "Our Execution." (white / lime), trait pill, tool chips, hero sub, stats | Hero entrance timeline; count-up on stats | [ ] |
-| 2 | Services | All 9 services from BRAND_GUIDE §1, numbered 01–09, icon, title, one line | Rows stagger in on scroll; hover lifts the row and lights the lime bar | [ ] |
-| 3 | How I Work | 4 steps: Discovery call → Audit & plan → Execute & own it → Report & improve | Cards with step numbers; line draws between steps on scroll | [ ] copy needs Hans review |
-| 4 | Tools | Grouped chips: Admin & Ops, Web & eCommerce, Automation & AI, Analytics & Hosting | Chips fade up in groups | [ ] data ready in `content/tools.ts` (from resume) |
-| 5 | Work | Tabs: Websites · Automation · Operations; project rows with status badges and links | Sliding tab pill (transitions-dev); rows cross-fade on tab change | [ ] data in `content/work.ts`: all 7 projects published (agency work + client names approved by Hans) |
-| 6 | Experience | Timeline: BS Computer Science (with Honors) + work history | Timeline line draws on scroll | [ ] data ready in `content/experience.ts` (from resume) |
+| 1 | About / hero | Photo, "Hi, I'm Hans_" typer, H1 "Your Daily Operations." / "Our Execution." (white / lime), trait pill, tool chips, hero sub, stats | Hero entrance timeline; count-up on stats | [x] Phase 3 (Q mark placeholder; motion Phase 4) |
+| 2 | Services | All 9 services from BRAND_GUIDE §1, numbered 01–09, icon, title, one line | Rows stagger in on scroll; hover lifts the row and lights the lime bar | [x] Phase 3 |
+| 3 | How I Work | 4 steps: Discovery call → Audit & plan → Execute & own it → Report & improve | Cards with step numbers; line draws between steps on scroll | [x] Phase 3, [!] copy needs Hans review |
+| 4 | Tools | Grouped chips: Admin & Ops, Web & eCommerce, Automation & AI, Analytics & Hosting | Chips fade up in groups | [x] Phase 3 |
+| 5 | Work | Tabs: Websites · Automation · Operations; project rows with status badges and links | Sliding tab pill (transitions-dev); rows cross-fade on tab change | [x] Phase 3 (Operations tab hidden: no projects) |
+| 6 | Experience | Timeline: BS Computer Science (with Honors) + work history | Timeline line draws on scroll | [x] Phase 3 |
 | 7 | Testimonials | Carousel of real quotes | Two-up slider, arrow buttons | [!] hidden until real testimonials (`content/testimonials.ts` is empty) |
-| 8 | Contact | "Let's work together", lime CTA band "Delegate Your Operations", pills: email, book a call, socials | CTA band reveal; button hover per brand | [ ] |
+| 8 | Contact | "Let's work together", lime CTA band "Delegate Your Operations", pills: email, book a call, socials | CTA band reveal; button hover per brand | [x] Phase 3 |
 | 9 | Footer | "QOVAOPS BY TRIQOVA \| HUMAN EXECUTION. POWERED BY SMARTER SYSTEMS." + © year | Static | [x] Phase 2 |
 
 ### 5.1 Light / dark theme
@@ -197,9 +197,9 @@ public/brand/       logo SVGs, favicon, OG assets
 - [x] Scaffold Next.js + TypeScript + Tailwind v4 in this folder (keep `brand/`, `CLAUDE.md`, `PLAN.md`) — Next 16.4.6, React 19.3, Tailwind 4.3.3, ESLint 9 (`.claude/**` ignored)
 - [x] Brand tokens in `@theme` as semantic tokens with dark + light sets (§5.1), base styles, background grid — `app/globals.css`; utilities `bg-bg`, `bg-surface`, `border-line`, `text-fg`, `text-body`, `text-muted`, `text-accent-text`, `bg-accent`, `text-on-accent`, plus `qo-grid-bg`, `qo-divider`, `text-outline`, `qo-label`
 - [x] Theme system: `data-theme` on `<html>`, no-flash script, saved choice, default dark — own inline head script (`components/layout/theme.ts`, no `next-themes`), toggle `components/ui/ThemeToggle.tsx`, `theme-color` synced per theme
-- [~] Fonts: Inter fallback now (`next/font`), JetBrains Mono for labels; Articulat CF once the license is confirmed
+- [x] Fonts: Articulat CF from Hans's Adobe Fonts web project (kit `lsg5lvm`, `<link>` in `app/layout.tsx`, added 2026-11-12), Inter (`next/font`) as fallback, JetBrains Mono for labels
 - [x] Install GSAP + `@gsap/react`, motion setup with reduced-motion handling — `components/motion/gsap.ts` (registers ScrollTrigger + useGSAP, `MOTION_CONDITIONS`), `components/motion/Reveal.tsx` (useGSAP + `gsap.matchMedia`)
-- [~] `git init`, first commit, GitHub repo — local repo + first commit done; [!] GitHub repo waits on Hans (private or public, which account)
+- [x] `git init`, first commit, GitHub repo — `Hans-tech-coder/QovaOps-Portfolio`, `main` pushed
 
 ### Phase 2 — Layout shell
 - [x] Header (wordmark, socials, theme toggle, Book a call) — `components/layout/Header.tsx`, `Wordmark.tsx` (GSAP letter reveal, pre-hidden via `qo-js` class from the head script so no flash; reduced-motion = static), `components/ui/SocialIcons.tsx` (Lucide v1 has no brand icons, so Lucide's old ISC brand glyphs are inlined), `ThemeToggle.tsx` restyled: square button, transitions-dev `09-icon-swap` keyed on `html[data-theme]`, View Transitions cross-fade (skipped under reduced motion / hidden tab)
@@ -209,14 +209,15 @@ public/brand/       logo SVGs, favicon, OG assets
 - [x] Shell page: `app/page.tsx` with skip link, header, sidebar and TODO cards for About, Services, How I Work, Tools, Contact. Work, Experience and Testimonials are `published: false` (no real data yet). Checked at 1440 / 1024 / 768 / 390, both themes, mouse + keyboard
 
 ### Phase 3 — Sections
-- [ ] About / hero
-- [ ] Services (9)
-- [ ] How I Work
-- [ ] Tools
-- [ ] Work (built, hidden until real data)
-- [ ] Experience
-- [ ] Testimonials (built, hidden until real data)
-- [ ] Contact + CTA band
+Sections live in `components/sections/` and are wired by id in `app/page.tsx` (`SECTION_COMPONENTS`), so the page and nav still come from `content/sections.ts`. Motion is basic (`Reveal` + CSS); the full pass is Phase 4.
+- [x] About / hero — `About.tsx`: section card renders the page **H1** (two-tone tagline; `SectionCard`/`SectionHeading` got `title`/`titleAs`/`titleClassName`), Hans's photo (`public/brand/hans-photo.jpg`; the Q mark placeholder was removed), CSS-only "Hi, I'm Hans_" typer (`.qo-typer`), trait pill, BRAND_GUIDE §7 blurb, tool chips (`heroTools` in `content/tools.ts`), Delegate/email buttons, stats 4+ years · 10+ client websites managed · 9 services + "Computer Science / With Honors" label. photo added 2026-11-12
+- [x] Services (9) — `Services.tsx` + `content/services.ts`: rows 01–09, outlined numbers, Lucide icons, one line each, accent left bar on hover (lime on dark, #101010 on light)
+- [x] How I Work — `HowIWork.tsx` + `content/process.ts` (4 steps, lime-on-black step badges). [!] copy marked `TODO: Hans review`
+- [x] Tools — `Tools.tsx`: 4 groups of dashed chips from `content/tools.ts`
+- [x] Work — `Work.tsx` + `WorkTabs.tsx`: transitions-dev `16-tabs-sliding` (lime pill, black text, ARIA tabs with arrow/Home/End), only categories with projects get a tab (Websites 4, Automation 3; Operations has none), status badges only where the resume states it (Live / Agency work / Personal), RunAsOne link. [!] screenshots/links for the other projects (`TODO(Hans)` in `content/work.ts`)
+- [x] Experience — `Experience.tsx`: education + certifications column, work timeline column, dashed period pills
+- [x] Testimonials (built, hidden until real data) — `Testimonials.tsx` + `TestimonialsCarousel.tsx` (two-up scroll-snap, arrow buttons, no stars); renders nothing while `content/testimonials.ts` is empty. [!] real quotes
+- [x] Contact + CTA band — `Contact.tsx`: lime band "Delegate Your Operations" (Book a call + Email me), pills for email, booking link and the four socials (`SocialIcon` export added). No location (on hold)
 
 ### Phase 4 — Motion & polish
 - [ ] Hero timeline, scroll reveals, count-ups, line draws
@@ -235,16 +236,16 @@ public/brand/       logo SVGs, favicon, OG assets
 
 ## 9. On hold — needed from Hans
 
-- [!] **Real photo** of Hans (hero). Until then: Q mark in a dark rounded square.
-- [!] **Logo SVGs** exported from Canva `DAHaBth6Gns` page 2 → `public/brand/`, both the dark version and the light variant (black wordmark).
-- [!] **Articulat CF license** (Adobe Fonts kit ID or webfont files).
+- [x] **Real photo** of Hans — transparent cut-out `public/brand/hans-photo.png` (exported from Canva `DAHasTtTt6Y`, 2026-11-12), shown in the About hero via `next/image`. The original `hans-photo.jpg` is no longer used.
+- [~] **Logo SVGs** — `public/brand/qovaops-logo.svg`, `qovaops-logo-light.svg`, `qovaops-mark.svg` (2026-11-12). The Q mark paths are copied 1:1 from Canva `DAHaBth6Gns` page 2 (read through the Canva connector; it can't export SVG). The wordmark is live text (Articulat CF → Inter/Helvetica fallback), not outlined. [!] For outlined text, Hans downloads the SVG from Canva (Pro) and replaces the files.
+- [x] **Articulat CF license** — Adobe Fonts kit `lsg5lvm` (2026-11-12). If the site ever shows Inter instead, check that the web project is still published in Adobe Fonts.
 - [x] **Tools list** — from the resume (2026-11-12), in `content/tools.ts`.
 - [x] **Experience details** — from the resume (2026-11-12), in `content/experience.ts`: St. Paul Colleges Foundation Inc. 2015–2019 (BS CS, With Honors; Best in Web Development, Best Mobile Application), Skyrocket Studios PH (Nov 2022 – Jul 2026), DigitYza (Jun–Dec 2023), self-employed 2021–present, 5 certifications. The resume's phone number and personal Gmail are deliberately not used on the site.
 - [~] **Projects / case studies** — resume projects are in `content/work.ts`, all published. Hans approved (2026-11-12) showing the Skyrocket agency work and naming Kubota PH and the client Shopify stores. [!] Still needed: screenshots/links for projects; location "Tarlac, Philippines": show on the site or not?
 - [!] **Testimonials** (quote, name, role, permission to publish).
-- [!] **How I Work copy** review once drafted.
+- [!] **How I Work copy** review — drafted in `content/process.ts` (Phase 3).
 - [!] Should the footer link to `www.triqova.com`?
-- [!] **GitHub repo:** private, on Hans's account; Hans creates it himself in the browser. Push only when Hans says so (local repo is ready).
+- [x] **GitHub repo:** `Hans-tech-coder/QovaOps-Portfolio` exists and `main` is pushed to `origin`. Still: push only when Hans says so.
 
 ## 10. Session log
 
@@ -257,3 +258,8 @@ public/brand/       logo SVGs, favicon, OG assets
 | 2026-11-12 | **Phase 2 done.** Layout shell: header + wordmark reveal, socials, square theme toggle with icon swap, lime Book a call; sticky sidebar with ScrollTrigger scrollspy and gliding ring; <1024px top bar + `<dialog>` menu sheet; SectionCard/SectionHeading; footer strip. Sections driven by `content/sections.ts` (Work/Experience/Testimonials hidden until real data). `npm run build` + `npm run lint` pass; verified in browser at 1440/1024/768/390, dark + light, mouse + keyboard (scrollspy, smooth scroll + focus, Esc/Tab trap). Notes: Experience is hidden too because there's no data yet (flip `published` once Hans sends school/years/roles); "by triqova" Cool Gray on dark is below AA at small sizes but is part of the logo lockup (sr-only text carries the name); mobile shows the wordmark twice (top bar + header), revisit in Phase 4. Not committed. Next: Phase 3 sections. |
 | 2026-11-12 | Hans added his resume (`brand/Hans Christian A. Obena - Resume (General Virtual Assistant).pdf`). Pulled the facts into `content/experience.ts`, `content/tools.ts`, `content/work.ts` and an empty `content/testimonials.ts`. Experience and Work are now published in `content/sections.ts` (Work shows while ≥1 project is published; Testimonials shows only when real quotes exist). Real numbers now available for Phase 3: 4+ years agency experience, 10+ client websites (hosting/security), 200K+/year subscription replaced, RunAsOne 3 events / 244+ registrants (as of Oct 2026). Open: agency-work/client-name permissions, location. Not committed. |
 | 2026-11-12 | Hans approved showing the agency work and naming clients: all projects in `content/work.ts` published, Kubota PH named in `content/experience.ts`. Not committed. |
+| 2026-11-12 | **Phase 3 done.** All sections built in `components/sections/` and wired in `app/page.tsx` (About/hero with H1 + Q mark + typer + real stats only, Services 01–09, How I Work, Tools, Work tabs, Experience timeline, Testimonials carousel hidden while empty, Contact + lime CTA band). New content files `content/services.ts`, `content/process.ts`; `status` badges + category labels in `content/work.ts`. `npx tsc --noEmit`, `npm run lint`, `npm run build` pass. Verified on the production build (`prod-preview` config in `.claude/launch.json`, port 3005) at 1440/1024/768/390, dark + light: no horizontal overflow, nav = rendered sections, scrollspy follows, tabs switch. Note: another session's `next dev` on :3000 served a stale `globals.css` (new CSS missing), so check new CSS on a fresh dev server or the prod preview. Open for Hans: photo/Q mark SVG, How I Work copy, project links/screenshots, testimonials, location. Not committed. Next: Phase 4 motion. |
+| 2026-11-12 | Hans added his portrait (`public/brand/hans-photo.jpg`), which now replaces the Q mark placeholder in the About hero (`next/image`, blur placeholder, rounded square). Built the logo SVGs in `public/brand/` (logo, light logo, mark) from the Canva page 2 vector paths; the wordmark is live text, not outlined. Removed the unused `QMark.tsx`. Lint + build pass; checked in the prod preview. Not committed. |
+| 2026-11-12 | Articulat CF is live: Hans's Adobe Fonts kit `lsg5lvm` loads via `<link>` + preconnect in `app/layout.tsx` (weights 400/500/700 confirmed loaded in the prod preview; Inter stays the fallback). Lint + build pass. Not committed. |
+| 2026-11-12 | About portrait restyled after Hans's reference: larger 3:4 photo, no frame, bottom fades into the card (`.qo-portrait-fade` mask in `globals.css`, also soft top/side edges), "Hi, I'm Hans_" tag overlaps the bottom. Light theme looks clean; in dark the JPG's light-gray background shows as a soft pale box. [!] Hans to send a transparent PNG cut-out (`public/brand/hans-photo.png`), then swap the import in `About.tsx`. Not committed. |
+| 2026-11-12 | Exported Hans's transparent portrait from Canva `DAHasTtTt6Y` (PNG 1200×1607, via the connector) to `public/brand/hans-photo.png`; About now uses it with a bottom fade plus a subtle aura behind it (`.qo-aura`: faint lime on dark, faint neutral on light, kept low because the brand rules out heavy glows). Lint + build pass; checked in both themes. `hans-photo.jpg` is unused (kept until Hans says delete). Not committed. |

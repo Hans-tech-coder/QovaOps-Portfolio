@@ -1,12 +1,32 @@
+import type { ComponentType } from "react";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { MobileNav } from "@/components/layout/MobileNav";
 import { ScrollSpyProvider } from "@/components/layout/ScrollSpy";
-import { SectionCard } from "@/components/layout/SectionCard";
 import { Sidebar } from "@/components/layout/Sidebar";
-import { navItems, sections } from "@/content/sections";
+import { About } from "@/components/sections/About";
+import { Contact } from "@/components/sections/Contact";
+import { Experience } from "@/components/sections/Experience";
+import { HowIWork } from "@/components/sections/HowIWork";
+import { Services } from "@/components/sections/Services";
+import { Testimonials } from "@/components/sections/Testimonials";
+import { Tools } from "@/components/sections/Tools";
+import { Work } from "@/components/sections/Work";
+import { navItems, sections, type SectionConfig } from "@/content/sections";
 
-// Phase 2 layout shell. Section bodies are placeholders; real content is Phase 3.
+// Section id (content/sections.ts) → component. Only published sections are in `sections`,
+// so the page and the nav (sidebar + mobile menu) always match.
+const SECTION_COMPONENTS: Record<string, ComponentType<{ section: SectionConfig }>> = {
+  about: About,
+  services: Services,
+  "how-i-work": HowIWork,
+  tools: Tools,
+  work: Work,
+  experience: Experience,
+  testimonials: Testimonials,
+  contact: Contact,
+};
+
 export default function Home() {
   return (
     <ScrollSpyProvider items={navItems}>
@@ -26,14 +46,10 @@ export default function Home() {
           <Sidebar />
 
           <main id="main" tabIndex={-1} className="flex min-w-0 flex-col gap-6 outline-none">
-            {sections.map((section) => (
-              <SectionCard key={section.id} section={section}>
-                {/* TODO(Phase 3): real section content */}
-                <div className="flex min-h-[40vh] items-center justify-center rounded-card border border-dashed border-line p-6">
-                  <p className="qo-label text-muted">{`// TODO: ${section.label} content (Phase 3)`}</p>
-                </div>
-              </SectionCard>
-            ))}
+            {sections.map((section) => {
+              const Section = SECTION_COMPONENTS[section.id];
+              return Section ? <Section key={section.id} section={section} /> : null;
+            })}
           </main>
         </div>
 

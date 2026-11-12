@@ -217,7 +217,7 @@ borderRadius: { card: "14px" },
 
 - [x] Portfolio domain: `qovaops.triqova.com`
 - [ ] Whether to link `www.triqova.com`
-- [ ] Articulat CF web license (Adobe Fonts kit or webfont purchase)
+- [x] Articulat CF web license — Adobe Fonts kit `lsg5lvm` (2026-11-12)
 - [ ] Export SVG logo files from Canva `DAHaBth6Gns` page 2
 - [ ] Real photo of Hans (the founder graphics' photo looked like a stock image)
 - [ ] Real projects, case studies and testimonials to show (none are in the brand files)

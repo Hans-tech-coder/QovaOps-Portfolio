@@ -61,6 +61,14 @@ const ICONS: Record<(typeof site.socials)[number]["label"], (p: IconProps) => Re
   LinkedIn: LinkedinIcon,
 };
 
+type SocialLabel = (typeof site.socials)[number]["label"];
+
+/** A single brand glyph by social label (decorative; pair it with visible or sr-only text). */
+export function SocialIcon({ label, ...props }: IconProps & { label: SocialLabel }) {
+  const Icon = ICONS[label];
+  return <Icon {...props} />;
+}
+
 /** Row of social icon links (BRAND_GUIDE §2). */
 export function SocialLinks({ className = "" }: { className?: string }) {
   return (

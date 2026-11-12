@@ -1,17 +1,32 @@
+import type { ReactNode } from "react";
+
 type SectionHeadingProps = {
   id: string;
   eyebrow: string;
   ghost: string;
-  title: string;
+  title: ReactNode;
   intro?: string;
+  /** The About/hero card renders the page H1; every other card an H2. */
+  as?: "h1" | "h2";
+  titleClassName?: string;
 };
+
+const DEFAULT_TITLE = "text-3xl sm:text-4xl lg:text-[2.5rem]";
 
 /**
  * Section header (PLAN.md §3/§4): mono `// EYEBROW` in the accent text color
- * over a large outlined ghost word, then the H2 and a muted intro line.
- * The H2 is the focus target after nav clicks (tabIndex -1, data-section-focus).
+ * over a large outlined ghost word, then the heading and a muted intro line.
+ * The heading is the focus target after nav clicks (tabIndex -1, data-section-focus).
  */
-export function SectionHeading({ id, eyebrow, ghost, title, intro }: SectionHeadingProps) {
+export function SectionHeading({
+  id,
+  eyebrow,
+  ghost,
+  title,
+  intro,
+  as: Heading = "h2",
+  titleClassName = DEFAULT_TITLE,
+}: SectionHeadingProps) {
   return (
     <div>
       <div className="relative">
@@ -25,14 +40,14 @@ export function SectionHeading({ id, eyebrow, ghost, title, intro }: SectionHead
           {`// ${eyebrow}`}
         </p>
       </div>
-      <h2
+      <Heading
         id={`${id}-title`}
         tabIndex={-1}
         data-section-focus
-        className="mt-4 scroll-mt-24 text-3xl font-bold tracking-tight text-fg outline-offset-4 sm:text-4xl lg:text-[2.5rem]"
+        className={`mt-4 scroll-mt-24 font-bold tracking-tight text-fg outline-offset-4 ${titleClassName}`}
       >
         {title}
-      </h2>
+      </Heading>
       {intro && <p className="mt-3 max-w-2xl text-base text-muted sm:text-lg">{intro}</p>}
     </div>
   );
