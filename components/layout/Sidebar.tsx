@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { gsap, prefersReducedMotion, useGSAP } from "@/components/motion/gsap";
+import { ResumeButtons } from "@/components/ui/ResumeButtons";
 import { site } from "@/content/site";
 import { useScrollSpy } from "./ScrollSpy";
 
@@ -102,6 +103,11 @@ export function Sidebar() {
           >
             {site.contact.email}
           </a>
+        </div>
+
+        <div className="mt-6 border-t border-dashed border-line pt-5">
+          <p className="qo-label text-muted">{"// Resume"}</p>
+          <ResumeButtons className="mt-3 flex flex-col gap-2" />
         </div>
       </div>
     </aside>

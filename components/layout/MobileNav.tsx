@@ -4,6 +4,7 @@ import { Menu, X } from "lucide-react";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { SocialLinks } from "@/components/ui/SocialIcons";
+import { ResumeButtons } from "@/components/ui/ResumeButtons";
 import { site } from "@/content/site";
 import { useScrollSpy } from "./ScrollSpy";
 
@@ -166,6 +167,13 @@ export function MobileNav() {
               })}
             </ul>
           </nav>
+
+          <div className="mt-5 border-t border-dashed border-line pt-4">
+            <p className="qo-label text-muted" aria-hidden="true">
+              {"// Resume"}
+            </p>
+            <ResumeButtons className="mt-3 grid grid-cols-2 gap-2" />
+          </div>
 
           <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
             <a

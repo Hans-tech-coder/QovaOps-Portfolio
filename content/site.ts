@@ -19,6 +19,12 @@ export const site = {
     email: "qovaops@gmail.com",
     bookingUrl: "https://bit.ly/3WlL3yg",
   },
+  // Resume PDF (copy of brand/Hans Christian A. Obena - Resume (General Virtual Assistant).pdf).
+  // Replace the file in public/resume/ to update it; the link stays the same.
+  resume: {
+    href: "/resume/hans-obena-resume.pdf",
+    downloadName: "Hans-Obena-Resume.pdf",
+  },
   socials: [
     { label: "Facebook", handle: "@qovaops", href: "https://facebook.com/qovaops" },
     { label: "Instagram", handle: "@qovaops", href: "https://instagram.com/qovaops" },
