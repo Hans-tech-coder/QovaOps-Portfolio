@@ -29,7 +29,7 @@ export function About({ section }: { section: SectionConfig }) {
     <SectionCard
       section={section}
       titleAs="h1"
-      titleClassName="text-4xl leading-[1.05] sm:text-5xl lg:text-6xl xl:text-[4.25rem]"
+      titleClassName="text-4xl leading-[1.05] sm:text-5xl lg:text-[3.5rem] xl:text-[4rem]"
       title={
         <>
           <span data-hero="line" className="block">
@@ -45,7 +45,7 @@ export function About({ section }: { section: SectionConfig }) {
       <div className="grid gap-8 md:grid-cols-[auto_minmax(0,1fr)] md:items-center md:gap-10">
         {/* Cut-out portrait over a soft aura; the bottom fades into the card so it
             doesn't look cut off. Styles in globals.css (.qo-aura, .qo-portrait-fade). */}
-        <div data-hero="photo" className="relative mx-auto w-64 sm:w-72 md:mx-0 lg:w-80">
+        <div data-hero="photo" className="relative mx-auto w-60 sm:w-64 md:mx-0 xl:w-72">
           <span aria-hidden="true" className="qo-aura" />
           <div className="qo-portrait-fade relative aspect-[3/4] w-full">
             <Image
@@ -53,7 +53,7 @@ export function About({ section }: { section: SectionConfig }) {
               alt="Hans Obena, virtual assistant with advanced technical skills"
               fill
               priority
-              sizes="(min-width: 1024px) 320px, (min-width: 640px) 288px, 256px"
+              sizes="(min-width: 1280px) 288px, (min-width: 640px) 256px, 240px"
               className="object-cover object-[50%_12%]"
             />
           </div>
@@ -72,7 +72,7 @@ export function About({ section }: { section: SectionConfig }) {
           </p>
         </div>
 
-        <div className="flex min-w-0 flex-col gap-6">
+        <div className="flex min-w-0 flex-col gap-5">
           {/* Trait pill: dark pill with a lime dot in both themes (lime never small on light) */}
           <p data-hero="pill" className="qo-trait-pill qo-label inline-flex w-fit items-center gap-2.5 rounded-full border px-4 py-2">
             <span aria-hidden="true" className="size-2 rounded-full bg-lime" />

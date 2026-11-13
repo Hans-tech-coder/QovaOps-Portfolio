@@ -5,12 +5,13 @@ import { site } from "@/content/site";
 import { Wordmark } from "./Wordmark";
 
 /**
- * Page header: wordmark left; socials, theme toggle and the lime "Book a call"
- * pill right. Below 1024px the toggle and socials live in the top bar / menu.
+ * Page header: a compact brand bar (wordmark left; socials, theme toggle and
+ * the lime "Book a call" pill right). Kept short so the About card shows on
+ * the first screen. Below 1024px the toggle and socials live in the top bar / menu.
  */
 export function Header() {
   return (
-    <header className="flex flex-col gap-6 pt-8 pb-8 sm:flex-row sm:items-end sm:justify-between lg:pt-12 lg:pb-10">
+    <header className="flex items-center justify-between gap-4 py-5 lg:py-6">
       <Wordmark />
       <div className="flex items-center gap-2">
         <SocialLinks className="hidden lg:flex" />
@@ -21,7 +22,7 @@ export function Header() {
           href={site.contact.bookingUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="qo-btn group inline-flex h-11 items-center gap-2 rounded-full bg-accent pr-4 pl-6 text-sm font-bold text-on-accent hover:bg-accent-hover lg:ml-2"
+          className="qo-btn group inline-flex h-10 shrink-0 items-center gap-2 rounded-full bg-accent pr-3.5 pl-5 text-sm font-bold text-on-accent hover:bg-accent-hover sm:h-11 sm:pr-4 sm:pl-6 lg:ml-2"
         >
           {site.cta.secondary}
           <ArrowUpRight

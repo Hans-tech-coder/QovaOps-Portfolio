@@ -29,7 +29,7 @@ export function SectionCard({
     <section
       id={id}
       aria-labelledby={`${id}-title`}
-      className={`overflow-hidden rounded-card border border-line bg-surface p-6 sm:p-10 ${className}`}
+      className={`overflow-hidden rounded-card border border-line bg-surface p-6 sm:p-8 lg:p-10 ${className}`}
     >
       <SectionHeading
         id={id}

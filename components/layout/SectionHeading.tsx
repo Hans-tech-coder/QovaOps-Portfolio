@@ -32,7 +32,7 @@ export function SectionHeading({
       <div className="relative">
         <span
           aria-hidden="true"
-          className="text-outline-ghost pointer-events-none block truncate text-6xl leading-none font-bold tracking-tight uppercase select-none sm:text-7xl lg:text-8xl"
+          className="text-outline-ghost pointer-events-none block truncate text-5xl leading-none font-bold tracking-tight uppercase select-none sm:text-6xl lg:text-[4.5rem]"
         >
           {ghost}
         </span>
@@ -44,7 +44,7 @@ export function SectionHeading({
         id={`${id}-title`}
         tabIndex={-1}
         data-section-focus
-        className={`mt-4 scroll-mt-24 font-bold tracking-tight text-fg outline-offset-4 ${titleClassName}`}
+        className={`mt-3 scroll-mt-24 font-bold tracking-tight text-fg outline-offset-4 ${titleClassName}`}
       >
         {title}
       </Heading>

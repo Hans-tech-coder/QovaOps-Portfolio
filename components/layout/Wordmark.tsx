@@ -15,7 +15,7 @@ export function Wordmark() {
     <div data-hero-wordmark className="inline-flex flex-col">
       <a
         href="#top"
-        className="rounded-lg text-5xl leading-none font-bold tracking-tight sm:text-6xl lg:text-7xl xl:text-8xl"
+        className="rounded-lg text-[1.75rem] leading-none font-bold tracking-tight sm:text-4xl lg:text-[2.75rem]"
       >
         <span className="sr-only">
           {site.name} {site.endorsement}
@@ -30,7 +30,7 @@ export function Wordmark() {
             <span
               key={`o${i}`}
               data-wordmark-letter
-              className="text-outline inline-block [-webkit-text-stroke-width:1.5px] lg:[-webkit-text-stroke-width:2px]"
+              className="text-outline inline-block [-webkit-text-stroke-width:1px] sm:[-webkit-text-stroke-width:1.25px] lg:[-webkit-text-stroke-width:1.5px]"
             >
               {ch}
             </span>
@@ -40,7 +40,7 @@ export function Wordmark() {
       <span
         data-wordmark-endorse
         aria-hidden="true"
-        className="mt-1 self-end text-lg font-medium text-endorse sm:text-xl lg:text-2xl"
+        className="mt-0.5 self-end text-xs font-medium text-endorse sm:text-sm lg:text-base"
       >
         {site.endorsement}
       </span>
