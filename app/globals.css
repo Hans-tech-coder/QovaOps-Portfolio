@@ -27,6 +27,7 @@
   --qo-on-accent: #101010;
   --qo-badge: #1f2937;
   --qo-ghost: #1f242b;
+  --qo-beam: rgb(198 255 0 / 0.4); /* moving grid-line streak (thin line, no glow) */
 }
 
 :root[data-theme="light"] {
@@ -46,6 +47,7 @@
   --qo-on-accent: #101010;
   --qo-badge: #101010;
   --qo-ghost: #e2e4df;
+  --qo-beam: rgb(16 16 16 / 0.3); /* no lime on light */
 }
 
 :root {
@@ -101,7 +103,8 @@
   }
 
   body {
-    background-color: var(--qo-bg);
+    /* Transparent so the fixed grid layer (.qo-bg-layer, z-index -1) shows; html carries the bg. */
+    background-color: transparent;
     color: var(--qo-text);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
@@ -129,6 +132,53 @@
     linear-gradient(90deg, var(--qo-grid) 1px, transparent 1px);
   background-size: var(--qo-grid-size) var(--qo-grid-size);
   background-position: center top;
+}
+
+/* Fixed page background: the grid stays put while the page scrolls, and a few
+   short streaks travel along grid lines (minimal take on the reference's moving
+   lines). Vertical lines sit at 50% - 48px + k*96px (grid is centered), horizontal
+   ones at k*96px from the top, so the streaks ride exactly on the grid. */
+.qo-bg-layer {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.qo-bg-layer .qo-beam {
+  position: absolute;
+  will-change: transform;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+.qo-beam-y {
+  top: 0;
+  left: calc(50% - var(--qo-grid-size) / 2 + var(--k) * var(--qo-grid-size));
+  width: 1px;
+  height: 80px;
+  background: linear-gradient(to bottom, transparent, var(--qo-beam));
+  animation-name: qo-beam-y;
+}
+.qo-beam-x {
+  left: 0;
+  top: calc(var(--k) * var(--qo-grid-size));
+  width: 80px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--qo-beam));
+  animation-name: qo-beam-x;
+}
+@keyframes qo-beam-y {
+  from { transform: translateY(-80px); }
+  to { transform: translateY(100vh); }
+}
+@keyframes qo-beam-x {
+  from { transform: translateX(-80px); }
+  to { transform: translateX(100vw); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .qo-bg-layer .qo-beam {
+    display: none;
+  }
 }
 
 /* Thin divider with a lime tip (accent-text so it stays visible on light) */

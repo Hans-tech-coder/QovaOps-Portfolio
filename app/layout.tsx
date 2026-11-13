@@ -48,6 +48,18 @@ export const viewport: Viewport = {
   colorScheme: "dark light",
 };
 
+// Background streaks: which grid line (k, counted from the centered column for
+// vertical, from the top for horizontal), speed and offset. Negative delays start
+// each one mid-run so they never all line up. Kept to a few on purpose.
+const BEAMS = [
+  { axis: "y", k: -6, dur: "9s", delay: "-1s" },
+  { axis: "y", k: -2, dur: "11s", delay: "-6s" },
+  { axis: "y", k: 1, dur: "10s", delay: "-3s" },
+  { axis: "y", k: 5, dur: "12s", delay: "-8s" },
+  { axis: "x", k: 1, dur: "14s", delay: "-4s" },
+  { axis: "x", k: 7, dur: "16s", delay: "-11s" },
+] as const;
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
@@ -68,7 +80,17 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       {/* Browser extensions (e.g. ColorZilla's cz-shortcut-listen) add attributes to
           <body> before React hydrates. This only ignores <body>'s own attributes,
           not its children, so real mismatches in the page still surface. */}
-      <body className="qo-grid-bg min-h-full flex flex-col" suppressHydrationWarning>
+      <body className="min-h-full flex flex-col" suppressHydrationWarning>
+        {/* Fixed grid + moving line streaks (globals.css .qo-bg-layer). Decorative only. */}
+        <div aria-hidden="true" className="qo-bg-layer qo-grid-bg">
+          {BEAMS.map(({ axis, k, dur, delay }) => (
+            <span
+              key={`${axis}${k}`}
+              className={`qo-beam qo-beam-${axis}`}
+              style={{ "--k": k, animationDuration: dur, animationDelay: delay } as React.CSSProperties}
+            />
+          ))}
+        </div>
         {children}
       </body>
     </html>
