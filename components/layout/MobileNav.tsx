@@ -152,7 +152,7 @@ export function MobileNav() {
                         <span
                           className={
                             active
-                              ? "flex size-5 items-center justify-center rounded-full border border-dashed border-accent-text"
+                              ? "qo-spin flex size-5 items-center justify-center rounded-full border border-dashed border-accent-text"
                               : "size-1 rounded-full bg-muted"
                           }
                         >

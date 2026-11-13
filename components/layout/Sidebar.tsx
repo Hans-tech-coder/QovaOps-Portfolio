@@ -57,8 +57,11 @@ export function Sidebar() {
             <span
               ref={ringRef}
               aria-hidden="true"
-              className="pointer-events-none invisible absolute left-0 top-0 size-5 rounded-full border border-dashed border-accent-text"
-            />
+              className="pointer-events-none invisible absolute left-0 top-0 size-5"
+            >
+              {/* GSAP moves the outer span (x/y); the dashes spin on this inner one (.qo-spin) */}
+              <span className="qo-spin block size-full rounded-full border border-dashed border-accent-text" />
+            </span>
             {items.map(({ id, label }) => {
               const active = id === activeId;
               return (

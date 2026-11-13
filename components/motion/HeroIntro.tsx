@@ -4,6 +4,7 @@ import {
   DIST,
   DUR,
   gsap,
+  heroStartDelay,
   MOTION_CONDITIONS,
   setHeroDuration,
   useGSAP,
@@ -11,7 +12,7 @@ import {
 } from "./gsap";
 
 /**
- * Hero entrance, once on load (PLAN.md §6, ≤1.2s): wordmark letters, the H1
+ * Hero entrance, once on load right after the intro loader (PLAN.md §6, ≤1.2s): wordmark letters, the H1
  * lines, portrait, trait pill, blurb, tool chips and buttons. Targets are
  * marked with data attributes in Wordmark.tsx and About.tsx and pre-hidden by
  * CSS when JS runs (`.qo-js [data-hero]`), so there is no flash before
@@ -45,7 +46,9 @@ export function HeroIntro() {
       }
 
       const rise = { autoAlpha: 0, y: DIST.medium };
-      const tl = gsap.timeline({ defaults: { duration: DUR.verySlow } });
+      // Starts as the intro loader slides away (components/motion/Loader.tsx).
+      const delay = heroStartDelay();
+      const tl = gsap.timeline({ delay, defaults: { duration: DUR.verySlow } });
       tl.fromTo(letters, { autoAlpha: 0, yPercent: 40 }, { autoAlpha: 1, yPercent: 0, stagger: DUR.stagger }, 0)
         .fromTo(endorse, { autoAlpha: 0, y: DIST.micro }, { autoAlpha: 1, y: 0, duration: DUR.slow }, 0.3)
         .fromTo(photo, { ...rise, scale: 0.98 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.6 }, 0.1)
@@ -62,7 +65,7 @@ export function HeroIntro() {
       // Clear transforms at the end so hover states (CSS transforms) take over.
       tl.set(all, { clearProps: "transform" });
 
-      setHeroDuration(tl.duration());
+      setHeroDuration(delay + tl.duration());
     });
 
     return () => mm.revert();

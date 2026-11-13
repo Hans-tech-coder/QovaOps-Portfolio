@@ -2,6 +2,7 @@ import { ArrowRight } from "lucide-react";
 import { SectionCard } from "@/components/layout/SectionCard";
 import { CountUp } from "@/components/motion/CountUp";
 import { Reveal } from "@/components/motion/Reveal";
+import { TypeCycler } from "@/components/motion/TypeCycler";
 import { Chip } from "@/components/ui/Chip";
 import Image from "next/image";
 // Transparent cut-out exported from Canva DAHasTtTt6Y (2026-11-12)
@@ -10,7 +11,8 @@ import type { SectionConfig } from "@/content/sections";
 import { site } from "@/content/site";
 import { heroTools } from "@/content/tools";
 
-const GREETING = "Hi, I'm Hans";
+// Photo tag, typed and backspaced in turn (components/motion/TypeCycler.tsx)
+const GREETINGS = ["Hi there!", "I'm Hans"] as const;
 
 // About blurb from BRAND_GUIDE §7.
 const BLURB =
@@ -58,16 +60,9 @@ export function About({ section }: { section: SectionConfig }) {
             />
           </div>
           <p className="absolute bottom-3 left-1/2 inline-flex -translate-x-1/2 items-center rounded-full border border-dashed border-line bg-surface px-3 py-1.5 font-mono text-sm whitespace-nowrap text-fg">
-            <span className="sr-only">{GREETING}</span>
-            <span
-              aria-hidden="true"
-              className="qo-typer"
-              style={{ "--chars": GREETING.length } as React.CSSProperties}
-            >
-              {GREETING}
-            </span>
-            <span aria-hidden="true" className="qo-caret text-accent-text">
-              _
+            <span className="sr-only">{GREETINGS.join(" ")}</span>
+            <span aria-hidden="true">
+              <TypeCycler words={GREETINGS} caretClassName="text-accent-text" />
             </span>
           </p>
         </div>

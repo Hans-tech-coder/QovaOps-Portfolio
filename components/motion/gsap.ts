@@ -55,6 +55,34 @@ export function prefersReducedMotion() {
   );
 }
 
+// ---------- Intro loader timing ----------
+// The page opens behind a 0–100% loader (components/motion/Loader.tsx). Its
+// length is fixed so the hero timeline and the scroll reveals can plan around it
+// without waiting on events. Both sides call startIntro(); the first call sets
+// the clock, so it does not matter which effect runs first.
+
+/** Loader phases in seconds: count to 100, hold, fade the counter out, slide the panel up. */
+export const INTRO = { count: 1.8, hold: 0.2, fadeOut: 0.35, slide: 0.8 } as const;
+
+let introStartedAt: number | null = null;
+
+/** Starts (once) and returns the intro clock: seconds since the loader began. */
+export function startIntro() {
+  if (introStartedAt === null) introStartedAt = performance.now();
+  return (performance.now() - introStartedAt) / 1000;
+}
+
+/**
+ * Seconds until the hero timeline should start: as the loader panel is about
+ * halfway up, so the page builds while it is being uncovered. 0 under reduced
+ * motion (no loader then).
+ */
+export function heroStartDelay() {
+  if (prefersReducedMotion()) return 0;
+  const { count, hold, fadeOut, slide } = INTRO;
+  return Math.max(0, count + hold + fadeOut + slide * 0.45 - startIntro());
+}
+
 // ---------- Hero / scroll-reveal coordination ----------
 // The hero timeline runs once on load. Scroll reveals that are already in view
 // at load (e.g. the About stats on a tall screen) wait until it is nearly done,

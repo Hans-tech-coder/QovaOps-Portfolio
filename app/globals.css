@@ -181,6 +181,19 @@
   }
 }
 
+/* Slow spin for the dashed active-nav ring (sidebar + mobile menu), like the reference */
+.qo-spin {
+  animation: qo-spin 10s linear infinite;
+}
+@keyframes qo-spin {
+  to { transform: rotate(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .qo-spin {
+    animation: none;
+  }
+}
+
 /* Thin divider with a lime tip (accent-text so it stays visible on light) */
 @utility qo-divider {
   height: 2px;
@@ -351,6 +364,49 @@ html {
   }
 }
 
+/* ---------- Intro loader (components/motion/Loader.tsx) ---------- */
+/* Only exists for JS visitors with motion allowed; GSAP counts it to 100% and
+   slides it away, then sets html.qo-intro-done. Page scroll is locked meanwhile;
+   scrollbar-gutter keeps the width steady when the lock lifts. */
+html {
+  scrollbar-gutter: stable;
+}
+.qo-loader {
+  display: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .qo-js .qo-loader {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    will-change: transform;
+  }
+  html.qo-js:not(.qo-intro-done) {
+    overflow: hidden;
+  }
+}
+/* "LOADING..." dots: reveal one dot at a time. They hang off the word so
+   "LOADING" itself stays centered and still. */
+.qo-loader-dots {
+  position: relative;
+}
+.qo-loader-dots::after {
+  content: "...";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 0;
+  animation: qo-loader-dots 1.2s steps(4, jump-none) infinite;
+}
+@keyframes qo-loader-dots {
+  to { width: 3ch; }
+}
+
 /* ---------- Interactive states (transitions-dev + transitions-polish) ---------- */
 /* Buttons, pills, icon buttons, carousel arrows and text links. Hover-in is
    quick (--duration-quick); press gives a small scale (--scale-small). Tailwind's
@@ -519,27 +575,10 @@ html {
   pointer-events: none;
 }
 
-/* ---------- About: "Hi, I'm Hans_" typer (CSS only, mono font so 1ch = 1 char) ---------- */
+/* ---------- About photo tag caret (typing: components/motion/TypeCycler.tsx) ---------- */
 
-.qo-typer {
-  display: inline-block;
-  overflow: hidden;
-  white-space: nowrap;
-  vertical-align: bottom;
-  width: calc(var(--chars) * 1ch);
-}
 .qo-caret {
   animation: qo-caret-blink 1s steps(1) infinite;
-}
-@media (prefers-reduced-motion: no-preference) {
-  .qo-typer {
-    animation: qo-type 1.1s steps(var(--chars)) 0.5s both;
-  }
-}
-@keyframes qo-type {
-  from {
-    width: 0;
-  }
 }
 @keyframes qo-caret-blink {
   50% {
