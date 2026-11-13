@@ -2,6 +2,7 @@
 
 import { Moon, Sun } from "lucide-react";
 import { useSyncExternalStore } from "react";
+import { Tooltip } from "./Tooltip";
 import {
   DEFAULT_THEME,
   THEME_COLORS,
@@ -65,23 +66,31 @@ export function applyTheme(theme: Theme) {
  * (09-icon-swap, CSS in globals.css). The visible icon is keyed on
  * html[data-theme], so the right one shows on first paint, before hydration.
  */
-export function ThemeToggle({ className = "" }: { className?: string }) {
+export function ThemeToggle({
+  className = "",
+  tooltipAlign = "center",
+}: {
+  className?: string;
+  /** "end" when the toggle sits near the right edge (mobile top bar). */
+  tooltipAlign?: "center" | "end";
+}) {
   const theme = useSyncExternalStore(subscribe, readTheme, () => DEFAULT_THEME);
   const next: Theme = theme === "dark" ? "light" : "dark";
 
   return (
-    <button
-      type="button"
-      onClick={() => applyTheme(next)}
-      aria-label={`Switch to ${next} theme`}
-      title={`Switch to ${next} theme`}
-      className={`qo-btn inline-flex size-10 shrink-0 items-center justify-center rounded-lg border border-line bg-surface text-fg hover:border-accent-text ${className}`}
-    >
-      <span className="t-icon-swap qo-theme-swap" aria-hidden="true">
-        {/* Dark theme shows the moon, light theme shows the sun */}
-        <Moon className="t-icon size-[18px]" data-icon="moon" />
-        <Sun className="t-icon size-[18px]" data-icon="sun" />
-      </span>
-    </button>
+    <Tooltip label={`Switch to ${next} theme`} align={tooltipAlign}>
+      <button
+        type="button"
+        onClick={() => applyTheme(next)}
+        aria-label={`Switch to ${next} theme`}
+        className={`qo-btn inline-flex size-10 shrink-0 items-center justify-center rounded-lg border border-line bg-surface text-fg hover:border-accent-text ${className}`}
+      >
+        <span className="t-icon-swap qo-theme-swap" aria-hidden="true">
+          {/* Dark theme shows the moon, light theme shows the sun */}
+          <Moon className="t-icon size-[18px]" data-icon="moon" />
+          <Sun className="t-icon size-[18px]" data-icon="sun" />
+        </span>
+      </button>
+    </Tooltip>
   );
 }

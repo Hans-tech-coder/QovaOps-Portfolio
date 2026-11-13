@@ -14,6 +14,7 @@ import { Services } from "@/components/sections/Services";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { Tools } from "@/components/sections/Tools";
 import { Work } from "@/components/sections/Work";
+import { BackToTop } from "@/components/ui/BackToTop";
 import { navItems, sections, type SectionConfig } from "@/content/sections";
 
 // Section id (content/sections.ts) → component. Only published sections are in `sections`,
@@ -61,6 +62,9 @@ export default function Home() {
 
         <Footer />
       </div>
+
+      <BackToTop />
+
     </ScrollSpyProvider>
   );
 }

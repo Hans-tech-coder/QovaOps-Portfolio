@@ -5,6 +5,7 @@ import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { SocialLinks } from "@/components/ui/SocialIcons";
 import { ResumeButtons } from "@/components/ui/ResumeButtons";
+import { Tooltip } from "@/components/ui/Tooltip";
 import { site } from "@/content/site";
 import { useScrollSpy } from "./ScrollSpy";
 
@@ -84,18 +85,20 @@ export function MobileNav() {
             </span>
           )}
           <div className="ml-auto flex items-center gap-2">
-            <ThemeToggle />
-            <button
-              type="button"
-              onClick={openMenu}
-              aria-haspopup="dialog"
-              aria-expanded={open}
-              aria-controls="mobile-menu"
-              aria-label="Open menu"
-              className="qo-btn inline-flex size-10 items-center justify-center rounded-lg border border-line bg-surface text-fg hover:border-accent-text"
-            >
-              <Menu aria-hidden="true" className="size-[18px]" />
-            </button>
+            <ThemeToggle tooltipAlign="end" />
+            <Tooltip label="Menu" align="end">
+              <button
+                type="button"
+                onClick={openMenu}
+                aria-haspopup="dialog"
+                aria-expanded={open}
+                aria-controls="mobile-menu"
+                aria-label="Open menu"
+                className="qo-btn inline-flex size-10 items-center justify-center rounded-lg border border-line bg-surface text-fg hover:border-accent-text"
+              >
+                <Menu aria-hidden="true" className="size-[18px]" />
+              </button>
+            </Tooltip>
           </div>
         </div>
       </div>
@@ -120,15 +123,17 @@ export function MobileNav() {
             <p className="qo-label text-muted" aria-hidden="true">
               {"// Menu"}
             </p>
-            <button
-              type="button"
-              onClick={closeMenu}
-              aria-label="Close menu"
-              autoFocus
-              className="qo-btn inline-flex size-10 items-center justify-center rounded-lg border border-line text-fg hover:border-accent-text"
-            >
-              <X aria-hidden="true" className="size-[18px]" />
-            </button>
+            <Tooltip label="Close" align="end">
+              <button
+                type="button"
+                onClick={closeMenu}
+                aria-label="Close menu"
+                autoFocus
+                className="qo-btn inline-flex size-10 items-center justify-center rounded-lg border border-line text-fg hover:border-accent-text"
+              >
+                <X aria-hidden="true" className="size-[18px]" />
+              </button>
+            </Tooltip>
           </div>
 
           <nav aria-label="Sections" className="mt-4">
@@ -185,7 +190,7 @@ export function MobileNav() {
               {site.cta.secondary}
               <span className="sr-only"> (opens in a new tab)</span>
             </a>
-            <SocialLinks className="-mr-2" />
+            <SocialLinks className="-mr-2" tooltipSide="top" />
           </div>
         </div>
       </dialog>

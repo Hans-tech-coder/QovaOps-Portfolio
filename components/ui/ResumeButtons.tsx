@@ -7,6 +7,7 @@ import { site } from "@/content/site";
 // Page images rendered from the PDF by scripts/resume-pages.py (re-run it after replacing the PDF).
 import page1 from "@/public/resume/page-1.webp";
 import page2 from "@/public/resume/page-2.webp";
+import { Tooltip } from "./Tooltip";
 
 const RESUME_PAGES = [page1, page2];
 
@@ -92,15 +93,17 @@ export function ResumeButtons({ className = "" }: { className?: string }) {
                 <span className="hidden min-[360px]:inline">Download</span>
                 <span className="sr-only"> resume (PDF)</span>
               </a>
-              <button
-                ref={closeRef}
-                type="button"
-                onClick={close}
-                className="qo-btn inline-flex size-10 items-center justify-center rounded-lg border border-line text-fg hover:border-accent-text"
-              >
-                <X aria-hidden="true" className="size-[18px]" />
-                <span className="sr-only">Close resume</span>
-              </button>
+              <Tooltip label="Close" align="end">
+                <button
+                  ref={closeRef}
+                  type="button"
+                  onClick={close}
+                  className="qo-btn inline-flex size-10 items-center justify-center rounded-lg border border-line text-fg hover:border-accent-text"
+                >
+                  <X aria-hidden="true" className="size-[18px]" />
+                  <span className="sr-only">Close resume</span>
+                </button>
+              </Tooltip>
             </div>
           </div>
 

@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight, Quote } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { prefersReducedMotion } from "@/components/motion/gsap";
 import type { Testimonial } from "@/content/testimonials";
+import { Tooltip } from "@/components/ui/Tooltip";
 
 /**
  * Two-up testimonial carousel (one-up below 768px). Native scroll-snap track,
@@ -85,24 +86,28 @@ export function TestimonialsCarousel({ items }: { items: Testimonial[] }) {
       </ul>
       {items.length > 1 && (
         <div className="mt-5 flex justify-end gap-2">
-          <button
-            type="button"
-            onClick={() => scrollByCard(-1)}
-            disabled={!canPrev}
-            aria-label="Previous testimonial"
-            className={arrowClass}
-          >
-            <ArrowLeft aria-hidden="true" className="qo-nudge-back size-4" />
-          </button>
-          <button
-            type="button"
-            onClick={() => scrollByCard(1)}
-            disabled={!canNext}
-            aria-label="Next testimonial"
-            className={arrowClass}
-          >
-            <ArrowRight aria-hidden="true" className="qo-nudge size-4" />
-          </button>
+          <Tooltip label="Previous" side="top">
+            <button
+              type="button"
+              onClick={() => scrollByCard(-1)}
+              disabled={!canPrev}
+              aria-label="Previous testimonial"
+              className={arrowClass}
+            >
+              <ArrowLeft aria-hidden="true" className="qo-nudge-back size-4" />
+            </button>
+          </Tooltip>
+          <Tooltip label="Next" side="top" align="end">
+            <button
+              type="button"
+              onClick={() => scrollByCard(1)}
+              disabled={!canNext}
+              aria-label="Next testimonial"
+              className={arrowClass}
+            >
+              <ArrowRight aria-hidden="true" className="qo-nudge size-4" />
+            </button>
+          </Tooltip>
         </div>
       )}
     </div>

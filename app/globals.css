@@ -28,6 +28,9 @@
   --qo-badge: #1f2937;
   --qo-ghost: #1f242b;
   --qo-beam: rgb(198 255 0 / 0.4); /* moving grid-line streak (thin line, no glow) */
+  --qo-cursor-ring: rgb(255 255 255 / 0.45);
+  --qo-cursor-fill: rgb(198 255 0 / 0.1);
+  --qo-grid-hot: rgb(198 255 0 / 0.22); /* grid lines lit around the pointer */
 }
 
 :root[data-theme="light"] {
@@ -48,6 +51,9 @@
   --qo-badge: #101010;
   --qo-ghost: #e2e4df;
   --qo-beam: rgb(16 16 16 / 0.3); /* no lime on light */
+  --qo-cursor-ring: rgb(16 16 16 / 0.4);
+  --qo-cursor-fill: rgb(16 16 16 / 0.06);
+  --qo-grid-hot: rgb(16 16 16 / 0.14);
 }
 
 :root {
@@ -179,6 +185,123 @@
   .qo-bg-layer .qo-beam {
     display: none;
   }
+}
+
+/* Grid spotlight: a second copy of the grid in a stronger line color, masked to a
+   soft circle around the pointer (--mx/--my set by components/motion/Cursor.tsx).
+   Lines only, no glow wash. A click briefly widens it (--spot-boost). */
+.qo-grid-spot {
+  --spot-r: 220px;
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--qo-grid-hot) 1px, transparent 1px),
+    linear-gradient(90deg, var(--qo-grid-hot) 1px, transparent 1px);
+  background-size: var(--qo-grid-size) var(--qo-grid-size);
+  background-position: center top;
+  -webkit-mask-image: radial-gradient(
+    circle calc(var(--spot-r) * var(--spot-boost, 1)) at var(--mx, -999px) var(--my, -999px),
+    #000 0%,
+    rgb(0 0 0 / 0.5) 45%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    circle calc(var(--spot-r) * var(--spot-boost, 1)) at var(--mx, -999px) var(--my, -999px),
+    #000 0%,
+    rgb(0 0 0 / 0.5) 45%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity var(--duration-slow, 0.4s) ease;
+}
+.qo-grid-spot.is-on {
+  opacity: 1;
+}
+
+/* ---------- Custom cursor (components/motion/Cursor.tsx) ----------
+   Only active with html.qo-cursor-on (fine pointer + motion allowed). Modal
+   dialogs sit in the top layer above the cursor, so they keep the native one. */
+html.qo-cursor-on,
+html.qo-cursor-on :not(dialog, dialog *) {
+  cursor: none !important;
+}
+html.qo-cursor-on dialog {
+  cursor: auto; /* cursor inherits, so reset it for the dialog's subtree */
+}
+.qo-cursor {
+  position: fixed;
+  inset: 0;
+  z-index: 200; /* above the intro loader (100) */
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--duration-fast, 0.25s) ease;
+}
+html.qo-cursor-on .qo-cursor[data-visible="true"] {
+  opacity: 1;
+}
+/* Dark theme: difference blend so the lime ring/dot flip to dark over lime
+   buttons and the CTA band instead of vanishing. (Light uses #101010, which
+   already shows on lime, and difference would erase black.) */
+:root:not([data-theme="light"]) .qo-cursor {
+  mix-blend-mode: difference;
+}
+.qo-cursor-dot,
+.qo-cursor-ring,
+.qo-cursor-ripple {
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform;
+}
+.qo-cursor-dot-shape,
+.qo-cursor-ring-shape {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  border-radius: 9999px;
+  translate: -50% -50%;
+}
+.qo-cursor-dot-shape {
+  width: 6px;
+  height: 6px;
+  background: var(--qo-accent-text);
+  transition: scale var(--duration-quick, 0.15s) var(--ease-smooth-out, ease-out);
+}
+.qo-cursor-ring-shape {
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--qo-cursor-ring);
+  transition:
+    width var(--duration-medium, 0.35s) var(--ease-smooth-out, ease-out),
+    height var(--duration-medium, 0.35s) var(--ease-smooth-out, ease-out),
+    background-color var(--duration-fast, 0.25s) ease,
+    border-color var(--duration-fast, 0.25s) ease,
+    scale var(--duration-quick, 0.15s) var(--ease-smooth-out, ease-out);
+}
+/* Hover over a link/button: ring grows, fills faintly, border takes the accent */
+.qo-cursor[data-hover="true"] .qo-cursor-ring-shape {
+  width: 56px;
+  height: 56px;
+  border-color: var(--qo-accent-text);
+  background-color: var(--qo-cursor-fill);
+}
+.qo-cursor[data-hover="true"] .qo-cursor-dot-shape {
+  scale: 0.5;
+}
+/* Press: squeeze */
+.qo-cursor[data-press="true"] .qo-cursor-ring-shape {
+  scale: 0.8;
+}
+.qo-cursor[data-press="true"] .qo-cursor-dot-shape {
+  scale: 1.6;
+}
+/* Click ripple (spawned and animated by GSAP) */
+.qo-cursor-ripple {
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--qo-accent-text);
+  border-radius: 9999px;
 }
 
 /* Slow spin for the dashed active-nav ring (sidebar + mobile menu), like the reference */
@@ -665,5 +788,181 @@ html {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- Back to top (components/ui/BackToTop.tsx) ----------
+   Fixed bottom right. Ring = track + progress circle (pathLength 1, so the
+   dashoffset is 1 - progress). Tooltip pill sits to the left and shows on
+   hover/focus: short appear delay, instant hide (transitions-dev 17 timings). */
+.qo-totop {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(var(--distance-base));
+  transition:
+    opacity var(--duration-fast) var(--ease-smooth-out),
+    transform var(--duration-fast) var(--ease-smooth-out),
+    visibility 0s linear var(--duration-fast);
+}
+@media (min-width: 640px) {
+  .qo-totop {
+    right: 1.5rem;
+    bottom: 1.5rem;
+  }
+}
+.qo-totop[data-visible="true"] {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition:
+    opacity var(--duration-fast) var(--ease-smooth-out),
+    transform var(--duration-fast) var(--ease-smooth-out),
+    visibility 0s;
+}
+.qo-totop-btn {
+  position: relative;
+  display: inline-flex;
+  width: 3rem;
+  height: 3rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background-color: color-mix(in srgb, var(--qo-surface) 88%, transparent);
+  color: var(--qo-text);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+.qo-totop-btn:hover {
+  background-color: var(--qo-surface);
+}
+.qo-totop-ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  rotate: -90deg; /* start the fill at 12 o'clock */
+  pointer-events: none;
+}
+.qo-totop-ring circle {
+  fill: none;
+  stroke-width: 2;
+}
+.qo-totop-track {
+  stroke: var(--qo-border);
+}
+.qo-totop-progress {
+  stroke: var(--qo-accent-text); /* lime on dark, #101010 on light */
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .qo-totop,
+  .qo-totop[data-visible="true"] {
+    transition: none !important;
+    transform: none;
+  }
+}
+
+/* ---------- Tooltip pill (components/ui/Tooltip.tsx) ----------
+   One style for every icon-only control (and Back to top). Shows on hover
+   (hover-capable devices) or keyboard focus: 80ms appear delay, a short slide
+   from the trigger, instant hide (transitions-dev 17 timings). Placement is
+   side (top/bottom/left) + align (center/start/end); the slide offset rides on
+   --tt-dx/--tt-dy so it adds to the centering translate. */
+.qo-tt-wrap {
+  position: relative;
+  display: inline-flex;
+}
+.qo-tt {
+  --tt-x: 0px;
+  --tt-y: 0px;
+  --tt-dx: 0px;
+  --tt-dy: 0px;
+  position: absolute;
+  z-index: 60;
+  padding: 0.5rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--qo-text) 18%, transparent);
+  border-radius: 9999px;
+  background-color: var(--qo-surface);
+  color: var(--qo-text);
+  line-height: 1.25;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  translate: calc(var(--tt-x) + var(--tt-dx)) calc(var(--tt-y) + var(--tt-dy));
+  scale: var(--scale-small);
+  transition:
+    opacity 50ms ease-out,
+    translate 50ms ease-out,
+    scale 50ms ease-out,
+    visibility 0s linear 50ms;
+}
+.qo-tt[data-side="bottom"] {
+  top: calc(100% + 8px);
+  --tt-dy: calc(var(--distance-micro, 4px) * -1);
+  transform-origin: 50% 0;
+}
+.qo-tt[data-side="top"] {
+  bottom: calc(100% + 8px);
+  --tt-dy: var(--distance-micro, 4px);
+  transform-origin: 50% 100%;
+}
+.qo-tt[data-side="top"][data-align="center"],
+.qo-tt[data-side="bottom"][data-align="center"] {
+  left: 50%;
+  --tt-x: -50%;
+}
+.qo-tt[data-align="start"] {
+  left: 0;
+  transform-origin: 0 0;
+}
+.qo-tt[data-side="top"][data-align="end"],
+.qo-tt[data-side="bottom"][data-align="end"] {
+  right: 0;
+  transform-origin: 100% 0;
+}
+.qo-tt[data-side="left"] {
+  right: calc(100% + 12px);
+  top: 50%;
+  --tt-y: -50%;
+  --tt-dx: var(--distance-base);
+  transform-origin: 100% 50%;
+}
+.qo-tt-wrap:has(> :focus-visible) > .qo-tt {
+  --tt-dx: 0px;
+  --tt-dy: 0px;
+  opacity: 1;
+  visibility: visible;
+  scale: 1;
+  transition: visibility 0s;
+}
+@media (hover: hover) {
+  .qo-tt-wrap:has(> :hover:not(:disabled)) > .qo-tt {
+    --tt-dx: 0px;
+    --tt-dy: 0px;
+    opacity: 1;
+    visibility: visible;
+    scale: 1;
+    transition:
+      opacity var(--duration-quick) ease-out var(--duration-micro),
+      translate var(--duration-quick) var(--ease-smooth-out) var(--duration-micro),
+      scale var(--duration-quick) ease-out var(--duration-micro),
+      visibility 0s linear var(--duration-micro);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .qo-tt {
+    transition: none !important;
+    --tt-dx: 0px !important;
+    --tt-dy: 0px !important;
   }
 }

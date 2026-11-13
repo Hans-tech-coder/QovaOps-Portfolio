@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { DEFAULT_THEME, THEME_COLORS, themeInitScript } from "@/components/layout/theme";
+import { Cursor } from "@/components/motion/Cursor";
 import { site } from "@/content/site";
 import "./globals.css";
 
@@ -83,6 +84,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
         {/* Fixed grid + moving line streaks (globals.css .qo-bg-layer). Decorative only. */}
         <div aria-hidden="true" className="qo-bg-layer qo-grid-bg">
+          {/* Grid lights up around the pointer (driven by <Cursor />, desktop only) */}
+          <span className="qo-grid-spot" />
           {BEAMS.map(({ axis, k, dur, delay }) => (
             <span
               key={`${axis}${k}`}
@@ -92,6 +95,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           ))}
         </div>
         {children}
+        <Cursor />
       </body>
     </html>
   );

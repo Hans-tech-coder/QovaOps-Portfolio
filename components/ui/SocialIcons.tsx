@@ -1,5 +1,6 @@
 import type { SVGProps } from "react";
 import { site } from "@/content/site";
+import { Tooltip } from "./Tooltip";
 
 // Lucide v1 dropped brand icons, so these are the monoline brand glyphs from
 // Lucide's last release that shipped them (ISC license), same 24px / 2px stroke.
@@ -70,23 +71,33 @@ export function SocialIcon({ label, ...props }: IconProps & { label: SocialLabel
 }
 
 /** Row of social icon links (BRAND_GUIDE §2). */
-export function SocialLinks({ className = "" }: { className?: string }) {
+export function SocialLinks({
+  className = "",
+  tooltipSide = "bottom",
+}: {
+  className?: string;
+  /** Where the tooltip pills go (top when the row sits near the bottom of a panel). */
+  tooltipSide?: "top" | "bottom";
+}) {
   return (
     <ul className={`flex items-center gap-1 ${className}`}>
-      {site.socials.map(({ label, handle, href }) => {
+      {site.socials.map(({ label, handle, href }, i) => {
+        // Last icon sits near the right edge: grow its pill leftward.
+        const align = i === site.socials.length - 1 ? "end" : "center";
         const Icon = ICONS[label];
         return (
           <li key={label}>
-            <a
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`${label} ${handle} (opens in a new tab)`}
-              title={`${label} ${handle}`}
-              className="qo-btn inline-flex size-10 items-center justify-center rounded-lg text-muted hover:bg-line hover:text-fg"
-            >
-              <Icon className="size-[18px]" />
-            </a>
+            <Tooltip label={`${label} ${handle}`} side={tooltipSide} align={align}>
+              <a
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${label} ${handle} (opens in a new tab)`}
+                className="qo-btn inline-flex size-10 items-center justify-center rounded-lg text-muted hover:bg-line hover:text-fg"
+              >
+                <Icon className="size-[18px]" />
+              </a>
+            </Tooltip>
           </li>
         );
       })}
