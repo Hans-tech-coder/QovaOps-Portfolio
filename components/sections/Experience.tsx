@@ -1,6 +1,7 @@
 import { BriefcaseBusiness, GraduationCap, type LucideIcon } from "lucide-react";
 import { SectionCard } from "@/components/layout/SectionCard";
 import { Reveal } from "@/components/motion/Reveal";
+import { ScrollLine } from "@/components/motion/ScrollLine";
 import { Chip } from "@/components/ui/Chip";
 import { certifications, education, work, type TimelineEntry } from "@/content/experience";
 import type { SectionConfig } from "@/content/sections";
@@ -20,7 +21,10 @@ function Timeline({
         <Icon aria-hidden="true" className="size-4 text-accent-text" />
         {title}
       </h3>
-      <ol className="mt-5 border-l border-dashed border-line">
+      {/* Dashed track + accent line that draws as you scroll (scrub) */}
+      <div className="relative mt-5">
+        <ScrollLine axis="y" className="top-0 bottom-0 left-0" start="top 75%" end="bottom 55%" />
+        <ol className="border-l border-dashed border-line">
         {entries.map((e) => (
           <li key={`${e.org}-${e.period}`} data-reveal className="relative pb-8 pl-6 last:pb-0">
             <span
@@ -45,7 +49,8 @@ function Timeline({
             </ul>
           </li>
         ))}
-      </ol>
+        </ol>
+      </div>
     </div>
   );
 }
@@ -59,7 +64,7 @@ export function Experience({ section }: { section: SectionConfig }) {
           <Timeline title="Education" icon={GraduationCap} entries={education} />
           <div data-reveal>
             <h3 className="qo-label text-fg">Certifications</h3>
-            <ul className="mt-4 flex flex-wrap gap-2">
+            <ul className="qo-chip-row mt-4 flex flex-wrap gap-2">
               {certifications.map((c) => (
                 <li key={c}>
                   <Chip>{c}</Chip>

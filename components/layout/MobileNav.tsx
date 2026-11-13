@@ -1,7 +1,7 @@
 "use client";
 
 import { Menu, X } from "lucide-react";
-import { useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { SocialLinks } from "@/components/ui/SocialIcons";
 import { site } from "@/content/site";
@@ -19,6 +19,22 @@ export function MobileNav() {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [open, setOpen] = useState(false);
   const activeLabel = items.find((i) => i.id === activeId)?.label;
+
+  // The page header already shows the big wordmark, so the small top-bar mark
+  // only fades in once the header wordmark has scrolled out of view (no double logo).
+  const [showMark, setShowMark] = useState(false);
+  useEffect(() => {
+    const big = document.querySelector("[data-hero-wordmark]");
+    // The header wordmark is always rendered; nothing to observe means nothing to hide.
+    if (!big) return;
+    const io = new IntersectionObserver(
+      ([entry]) => setShowMark(!entry.isIntersecting),
+      // Count the area under the sticky bar as "out of view".
+      { rootMargin: "-64px 0px 0px 0px" },
+    );
+    io.observe(big);
+    return () => io.disconnect();
+  }, []);
 
   const openMenu = () => {
     dialogRef.current?.showModal();
@@ -51,7 +67,13 @@ export function MobileNav() {
         className="sticky top-0 z-40 border-b border-line bg-bg/90 backdrop-blur-sm lg:hidden"
       >
         <div className="mx-auto flex h-(--qo-topbar-h) max-w-7xl items-center gap-3 px-4 sm:px-6">
-          <a href="#top" className="text-xl font-bold tracking-tight" aria-label={`${site.name} ${site.endorsement}, back to top`}>
+          <a
+            href="#top"
+            inert={!showMark}
+            data-shown={showMark}
+            className="qo-topbar-mark text-xl font-bold tracking-tight"
+            aria-label={`${site.name} ${site.endorsement}, back to top`}
+          >
             <span className="text-fg">Qova</span>
             <span className="text-outline [-webkit-text-stroke-width:1px]">Ops</span>
           </a>
@@ -69,7 +91,7 @@ export function MobileNav() {
               aria-expanded={open}
               aria-controls="mobile-menu"
               aria-label="Open menu"
-              className="inline-flex size-10 items-center justify-center rounded-lg border border-line bg-surface text-fg transition-colors duration-150 hover:border-accent-text"
+              className="qo-btn inline-flex size-10 items-center justify-center rounded-lg border border-line bg-surface text-fg hover:border-accent-text"
             >
               <Menu aria-hidden="true" className="size-[18px]" />
             </button>
@@ -102,7 +124,7 @@ export function MobileNav() {
               onClick={closeMenu}
               aria-label="Close menu"
               autoFocus
-              className="inline-flex size-10 items-center justify-center rounded-lg border border-line text-fg transition-colors duration-150 hover:border-accent-text"
+              className="qo-btn inline-flex size-10 items-center justify-center rounded-lg border border-line text-fg hover:border-accent-text"
             >
               <X aria-hidden="true" className="size-[18px]" />
             </button>
@@ -150,7 +172,7 @@ export function MobileNav() {
               href={site.contact.bookingUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex h-11 items-center rounded-full bg-accent px-6 text-sm font-bold text-on-accent transition-colors duration-150 hover:bg-accent-hover"
+              className="qo-btn inline-flex h-11 items-center rounded-full bg-accent px-6 text-sm font-bold text-on-accent hover:bg-accent-hover"
             >
               {site.cta.secondary}
               <span className="sr-only"> (opens in a new tab)</span>

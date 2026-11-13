@@ -6,7 +6,7 @@ import type { SectionConfig } from "@/content/sections";
 import { site } from "@/content/site";
 
 const pillClass =
-  "group inline-flex h-11 items-center gap-2.5 rounded-full border border-dashed border-line px-4 text-sm text-fg transition-colors duration-150 hover:border-solid hover:bg-line";
+  "group inline-flex h-11 items-center gap-2.5 rounded-full border border-dashed border-line px-4 text-sm text-fg qo-btn hover:border-solid hover:bg-line";
 
 /**
  * Contact: lime CTA band "Delegate Your Operations" + pill links.
@@ -33,18 +33,18 @@ export function Contact({ section }: { section: SectionConfig }) {
               href={bookingUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="group inline-flex h-12 items-center gap-2 rounded-full bg-brand-black pr-5 pl-6 text-sm font-bold text-brand-white transition-colors duration-150 hover:bg-[#262626] focus-visible:outline-brand-black"
+              className="qo-btn group inline-flex h-12 items-center gap-2 rounded-full bg-brand-black pr-5 pl-6 text-sm font-bold text-brand-white hover:bg-[#262626] focus-visible:outline-brand-black"
             >
               {site.cta.secondary}
               <ArrowUpRight
                 aria-hidden="true"
-                className="size-4 text-lime transition-transform duration-250 ease-(--ease-smooth-out) group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                className="size-4 text-lime qo-nudge-ne"
               />
               <span className="sr-only"> (opens in a new tab)</span>
             </a>
             <a
               href={`mailto:${email}`}
-              className="inline-flex h-12 items-center rounded-full border-2 border-brand-black px-6 text-sm font-bold transition-colors duration-150 hover:bg-brand-black/10 focus-visible:outline-brand-black"
+              className="qo-btn inline-flex h-12 items-center rounded-full border-2 border-brand-black px-6 text-sm font-bold hover:bg-brand-black/10 focus-visible:outline-brand-black"
             >
               Email me
             </a>

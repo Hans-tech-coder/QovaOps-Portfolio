@@ -83,7 +83,7 @@ export function SocialLinks({ className = "" }: { className?: string }) {
               rel="noopener noreferrer"
               aria-label={`${label} ${handle} (opens in a new tab)`}
               title={`${label} ${handle}`}
-              className="inline-flex size-10 items-center justify-center rounded-lg text-muted transition-colors duration-150 hover:bg-line hover:text-fg"
+              className="qo-btn inline-flex size-10 items-center justify-center rounded-lg text-muted hover:bg-line hover:text-fg"
             >
               <Icon className="size-[18px]" />
             </a>

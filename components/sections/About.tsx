@@ -1,5 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import { SectionCard } from "@/components/layout/SectionCard";
+import { CountUp } from "@/components/motion/CountUp";
 import { Reveal } from "@/components/motion/Reveal";
 import { Chip } from "@/components/ui/Chip";
 import Image from "next/image";
@@ -16,10 +17,11 @@ const BLURB =
   "I'm Hans, a Computer Science graduate with Honors and 4+ years in web development, digital operations and AI automation. I help busy founders, digital agencies and eCommerce brands simplify operations, fix technical bottlenecks, and scale without juggling multiple hires. I take ownership of the work, not just the task list.";
 
 // Only real numbers (PLAN.md "Stats" + session log). Do not add more without Hans.
+// Counted up on scroll (components/motion/CountUp.tsx); the HTML holds the final value.
 const STATS = [
-  { value: "4+", label: "Years experience" },
-  { value: "10+", label: "Client websites managed" },
-  { value: "9", label: "Services" },
+  { value: 4, suffix: "+", label: "Years experience" },
+  { value: 10, suffix: "+", label: "Client websites managed" },
+  { value: 9, suffix: "", label: "Services" },
 ] as const;
 
 export function About({ section }: { section: SectionConfig }) {
@@ -30,15 +32,20 @@ export function About({ section }: { section: SectionConfig }) {
       titleClassName="text-4xl leading-[1.05] sm:text-5xl lg:text-6xl xl:text-[4.25rem]"
       title={
         <>
-          <span className="block">{site.tagline.line1}</span>
-          <span className="block text-accent-text">{site.tagline.line2}</span>
+          <span data-hero="line" className="block">
+            {site.tagline.line1}
+          </span>
+          <span data-hero="line" className="block text-accent-text">
+            {site.tagline.line2}
+          </span>
         </>
       }
     >
-      <Reveal className="grid gap-8 md:grid-cols-[auto_minmax(0,1fr)] md:items-center md:gap-10">
+      {/* Top block animates with the hero timeline (components/motion/HeroIntro.tsx, data-hero) */}
+      <div className="grid gap-8 md:grid-cols-[auto_minmax(0,1fr)] md:items-center md:gap-10">
         {/* Cut-out portrait over a soft aura; the bottom fades into the card so it
             doesn't look cut off. Styles in globals.css (.qo-aura, .qo-portrait-fade). */}
-        <div data-reveal className="relative mx-auto w-64 sm:w-72 md:mx-0 lg:w-80">
+        <div data-hero="photo" className="relative mx-auto w-64 sm:w-72 md:mx-0 lg:w-80">
           <span aria-hidden="true" className="qo-aura" />
           <div className="qo-portrait-fade relative aspect-[3/4] w-full">
             <Image
@@ -66,19 +73,17 @@ export function About({ section }: { section: SectionConfig }) {
         </div>
 
         <div className="flex min-w-0 flex-col gap-6">
-          <p
-            data-reveal
-            className="qo-label inline-flex w-fit items-center gap-2.5 rounded-full border border-line bg-bg px-4 py-2 text-fg"
-          >
-            <span aria-hidden="true" className="size-2 rounded-full bg-accent" />
+          {/* Trait pill: dark pill with a lime dot in both themes (lime never small on light) */}
+          <p data-hero="pill" className="qo-trait-pill qo-label inline-flex w-fit items-center gap-2.5 rounded-full border px-4 py-2">
+            <span aria-hidden="true" className="size-2 rounded-full bg-lime" />
             {site.traits.join(" | ")}
           </p>
 
-          <p data-reveal className="max-w-2xl text-base leading-relaxed text-body sm:text-lg">
+          <p data-hero="blurb" className="max-w-2xl text-base leading-relaxed text-body sm:text-lg">
             {BLURB}
           </p>
 
-          <ul data-reveal aria-label="Tools I use" className="flex flex-wrap gap-2">
+          <ul data-hero="chips" aria-label="Tools I use" className="qo-chip-row flex flex-wrap gap-2">
             {heroTools.map((tool) => (
               <li key={tool}>
                 <Chip>{tool}</Chip>
@@ -86,37 +91,36 @@ export function About({ section }: { section: SectionConfig }) {
             ))}
           </ul>
 
-          <div data-reveal className="flex flex-wrap items-center gap-3">
+          <div data-hero="actions" className="flex flex-wrap items-center gap-3">
             <a
               href="#contact"
-              className="group inline-flex h-11 items-center gap-2 rounded-full bg-accent pr-4 pl-6 text-sm font-bold text-on-accent transition-colors duration-150 hover:bg-accent-hover"
+              className="qo-btn group inline-flex h-11 items-center gap-2 rounded-full bg-accent pr-4 pl-6 text-sm font-bold text-on-accent hover:bg-accent-hover"
             >
               {site.cta.primary}
-              <ArrowRight
-                aria-hidden="true"
-                className="size-4 transition-transform duration-250 ease-(--ease-smooth-out) group-hover:translate-x-0.5"
-              />
+              <ArrowRight aria-hidden="true" className="qo-nudge size-4" />
             </a>
             <a
               href={`mailto:${site.contact.email}`}
-              className="inline-flex h-11 items-center rounded-full border border-line px-5 text-sm font-bold text-fg transition-colors duration-150 hover:bg-line"
+              className="qo-btn inline-flex h-11 items-center rounded-full border border-line px-5 text-sm font-bold text-fg hover:bg-line"
             >
               {site.contact.email}
             </a>
           </div>
         </div>
-      </Reveal>
+      </div>
 
       <Reveal className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {STATS.map(({ value, label }) => (
+        {STATS.map(({ value, suffix, label }) => (
           <div
             key={label}
             data-reveal
             className="flex flex-col gap-2 rounded-card border border-dashed border-line p-4 sm:p-5"
           >
-            <span className="text-outline text-4xl leading-none font-bold tracking-tight sm:text-5xl">
-              {value}
-            </span>
+            <CountUp
+              value={value}
+              suffix={suffix}
+              className="text-outline text-4xl leading-none font-bold tracking-tight sm:text-5xl"
+            />
             <span className="qo-label text-muted">{label}</span>
           </div>
         ))}

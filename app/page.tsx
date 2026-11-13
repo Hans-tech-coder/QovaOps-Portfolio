@@ -4,6 +4,7 @@ import { Header } from "@/components/layout/Header";
 import { MobileNav } from "@/components/layout/MobileNav";
 import { ScrollSpyProvider } from "@/components/layout/ScrollSpy";
 import { Sidebar } from "@/components/layout/Sidebar";
+import { HeroIntro } from "@/components/motion/HeroIntro";
 import { About } from "@/components/sections/About";
 import { Contact } from "@/components/sections/Contact";
 import { Experience } from "@/components/sections/Experience";
@@ -30,6 +31,8 @@ const SECTION_COMPONENTS: Record<string, ComponentType<{ section: SectionConfig 
 export default function Home() {
   return (
     <ScrollSpyProvider items={navItems}>
+      {/* First, so the hero timeline is set up before the scroll reveals (see HeroIntro) */}
+      <HeroIntro />
       <a
         href="#main"
         className="qo-label sr-only z-50 rounded-full bg-accent px-4 py-2 text-on-accent focus:not-sr-only focus:fixed focus:top-3 focus:left-3"

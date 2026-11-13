@@ -161,23 +161,65 @@
   text-transform: uppercase;
 }
 
-/* ---------- Motion tokens (transitions-dev _root.css, the ones we use) ---------- */
+/* ---------- Motion tokens ---------- */
+/* Shared scale from transitions-dev / transitions-polish _root.css (imported once,
+   here). GSAP mirrors it in components/motion/gsap.ts (DUR, DIST, EASE_SMOOTH_OUT). */
 
 :root {
-  --duration-quick: 150ms;
-  --duration-fast: 250ms;
+  /* Durations */
+  --duration-stagger: 40ms; /* per-item stagger offset */
+  --duration-micro: 80ms; /* tooltip/path delay, shake segment, large stagger */
+  --duration-quick: 150ms; /* modal/dropdown close, text swap, tooltip appear */
+  --duration-fast: 250ms; /* icon swap, dropdown/modal open, tabs sliding, page slide */
+  --duration-medium: 350ms; /* panel close, toast close */
+  --duration-slow: 400ms; /* panel open, skeleton content reveal, input clear */
+  --duration-very-slow: 500ms; /* emphasis moments, badge appear, text reveal, success check */
+  /* Easings */
   --ease-smooth-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: ease-in-out;
+  --ease-out: ease-out;
+  --ease-linear: linear;
+  --ease-bounce: cubic-bezier(0.34, 1.36, 0.64, 1);
+  --ease-bounce-strong: cubic-bezier(0.34, 3.85, 0.64, 1);
+  /* Distances */
+  --distance-micro: 4px;
+  --distance-small: 6px;
+  --distance-base: 8px;
+  --distance-medium: 12px;
+  --distance-large: 30px;
+  /* Scales */
+  --scale-large: 0.96;
+  --scale-medium: 0.97;
+  --scale-small: 0.98;
+  --scale-tiny: 0.99;
+  /* Blur */
+  --blur-small: 2px;
+  --blur-medium: 3px;
+  --blur-large: 8px;
+
+  /* 24-learn-more-hover (trailing arrows on buttons and links) */
+  --learn-shift: 2px;
+  --learn-in: 350ms;
+  --learn-out: 350ms;
+  --learn-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* 11-avatar-group-hover, applied to chip rows */
+  --chip-lift: -3px;
+  --chip-falloff: 0.45;
+  --avatar-dur: 320ms;
+  --avatar-ease-in: var(--ease-smooth-out);
+  --avatar-ease-out: var(--ease-bounce-strong);
 
   /* 09-icon-swap */
-  --icon-swap-dur: 250ms;
-  --icon-swap-blur: 2px;
+  --icon-swap-dur: var(--duration-fast);
+  --icon-swap-blur: var(--blur-small);
   --icon-swap-start-scale: 0.25;
-  --icon-swap-ease: ease-in-out;
+  --icon-swap-ease: var(--ease-in-out);
 
   /* Menu sheet (06-modal timings: slower open, quicker close) */
-  --sheet-open-dur: 250ms;
-  --sheet-close-dur: 150ms;
-  --sheet-distance: 8px;
+  --sheet-open-dur: var(--duration-fast);
+  --sheet-close-dur: var(--duration-quick);
+  --sheet-distance: var(--distance-base);
 
   /* Height of the <1024px top bar; used for scroll offsets */
   --qo-topbar-h: 64px;
@@ -234,13 +276,130 @@ html {
   animation-timing-function: ease-in-out;
 }
 
-/* ---------- Wordmark reveal: pre-hide letters only when JS runs ---------- */
+/* ---------- Load + scroll motion: pre-hide only when JS runs ---------- */
+/* `qo-js` is set by the head script (components/layout/theme.ts) before first
+   paint, so GSAP-revealed content never flashes visible→hidden. Without JS, or
+   under reduced motion, nothing is hidden. GSAP's inline styles take over from here. */
 
 @media (prefers-reduced-motion: no-preference) {
   .qo-js [data-wordmark-letter],
-  .qo-js [data-wordmark-endorse] {
+  .qo-js [data-wordmark-endorse],
+  .qo-js [data-hero],
+  .qo-js [data-hero="chips"] > li,
+  .qo-js [data-reveal] {
     opacity: 0;
   }
+  /* The chip list itself stays visible; its items animate. */
+  .qo-js [data-hero="chips"] {
+    opacity: 1;
+  }
+  .qo-js [data-scroll-line="x"] {
+    transform: scaleX(0);
+  }
+  .qo-js [data-scroll-line="y"] {
+    transform: scaleY(0);
+  }
+}
+
+/* ---------- Interactive states (transitions-dev + transitions-polish) ---------- */
+/* Buttons, pills, icon buttons, carousel arrows and text links. Hover-in is
+   quick (--duration-quick); press gives a small scale (--scale-small). Tailwind's
+   hover: variant is already limited to devices that can hover. */
+
+.qo-btn {
+  transition:
+    background-color var(--duration-quick) var(--ease-smooth-out),
+    border-color var(--duration-quick) var(--ease-smooth-out),
+    color var(--duration-quick) var(--ease-smooth-out),
+    transform var(--duration-quick) var(--ease-smooth-out);
+}
+.qo-btn:active:not(:disabled) {
+  transform: scale(var(--scale-small));
+}
+
+/* 24-learn-more-hover: trailing arrow slides toward the reading direction */
+.qo-nudge,
+.qo-nudge-ne,
+.qo-nudge-back {
+  transition: transform var(--learn-out) var(--learn-ease);
+}
+@media (hover: hover) {
+  .group:hover .qo-nudge {
+    transform: translateX(var(--learn-shift));
+    transition-duration: var(--learn-in);
+  }
+  .group:hover .qo-nudge-ne {
+    transform: translate(var(--learn-shift), calc(var(--learn-shift) * -1));
+    transition-duration: var(--learn-in);
+  }
+  .group:not(:disabled):hover .qo-nudge-back {
+    transform: translateX(calc(var(--learn-shift) * -1));
+    transition-duration: var(--learn-in);
+  }
+}
+
+/* 11-avatar-group-hover on chip rows (CSS only): the hovered chip lifts, its
+   direct neighbours lift less (falloff); smooth up, a small spring on return. */
+.qo-chip {
+  transition:
+    transform var(--avatar-dur) var(--avatar-ease-out),
+    color var(--duration-quick) var(--ease-smooth-out),
+    border-color var(--duration-quick) var(--ease-smooth-out);
+}
+@media (hover: hover) {
+  .qo-chip-row > li:hover > .qo-chip {
+    transform: translateY(var(--chip-lift));
+    transition-timing-function: var(--avatar-ease-in);
+    color: var(--qo-text);
+    border-color: var(--qo-text-muted);
+  }
+  .qo-chip-row > li:hover + li > .qo-chip,
+  .qo-chip-row > li:has(+ li:hover) > .qo-chip {
+    transform: translateY(calc(var(--chip-lift) * var(--chip-falloff)));
+    transition-timing-function: var(--avatar-ease-in);
+  }
+}
+
+/* Mobile top-bar mark: fades in once the header wordmark has scrolled away */
+.qo-topbar-mark {
+  opacity: 0;
+  transform: translateY(var(--distance-micro));
+  transition:
+    opacity var(--duration-fast) var(--ease-smooth-out),
+    transform var(--duration-fast) var(--ease-smooth-out);
+}
+.qo-topbar-mark[data-shown="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qo-btn,
+  .qo-nudge,
+  .qo-nudge-ne,
+  .qo-nudge-back,
+  .qo-chip,
+  .qo-topbar-mark {
+    transition: none !important;
+  }
+  .qo-chip-row > li > .qo-chip,
+  .qo-btn:active {
+    transform: none !important;
+  }
+}
+
+/* ---------- Trait pill ---------- */
+/* Dark pill with a lime dot in both themes: on light the pill turns black, so
+   the lime dot never sits small on a light background (BRAND_GUIDE §3/§5). */
+.qo-trait-pill {
+  background-color: var(--qo-bg);
+  border-color: var(--qo-border);
+  color: var(--qo-text);
+}
+:root[data-theme="light"] .qo-trait-pill {
+  background-color: #101010;
+  border-color: #101010;
+  color: #ffffff;
 }
 
 /* ---------- Mobile menu sheet (<dialog>) ---------- */
@@ -397,7 +556,7 @@ html {
 @keyframes qo-panel-in {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(var(--distance-base));
   }
 }
 @media (prefers-reduced-motion: reduce) {

@@ -44,7 +44,7 @@ export function Services({ section }: { section: SectionConfig }) {
                 {/* Brand-sheet left bar: lime on dark, #101010 on light (never a thin lime line on light) */}
                 <span
                   aria-hidden="true"
-                  className="absolute top-3 bottom-3 left-0 w-[3px] origin-center scale-y-0 rounded-full bg-accent-text transition-transform duration-250 ease-(--ease-smooth-out) group-hover:scale-y-100"
+                  className="absolute top-3 bottom-3 left-0 w-[3px] origin-center scale-y-0 rounded-full bg-accent-text transition-transform duration-(--duration-fast) ease-(--ease-smooth-out) group-hover:scale-y-100"
                 />
                 <span
                   aria-hidden="true"
@@ -52,7 +52,7 @@ export function Services({ section }: { section: SectionConfig }) {
                 >
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <h3 className="flex items-start gap-3 text-lg leading-snug font-bold text-fg transition-transform duration-250 ease-(--ease-smooth-out) group-hover:translate-x-1 sm:text-xl">
+                <h3 className="flex items-start gap-3 text-lg leading-snug font-bold text-fg transition-transform duration-(--duration-fast) ease-(--ease-smooth-out) group-hover:translate-x-1 sm:text-xl">
                   <Icon aria-hidden="true" className="mt-1 size-5 shrink-0 text-accent-text" />
                   <span>
                     <span className="sr-only">{`${String(i + 1).padStart(2, "0")}. `}</span>

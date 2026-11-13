@@ -75,7 +75,7 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
       onClick={() => applyTheme(next)}
       aria-label={`Switch to ${next} theme`}
       title={`Switch to ${next} theme`}
-      className={`inline-flex size-10 shrink-0 items-center justify-center rounded-lg border border-line bg-surface text-fg transition-colors duration-150 hover:border-accent-text ${className}`}
+      className={`qo-btn inline-flex size-10 shrink-0 items-center justify-center rounded-lg border border-line bg-surface text-fg hover:border-accent-text ${className}`}
     >
       <span className="t-icon-swap qo-theme-swap" aria-hidden="true">
         {/* Dark theme shows the moon, light theme shows the sun */}

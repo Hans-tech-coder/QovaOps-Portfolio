@@ -122,7 +122,7 @@ export function WorkTabs({ tabs }: { tabs: WorkTab[] }) {
               className="qo-tab qo-label"
             >
               {tab.label}
-              <span className="ml-1.5 opacity-60">{tab.projects.length}</span>
+              <span className="ml-1.5 font-medium">{tab.projects.length}</span>
             </button>
           ))}
         </div>
@@ -159,12 +159,12 @@ export function WorkTabs({ tabs }: { tabs: WorkTab[] }) {
                     href={p.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group mt-1 inline-flex items-center gap-1.5 rounded-full border border-line px-3 py-1.5 font-mono text-xs text-fg transition-colors duration-150 hover:bg-line"
+                    className="qo-btn group mt-1 inline-flex items-center gap-1.5 rounded-full border border-line px-3 py-1.5 font-mono text-xs text-fg hover:bg-line"
                   >
                     {p.href.replace(/^https?:\/\//, "")}
                     <ArrowUpRight
                       aria-hidden="true"
-                      className="size-3.5 transition-transform duration-250 ease-(--ease-smooth-out) group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                      className="size-3.5 qo-nudge-ne"
                     />
                     <span className="sr-only"> (opens in a new tab)</span>
                   </a>

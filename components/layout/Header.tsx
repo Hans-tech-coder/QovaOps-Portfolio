@@ -21,12 +21,12 @@ export function Header() {
           href={site.contact.bookingUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="group inline-flex h-11 items-center gap-2 rounded-full bg-accent pr-4 pl-6 text-sm font-bold text-on-accent transition-colors duration-150 hover:bg-accent-hover lg:ml-2"
+          className="qo-btn group inline-flex h-11 items-center gap-2 rounded-full bg-accent pr-4 pl-6 text-sm font-bold text-on-accent hover:bg-accent-hover lg:ml-2"
         >
           {site.cta.secondary}
           <ArrowUpRight
             aria-hidden="true"
-            className="size-4 transition-transform duration-250 ease-(--ease-smooth-out) group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+            className="size-4 qo-nudge-ne"
           />
           <span className="sr-only"> (opens in a new tab)</span>
         </a>

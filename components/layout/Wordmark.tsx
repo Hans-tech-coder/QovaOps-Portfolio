@@ -1,7 +1,3 @@
-"use client";
-
-import { useRef } from "react";
-import { gsap, MOTION_CONDITIONS, useGSAP, type MotionConditions } from "@/components/motion/gsap";
 import { site } from "@/content/site";
 
 const SOLID = "Qova";
@@ -10,39 +6,13 @@ const OUTLINE = "Ops";
 /**
  * QovaOps wordmark: solid "Qova" + outlined "Ops" (accent outline: lime on
  * dark, #101010 on light), "by triqova" in Cool Gray right-aligned under it.
- * Letters rise in on load. CSS pre-hides them when JS runs (globals.css), so
- * there is no flash; under reduced motion they are never hidden.
+ * The letters rise in as part of the hero timeline (components/motion/HeroIntro.tsx,
+ * targets data-wordmark-letter / data-wordmark-endorse). CSS pre-hides them when
+ * JS runs (globals.css), so there is no flash; under reduced motion they are never hidden.
  */
 export function Wordmark() {
-  const root = useRef<HTMLDivElement>(null);
-
-  useGSAP(
-    () => {
-      const mm = gsap.matchMedia();
-      mm.add(MOTION_CONDITIONS, (ctx) => {
-        const { reduceMotion } = ctx.conditions as MotionConditions;
-        const letters = gsap.utils.toArray<HTMLElement>("[data-wordmark-letter]");
-        const endorse = gsap.utils.toArray<HTMLElement>("[data-wordmark-endorse]");
-        if (reduceMotion) {
-          gsap.set([...letters, ...endorse], { autoAlpha: 1, clearProps: "transform" });
-          return;
-        }
-        gsap
-          .timeline({ defaults: { ease: "power3.out" } })
-          .fromTo(
-            letters,
-            { autoAlpha: 0, yPercent: 40 },
-            { autoAlpha: 1, yPercent: 0, duration: 0.6, stagger: 0.05 },
-          )
-          .fromTo(endorse, { autoAlpha: 0, y: 6 }, { autoAlpha: 1, y: 0, duration: 0.4 }, "-=0.25");
-      });
-      return () => mm.revert();
-    },
-    { scope: root },
-  );
-
   return (
-    <div ref={root} className="inline-flex flex-col">
+    <div data-hero-wordmark className="inline-flex flex-col">
       <a
         href="#top"
         className="rounded-lg text-5xl leading-none font-bold tracking-tight sm:text-6xl lg:text-7xl xl:text-8xl"

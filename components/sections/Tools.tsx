@@ -18,7 +18,7 @@ export function Tools({ section }: { section: SectionConfig }) {
               <span aria-hidden="true" className="h-3 w-[3px] rounded-full bg-accent-text" />
               {label}
             </h3>
-            <ul className="mt-4 flex flex-wrap gap-2">
+            <ul className="qo-chip-row mt-4 flex flex-wrap gap-2">
               {tools.map((tool) => (
                 <li key={tool}>
                   <Chip>{tool}</Chip>

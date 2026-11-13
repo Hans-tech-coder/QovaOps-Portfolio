@@ -70,16 +70,16 @@ export function Sidebar() {
                       goTo(id);
                     }}
                     aria-current={active ? "location" : undefined}
-                    className={`qo-label group flex items-center gap-3 rounded-lg py-2 pr-2 transition-colors duration-150 ${
+                    className={`qo-btn qo-label group flex items-center gap-3 rounded-lg py-2 pr-2 ${
                       active ? "text-fg" : "text-muted hover:text-fg"
                     }`}
                   >
                     <span data-marker className="flex size-5 shrink-0 items-center justify-center">
                       <span
-                        className={`rounded-full transition-all duration-250 ${
+                        className={`size-2 rounded-full transition-[transform,background-color] duration-(--duration-fast) ease-(--ease-smooth-out) ${
                           active
-                            ? "size-2 bg-accent-text"
-                            : "size-1 bg-muted group-hover:bg-fg"
+                            ? "bg-accent-text"
+                            : "scale-50 bg-muted group-hover:bg-fg"
                         }`}
                       />
                     </span>

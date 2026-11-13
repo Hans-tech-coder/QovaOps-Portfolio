@@ -46,7 +46,7 @@ export function TestimonialsCarousel({ items }: { items: Testimonial[] }) {
   };
 
   const arrowClass =
-    "inline-flex size-11 items-center justify-center rounded-full border border-line text-fg transition-colors duration-150 hover:bg-line disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent";
+    "qo-btn group inline-flex size-11 items-center justify-center rounded-full border border-line text-fg hover:bg-line disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent";
 
   return (
     <div>
@@ -92,7 +92,7 @@ export function TestimonialsCarousel({ items }: { items: Testimonial[] }) {
             aria-label="Previous testimonial"
             className={arrowClass}
           >
-            <ArrowLeft aria-hidden="true" className="size-4" />
+            <ArrowLeft aria-hidden="true" className="qo-nudge-back size-4" />
           </button>
           <button
             type="button"
@@ -101,7 +101,7 @@ export function TestimonialsCarousel({ items }: { items: Testimonial[] }) {
             aria-label="Next testimonial"
             className={arrowClass}
           >
-            <ArrowRight aria-hidden="true" className="size-4" />
+            <ArrowRight aria-hidden="true" className="qo-nudge size-4" />
           </button>
         </div>
       )}
