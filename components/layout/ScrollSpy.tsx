@@ -86,19 +86,25 @@ export function ScrollSpyProvider({ items, children }: { items: NavItem[]; child
         });
       }
 
-      const bottom = ScrollTrigger.create({
-        start: () => ScrollTrigger.maxScroll(window) - 4,
-        end: "max",
-        onToggle: (self) => {
-          atBottom = self.isActive;
-          recompute();
-        },
-      });
+      // Direct position check: a ScrollTrigger ending at "max" reports
+      // isActive=false at progress 1, i.e. exactly when the page is at the bottom.
+      const checkBottom = () => {
+        const next = window.scrollY >= ScrollTrigger.maxScroll(window) - 4;
+        if (next === atBottom) return;
+        atBottom = next;
+        recompute();
+      };
+      window.addEventListener("scroll", checkBottom, { passive: true });
+      window.addEventListener("resize", checkBottom);
+      ScrollTrigger.addEventListener("refresh", checkBottom);
 
+      checkBottom();
       recompute();
       return () => {
         triggers.forEach((t) => t.st.kill());
-        bottom.kill();
+        window.removeEventListener("scroll", checkBottom);
+        window.removeEventListener("resize", checkBottom);
+        ScrollTrigger.removeEventListener("refresh", checkBottom);
       };
     },
     { dependencies: [items] },
