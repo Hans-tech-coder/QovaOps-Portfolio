@@ -1,7 +1,10 @@
 import type { Metadata, Viewport } from "next";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { DEFAULT_THEME, THEME_COLORS, themeInitScript } from "@/components/layout/theme";
 import { Cursor } from "@/components/motion/Cursor";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { site } from "@/content/site";
 import "./globals.css";
 
@@ -11,6 +14,9 @@ const inter = Inter({
   subsets: ["latin"],
   display: "swap",
 });
+
+const TYPEKIT_CSS = "https://use.typekit.net/lsg5lvm.css";
+const typekitLoader = `(function(){var l=document.createElement("link");l.rel="stylesheet";l.href=${JSON.stringify(TYPEKIT_CSS)};document.head.appendChild(l)})();`;
 
 // Mono for eyebrows, nav and labels.
 const jetbrainsMono = JetBrains_Mono({
@@ -28,6 +34,9 @@ export const metadata: Metadata = {
   authors: [{ name: site.owner }],
   creator: site.owner,
   alternates: { canonical: "/" },
+  robots: { index: true, follow: true },
+  // OG/Twitter images come from app/opengraph-image.tsx and app/twitter-image.tsx;
+  // icons from app/favicon.ico, icon.svg, apple-icon.png (scripts/icons.mjs).
   openGraph: {
     type: "website",
     url: site.url,
@@ -73,10 +82,17 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         {/* Articulat CF via Hans's licensed Adobe Fonts web project (kit lsg5lvm).
-            The kit CSS sets font-display: swap, so Inter shows until it loads. */}
+            The kit CSS sets font-display: swap, so Inter shows until it loads. It is
+            added by a script instead of a blocking <link>, because the kit CSS @imports
+            p.typekit.net (Adobe's required usage ping) and that chain held back first
+            paint by ~0.8s on mobile. Fonts still swap in exactly as before. */}
+        <link rel="preconnect" href="https://use.typekit.net" />
         <link rel="preconnect" href="https://use.typekit.net" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://p.typekit.net" crossOrigin="anonymous" />
-        <link rel="stylesheet" href="https://use.typekit.net/lsg5lvm.css" />
+        <link rel="preconnect" href="https://p.typekit.net" />
+        <script dangerouslySetInnerHTML={{ __html: typekitLoader }} />
+        <noscript>
+          <link rel="stylesheet" href={TYPEKIT_CSS} />
+        </noscript>
       </head>
       {/* Browser extensions (e.g. ColorZilla's cz-shortcut-listen) add attributes to
           <body> before React hydrates. This only ignores <body>'s own attributes,
@@ -96,6 +112,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </div>
         {children}
         <Cursor />
+        <JsonLd />
+        {/* Vercel Web Analytics + Speed Insights: cookieless, so no consent banner (PLAN.md §2).
+            Only rendered on Vercel builds (VERCEL=1); elsewhere /_vercel/* doesn't exist and
+            the scripts would 404 (local `next start`, Lighthouse runs). */}
+        {process.env.VERCEL ? (
+          <>
+            <Analytics />
+            <SpeedInsights />
+          </>
+        ) : null}
       </body>
     </html>
   );

@@ -54,7 +54,8 @@ export function About({ section }: { section: SectionConfig }) {
               src={hansPhoto}
               alt="Hans Obena, virtual assistant with advanced technical skills"
               fill
-              priority
+              preload
+              fetchPriority="high"
               sizes="(min-width: 1280px) 288px, (min-width: 640px) 256px, 240px"
               className="object-cover object-[50%_12%]"
             />
