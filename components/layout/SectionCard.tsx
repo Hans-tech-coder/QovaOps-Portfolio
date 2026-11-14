@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import type { SectionConfig } from "@/content/sections";
+import type { SectionConfig } from "@/content/profile";
 import { SectionHeading } from "./SectionHeading";
 
 type SectionCardProps = {

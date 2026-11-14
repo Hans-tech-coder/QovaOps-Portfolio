@@ -3,20 +3,16 @@
 import { Download, Eye, X } from "lucide-react";
 import Image from "next/image";
 import { useId, useRef, type KeyboardEvent } from "react";
+import type { Resume } from "@/content/profile";
 import { site } from "@/content/site";
-// Page images rendered from the PDF by scripts/resume-pages.py (re-run it after replacing the PDF).
-import page1 from "@/public/resume/page-1.webp";
-import page2 from "@/public/resume/page-2.webp";
 import { Tooltip } from "./Tooltip";
-
-const RESUME_PAGES = [page1, page2];
 
 const BTN =
   "qo-btn inline-flex h-10 items-center justify-center gap-2 rounded-full border border-line px-4 text-sm font-bold text-fg hover:border-accent-text";
 
 /**
  * "View resume" opens the resume in a branded modal on the page (no new tab);
- * "Download" saves the PDF (site.resume). Outlined, not lime, so the accent stays
+ * "Download" saves the PDF (the profile's resume). Outlined, not lime, so the accent stays
  * ~10% of the page. Used in the sidebar (stacked) and the mobile menu (side by side).
  *
  * The modal shows the pages as images instead of an embedded PDF, because phones
@@ -25,8 +21,8 @@ const BTN =
  * same open/close motion as the menu sheet (.qo-sheet). Images load lazily, so
  * nothing is fetched until it is opened.
  */
-export function ResumeButtons({ className = "" }: { className?: string }) {
-  const { href, downloadName } = site.resume;
+export function ResumeButtons({ resume, className = "" }: { resume: Resume; className?: string }) {
+  const { href, downloadName, title, pages } = resume;
   const dialogRef = useRef<HTMLDialogElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const prevOverflow = useRef("");
@@ -80,7 +76,7 @@ export function ResumeButtons({ className = "" }: { className?: string }) {
               </p>
               <h2 id={titleId} className="mt-1 truncate text-base font-bold tracking-tight sm:text-lg">
                 {site.owner}
-                <span className="hidden text-muted sm:inline"> · General Virtual Assistant</span>
+                <span className="hidden text-muted sm:inline">{` · ${title}`}</span>
               </h2>
             </div>
             <div className="ml-auto flex shrink-0 items-center gap-2">
@@ -109,11 +105,11 @@ export function ResumeButtons({ className = "" }: { className?: string }) {
 
           <div className="flex-1 overflow-y-auto overscroll-contain bg-bg p-3 sm:p-6">
             <div className="mx-auto flex max-w-[44rem] flex-col gap-3 sm:gap-5">
-              {RESUME_PAGES.map((page, i) => (
+              {pages.map((page, i) => (
                 <Image
                   key={page.src}
                   src={page}
-                  alt={`${site.owner} resume, page ${i + 1} of ${RESUME_PAGES.length}`}
+                  alt={`${site.owner} resume, page ${i + 1} of ${pages.length}`}
                   placeholder="blur"
                   sizes="(min-width: 768px) 704px, 100vw"
                   className="h-auto w-full rounded-lg border border-line bg-white"

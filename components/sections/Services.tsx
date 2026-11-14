@@ -12,8 +12,8 @@ import {
 } from "lucide-react";
 import { SectionCard } from "@/components/layout/SectionCard";
 import { Reveal } from "@/components/motion/Reveal";
-import type { SectionConfig } from "@/content/sections";
-import { services, type ServiceIcon } from "@/content/services";
+import type { SectionProps } from "@/content/profile";
+import { services, type ServiceIcon } from "@/content/va/services";
 
 const ICONS: Record<ServiceIcon, LucideIcon> = {
   inbox: Inbox,
@@ -28,7 +28,7 @@ const ICONS: Record<ServiceIcon, LucideIcon> = {
 };
 
 /** Numbered rows 01–09: outlined number, icon + title, one line; accent left bar on hover. */
-export function Services({ section }: { section: SectionConfig }) {
+export function Services({ section }: SectionProps) {
   return (
     <SectionCard section={section}>
       <Reveal className="border-t border-dashed border-line">

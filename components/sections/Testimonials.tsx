@@ -1,14 +1,14 @@
 import { SectionCard } from "@/components/layout/SectionCard";
 import { Reveal } from "@/components/motion/Reveal";
-import type { SectionConfig } from "@/content/sections";
-import { testimonials } from "@/content/testimonials";
+import type { SectionProps } from "@/content/profile";
+import { testimonials } from "@/content/va/testimonials";
 import { TestimonialsCarousel } from "./TestimonialsCarousel";
 
 /**
- * Only renders when content/testimonials.ts has real quotes (the section is
- * also unpublished in content/sections.ts until then). Never invent quotes.
+ * Only renders when content/va/testimonials.ts has real quotes (the section is
+ * also unpublished in content/va/sections.ts until then). Never invent quotes.
  */
-export function Testimonials({ section }: { section: SectionConfig }) {
+export function Testimonials({ section }: SectionProps) {
   if (testimonials.length === 0) return null;
   return (
     <SectionCard section={section}>

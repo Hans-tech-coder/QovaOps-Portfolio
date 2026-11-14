@@ -1,13 +1,14 @@
 import type { MetadataRoute } from "next";
 import { THEME_COLORS } from "@/components/layout/theme";
-import { site } from "@/content/site";
+import { vaMeta, vaProfile } from "@/content/va/profile";
 
+// Shared by both domains (manifest must live in the app root). VA values until Phase C.
 // Icons are generated from the Q mark by scripts/icons.mjs.
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: `${site.name} ${site.endorsement}`,
-    short_name: site.name,
-    description: site.description,
+    name: `${vaProfile.brand.name} ${vaProfile.brand.endorsement}`,
+    short_name: vaProfile.brand.name,
+    description: vaMeta.description,
     start_url: "/",
     display: "browser",
     background_color: THEME_COLORS.dark,

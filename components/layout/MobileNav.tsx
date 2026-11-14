@@ -6,7 +6,8 @@ import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { SocialLinks } from "@/components/ui/SocialIcons";
 import { ResumeButtons } from "@/components/ui/ResumeButtons";
 import { Tooltip } from "@/components/ui/Tooltip";
-import { site } from "@/content/site";
+import type { Brand, Contact, Resume } from "@/content/profile";
+import type { SocialLink } from "@/content/site";
 import { useScrollSpy } from "./ScrollSpy";
 
 const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -16,7 +17,17 @@ const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1
  * the rest of the page is inert while it is open, Esc closes it, focus is
  * trapped inside (Tab cycles) and returns to the menu button on close.
  */
-export function MobileNav() {
+export function MobileNav({
+  brand,
+  contact,
+  socials,
+  resume,
+}: {
+  brand: Brand;
+  contact: Pick<Contact, "bookingUrl" | "bookingCta">;
+  socials: readonly SocialLink[];
+  resume: Resume;
+}) {
   const { items, activeId, goTo } = useScrollSpy();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [open, setOpen] = useState(false);
@@ -74,10 +85,10 @@ export function MobileNav() {
             inert={!showMark}
             data-shown={showMark}
             className="qo-topbar-mark text-xl font-bold tracking-tight"
-            aria-label={`${site.name} ${site.endorsement}, back to top`}
+            aria-label={`${brand.endorsement ? `${brand.name} ${brand.endorsement}` : brand.name}, back to top`}
           >
-            <span className="text-fg">Qova</span>
-            <span className="text-outline [-webkit-text-stroke-width:1px]">Ops</span>
+            <span className="text-fg">{brand.wordmark.solid}</span>
+            <span className="text-outline [-webkit-text-stroke-width:1px]">{brand.wordmark.outline}</span>
           </a>
           {activeLabel && (
             <span className="qo-label hidden truncate text-muted min-[420px]:block" aria-hidden="true">
@@ -177,20 +188,20 @@ export function MobileNav() {
             <p className="qo-label text-muted" aria-hidden="true">
               {"// Resume"}
             </p>
-            <ResumeButtons className="mt-3 grid grid-cols-2 gap-2" />
+            <ResumeButtons resume={resume} className="mt-3 grid grid-cols-2 gap-2" />
           </div>
 
           <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
             <a
-              href={site.contact.bookingUrl}
+              href={contact.bookingUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="qo-btn inline-flex h-11 items-center rounded-full bg-accent px-6 text-sm font-bold text-on-accent hover:bg-accent-hover"
             >
-              {site.cta.secondary}
+              {contact.bookingCta}
               <span className="sr-only"> (opens in a new tab)</span>
             </a>
-            <SocialLinks className="-mr-2" tooltipSide="top" />
+            <SocialLinks socials={socials} className="-mr-2" tooltipSide="top" />
           </div>
         </div>
       </dialog>

@@ -3,8 +3,7 @@ import { SectionCard } from "@/components/layout/SectionCard";
 import { Reveal } from "@/components/motion/Reveal";
 import { ScrollLine } from "@/components/motion/ScrollLine";
 import { Chip } from "@/components/ui/Chip";
-import { certifications, education, work, type TimelineEntry } from "@/content/experience";
-import type { SectionConfig } from "@/content/sections";
+import type { SectionProps, TimelineEntry } from "@/content/profile";
 
 function Timeline({
   title,
@@ -56,7 +55,8 @@ function Timeline({
 }
 
 /** Two timeline columns: education (+ certifications) and work history. */
-export function Experience({ section }: { section: SectionConfig }) {
+export function Experience({ section, profile }: SectionProps) {
+  const { education, work, certifications } = profile.experience;
   return (
     <SectionCard section={section}>
       <Reveal className="grid gap-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-12">

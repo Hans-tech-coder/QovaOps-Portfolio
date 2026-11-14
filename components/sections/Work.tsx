@@ -1,14 +1,13 @@
 import { SectionCard } from "@/components/layout/SectionCard";
 import { Reveal } from "@/components/motion/Reveal";
-import type { SectionConfig } from "@/content/sections";
-import { publishedProjects, workCategoryLabels, type WorkCategory } from "@/content/work";
+import type { SectionProps } from "@/content/profile";
+import { publishedProjects, workCategoryLabels } from "@/content/work";
 import { WorkTabs } from "./WorkTabs";
 
-const ORDER: WorkCategory[] = ["websites", "automation", "operations"];
-
-export function Work({ section }: { section: SectionConfig }) {
-  // Tabs with no published projects are left out (hidden-until-real rule).
-  const tabs = ORDER.map((id) => ({
+export function Work({ section, profile }: SectionProps) {
+  // Tab order comes from the profile; tabs with no published projects are left out
+  // (hidden-until-real rule).
+  const tabs = profile.workTabs.map((id) => ({
     id,
     label: workCategoryLabels[id],
     projects: publishedProjects.filter((p) => p.category === id),

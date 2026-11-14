@@ -3,14 +3,14 @@
 import { useRef } from "react";
 import { gsap, prefersReducedMotion, useGSAP } from "@/components/motion/gsap";
 import { ResumeButtons } from "@/components/ui/ResumeButtons";
-import { site } from "@/content/site";
+import type { Resume } from "@/content/profile";
 import { useScrollSpy } from "./ScrollSpy";
 
 /**
  * Sticky sidebar nav (≥1024px). Inactive items show a small dot; the active
  * item gets a dashed accent ring that glides between items (PLAN.md §4).
  */
-export function Sidebar() {
+export function Sidebar({ email, resume }: { email: string; resume: Resume }) {
   const { items, activeId, goTo } = useScrollSpy();
   const listRef = useRef<HTMLUListElement>(null);
   const ringRef = useRef<HTMLSpanElement>(null);
@@ -98,16 +98,16 @@ export function Sidebar() {
         <div className="mt-6 border-t border-dashed border-line pt-5">
           <p className="qo-label text-muted">{"// Email"}</p>
           <a
-            href={`mailto:${site.contact.email}`}
+            href={`mailto:${email}`}
             className="mt-2 block break-all text-sm font-medium text-fg underline-offset-4 hover:underline"
           >
-            {site.contact.email}
+            {email}
           </a>
         </div>
 
         <div className="mt-6 border-t border-dashed border-line pt-5">
           <p className="qo-label text-muted">{"// Resume"}</p>
-          <ResumeButtons className="mt-3 flex flex-col gap-2" />
+          <ResumeButtons resume={resume} className="mt-3 flex flex-col gap-2" />
         </div>
       </div>
     </aside>

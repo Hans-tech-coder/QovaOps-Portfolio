@@ -3,7 +3,7 @@
 import { ArrowLeft, ArrowRight, Quote } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { prefersReducedMotion } from "@/components/motion/gsap";
-import type { Testimonial } from "@/content/testimonials";
+import type { Testimonial } from "@/content/va/testimonials";
 import { Tooltip } from "@/components/ui/Tooltip";
 
 /**

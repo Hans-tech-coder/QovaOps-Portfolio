@@ -2,14 +2,7 @@
 // Source: brand/Hans Christian A. Obena - Resume (General Virtual Assistant).pdf (added 2026-11-12).
 // Only facts from the resume. Personal phone/email from the resume are intentionally NOT used.
 
-export type TimelineEntry = {
-  title: string;
-  org: string;
-  /** Short context shown after the org, e.g. "Digital Marketing Agency" */
-  orgNote?: string;
-  period: string;
-  points: string[];
-};
+import type { TimelineEntry } from "@/content/profile";
 
 export const education: TimelineEntry[] = [
   {

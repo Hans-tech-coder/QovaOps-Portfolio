@@ -2,12 +2,15 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { cacheLife } from "next/cache";
 import { ImageResponse } from "next/og";
-import { site } from "@/content/site";
+import { vaProfile } from "@/content/va/profile";
 
-// Shared Open Graph / Twitter card (app/opengraph-image.tsx, app/twitter-image.tsx).
+// VA card (app/va/opengraph-image.tsx, twitter-image.tsx). Phase C adds the dev card.
+const { brand, about: { tagline } } = vaProfile;
+
+// Shared Open Graph / Twitter card (app/va/opengraph-image.tsx, app/va/twitter-image.tsx).
 // Brand sheet look: #101010 + faint grid, Q mark, two-tone headline, divider with lime tip.
 export const ogSize = { width: 1200, height: 630 };
-export const ogAlt = `${site.name} ${site.endorsement}: ${site.tagline.line1} ${site.tagline.line2} Hans Obena, virtual assistant with advanced technical skills.`;
+export const ogAlt = `${brand.name} ${brand.endorsement}: ${tagline.line1} ${tagline.line2} Hans Obena, virtual assistant with advanced technical skills.`;
 
 const C = { bg: "#101010", grid: "#1A1D21", white: "#FFFFFF", lime: "#C6FF00", gray: "#6B7280", body: "#B4B9C0" };
 
@@ -62,16 +65,16 @@ export async function renderOgImage() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={`data:image/svg+xml;base64,${mark}`} width={84} height={84} alt="" />
           <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
-            <div style={{ fontSize: 46, fontWeight: 700, letterSpacing: -1, lineHeight: 1 }}>{site.name}</div>
-            <div style={{ fontSize: 20, fontWeight: 500, color: C.gray, marginTop: 4 }}>{site.endorsement}</div>
+            <div style={{ fontSize: 46, fontWeight: 700, letterSpacing: -1, lineHeight: 1 }}>{brand.name}</div>
+            <div style={{ fontSize: 20, fontWeight: 500, color: C.gray, marginTop: 4 }}>{brand.endorsement}</div>
           </div>
         </div>
 
         {/* Headline */}
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <div style={{ fontSize: 76, fontWeight: 700, letterSpacing: -2, lineHeight: 1.05 }}>{site.tagline.line1}</div>
+          <div style={{ fontSize: 76, fontWeight: 700, letterSpacing: -2, lineHeight: 1.05 }}>{tagline.line1}</div>
           <div style={{ fontSize: 76, fontWeight: 700, letterSpacing: -2, lineHeight: 1.05, color: C.lime }}>
-            {site.tagline.line2}
+            {tagline.line2}
           </div>
           <div style={{ fontSize: 30, fontWeight: 500, color: C.body, marginTop: 26 }}>
             Virtual assistant with advanced technical skills
@@ -94,7 +97,7 @@ export async function renderOgImage() {
               color: C.gray,
             }}
           >
-            <div>{site.secondaryLine}</div>
+            <div>{brand.secondaryLine}</div>
             <div style={{ color: C.white }}>qovaops.triqova.com</div>
           </div>
         </div>

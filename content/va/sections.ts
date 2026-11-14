@@ -1,26 +1,15 @@
-// One config for the page sections and the nav (sidebar + mobile menu).
+// VA site (qovaops.triqova.com): one config for the page sections and the nav (sidebar + mobile menu).
 // Only `published` sections render and show in the nav (PLAN.md §5, hidden-until-real rule).
 // Order here = order on the page and in the nav.
 
+import { publishSections, type SectionConfig } from "@/content/profile";
+import { publishedProjects } from "@/content/work";
 import { testimonials } from "./testimonials";
-import { publishedProjects } from "./work";
-
-export type SectionConfig = {
-  id: string;
-  /** Nav label (rendered uppercase mono) */
-  label: string;
-  /** Mono eyebrow, shown as `// EYEBROW` */
-  eyebrow: string;
-  /** Large outlined ghost word behind the eyebrow */
-  ghost: string;
-  title: string;
-  intro: string;
-  published: boolean;
-};
 
 const allSections: SectionConfig[] = [
   {
     id: "about",
+    kind: "about",
     label: "About",
     eyebrow: "About",
     ghost: "About",
@@ -32,6 +21,7 @@ const allSections: SectionConfig[] = [
   },
   {
     id: "services",
+    kind: "services",
     label: "Services",
     eyebrow: "Services",
     ghost: "Services",
@@ -41,6 +31,7 @@ const allSections: SectionConfig[] = [
   },
   {
     id: "how-i-work",
+    kind: "how-i-work",
     label: "How I Work",
     eyebrow: "How I work",
     ghost: "Process",
@@ -51,6 +42,7 @@ const allSections: SectionConfig[] = [
   },
   {
     id: "tools",
+    kind: "tools",
     label: "Tools",
     eyebrow: "Tools",
     ghost: "Tools",
@@ -61,6 +53,7 @@ const allSections: SectionConfig[] = [
   },
   {
     id: "work",
+    kind: "work",
     label: "Work",
     eyebrow: "Work",
     ghost: "Work",
@@ -71,6 +64,7 @@ const allSections: SectionConfig[] = [
   },
   {
     id: "experience",
+    kind: "experience",
     label: "Experience",
     eyebrow: "Experience",
     ghost: "Resume",
@@ -81,6 +75,7 @@ const allSections: SectionConfig[] = [
   },
   {
     id: "testimonials",
+    kind: "testimonials",
     label: "Testimonials",
     eyebrow: "Testimonials",
     ghost: "Clients",
@@ -91,6 +86,7 @@ const allSections: SectionConfig[] = [
   },
   {
     id: "contact",
+    kind: "contact",
     label: "Contact",
     eyebrow: "Contact",
     ghost: "Contact",
@@ -100,7 +96,4 @@ const allSections: SectionConfig[] = [
   },
 ];
 
-export const sections = allSections.filter((s) => s.published);
-
-export type NavItem = Pick<SectionConfig, "id" | "label">;
-export const navItems: NavItem[] = sections.map(({ id, label }) => ({ id, label }));
+export const { sections, navItems } = publishSections(allSections);

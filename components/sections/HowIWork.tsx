@@ -1,11 +1,11 @@
 import { SectionCard } from "@/components/layout/SectionCard";
 import { Reveal } from "@/components/motion/Reveal";
 import { ScrollLine } from "@/components/motion/ScrollLine";
-import { processSteps } from "@/content/process";
-import type { SectionConfig } from "@/content/sections";
+import { processSteps } from "@/content/va/process";
+import type { SectionProps } from "@/content/profile";
 
-// TODO: Hans review — How I Work copy lives in content/process.ts (PLAN.md §9).
-export function HowIWork({ section }: { section: SectionConfig }) {
+// TODO: Hans review — How I Work copy lives in content/va/process.ts (PLAN.md §9).
+export function HowIWork({ section }: SectionProps) {
   return (
     <SectionCard section={section}>
       <Reveal className="relative">

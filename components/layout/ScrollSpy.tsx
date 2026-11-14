@@ -8,7 +8,7 @@ import {
   ScrollTrigger,
   useGSAP,
 } from "@/components/motion/gsap";
-import type { NavItem } from "@/content/sections";
+import type { NavItem } from "@/content/profile";
 
 type ScrollSpyValue = {
   items: NavItem[];

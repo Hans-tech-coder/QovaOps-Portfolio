@@ -1,14 +1,14 @@
 import { SectionCard } from "@/components/layout/SectionCard";
 import { Reveal } from "@/components/motion/Reveal";
 import { Chip } from "@/components/ui/Chip";
-import type { SectionConfig } from "@/content/sections";
-import { toolGroups } from "@/content/tools";
+import { ToolLogo } from "@/components/ui/ToolLogo";
+import type { SectionProps } from "@/content/profile";
 
-export function Tools({ section }: { section: SectionConfig }) {
+export function Tools({ section, profile }: SectionProps) {
   return (
     <SectionCard section={section}>
       <Reveal className="grid gap-4 md:grid-cols-2">
-        {toolGroups.map(({ label, tools }) => (
+        {profile.toolGroups.map(({ label, tools }) => (
           <div
             key={label}
             data-reveal
@@ -21,7 +21,7 @@ export function Tools({ section }: { section: SectionConfig }) {
             <ul className="qo-chip-row mt-4 flex flex-wrap gap-2">
               {tools.map((tool) => (
                 <li key={tool}>
-                  <Chip>{tool}</Chip>
+                  <Chip icon={<ToolLogo name={tool} />}>{tool}</Chip>
                 </li>
               ))}
             </ul>

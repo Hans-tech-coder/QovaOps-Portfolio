@@ -1,4 +1,5 @@
 import { cacheLife } from "next/cache";
+import type { Brand } from "@/content/profile";
 import { site } from "@/content/site";
 
 // Cached at build time (cacheComponents forbids a bare new Date() in the
@@ -10,12 +11,12 @@ async function CopyrightYear() {
 }
 
 /** Footer strip from the brand sheet (BRAND_GUIDE §6). */
-export function Footer() {
+export function Footer({ brand }: { brand: Brand }) {
   return (
     <footer className="mt-8 border-t border-dashed border-line py-8">
       <div className="flex flex-col items-center gap-2 text-center sm:flex-row sm:justify-between sm:text-left">
         <p className="qo-label text-muted">
-          {site.name} by{" "}
+          {brand.name} by{" "}
           <a
             href={site.triqovaUrl}
             target="_blank"
@@ -26,10 +27,10 @@ export function Footer() {
             <span className="sr-only"> (opens in a new tab)</span>
           </a>{" "}
           <span aria-hidden="true">|</span>{" "}
-          {site.secondaryLine}
+          {brand.secondaryLine}
         </p>
         <p className="font-mono text-xs text-muted">
-          © <CopyrightYear /> {site.name}
+          © <CopyrightYear /> {brand.name}
         </p>
       </div>
     </footer>

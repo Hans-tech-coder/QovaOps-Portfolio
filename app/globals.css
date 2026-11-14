@@ -391,7 +391,6 @@ html.qo-cursor-on .qo-cursor[data-visible="true"] {
 
   /* 11-avatar-group-hover, applied to chip rows */
   --chip-lift: -3px;
-  --chip-falloff: 0.45;
   --avatar-dur: 320ms;
   --avatar-ease-in: var(--ease-smooth-out);
   --avatar-ease-out: var(--ease-bounce-strong);
@@ -567,8 +566,8 @@ html {
   }
 }
 
-/* 11-avatar-group-hover on chip rows (CSS only): the hovered chip lifts, its
-   direct neighbours lift less (falloff); smooth up, a small spring on return. */
+/* Chip hover (CSS only): only the hovered chip lifts, neighbours stay still;
+   smooth up, a small spring on return. */
 .qo-chip {
   transition:
     transform var(--avatar-dur) var(--avatar-ease-out),
@@ -581,11 +580,6 @@ html {
     transition-timing-function: var(--avatar-ease-in);
     color: var(--qo-text);
     border-color: var(--qo-text-muted);
-  }
-  .qo-chip-row > li:hover + li > .qo-chip,
-  .qo-chip-row > li:has(+ li:hover) > .qo-chip {
-    transform: translateY(calc(var(--chip-lift) * var(--chip-falloff)));
-    transition-timing-function: var(--avatar-ease-in);
   }
 }
 

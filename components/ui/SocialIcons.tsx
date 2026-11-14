@@ -1,5 +1,5 @@
 import type { SVGProps } from "react";
-import { site } from "@/content/site";
+import type { SocialLabel, SocialLink } from "@/content/site";
 import { Tooltip } from "./Tooltip";
 
 // Lucide v1 dropped brand icons, so these are the monoline brand glyphs from
@@ -55,14 +55,12 @@ const LinkedinIcon = (p: IconProps) => (
   </Base>
 );
 
-const ICONS: Record<(typeof site.socials)[number]["label"], (p: IconProps) => React.JSX.Element> = {
+const ICONS: Record<SocialLabel, (p: IconProps) => React.JSX.Element> = {
   Facebook: FacebookIcon,
   Instagram: InstagramIcon,
   YouTube: YoutubeIcon,
   LinkedIn: LinkedinIcon,
 };
-
-type SocialLabel = (typeof site.socials)[number]["label"];
 
 /** A single brand glyph by social label (decorative; pair it with visible or sr-only text). */
 export function SocialIcon({ label, ...props }: IconProps & { label: SocialLabel }) {
@@ -72,18 +70,20 @@ export function SocialIcon({ label, ...props }: IconProps & { label: SocialLabel
 
 /** Row of social icon links (BRAND_GUIDE §2). */
 export function SocialLinks({
+  socials,
   className = "",
   tooltipSide = "bottom",
 }: {
+  socials: readonly SocialLink[];
   className?: string;
   /** Where the tooltip pills go (top when the row sits near the bottom of a panel). */
   tooltipSide?: "top" | "bottom";
 }) {
   return (
     <ul className={`flex items-center gap-1 ${className}`}>
-      {site.socials.map(({ label, handle, href }, i) => {
+      {socials.map(({ label, handle, href }, i) => {
         // Last icon sits near the right edge: grow its pill leftward.
-        const align = i === site.socials.length - 1 ? "end" : "center";
+        const align = i === socials.length - 1 ? "end" : "center";
         const Icon = ICONS[label];
         return (
           <li key={label}>

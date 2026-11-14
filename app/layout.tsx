@@ -1,11 +1,9 @@
-import type { Metadata, Viewport } from "next";
+import type { Viewport } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { DEFAULT_THEME, THEME_COLORS, themeInitScript } from "@/components/layout/theme";
 import { Cursor } from "@/components/motion/Cursor";
-import { JsonLd } from "@/components/seo/JsonLd";
-import { site } from "@/content/site";
 import "./globals.css";
 
 // Inter is the metric fallback while Articulat CF (Adobe Fonts kit, see <head>) loads.
@@ -26,31 +24,8 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL(site.url),
-  title: site.title,
-  description: site.description,
-  applicationName: `${site.name} ${site.endorsement}`,
-  authors: [{ name: site.owner }],
-  creator: site.owner,
-  alternates: { canonical: "/" },
-  robots: { index: true, follow: true },
-  // OG/Twitter images come from app/opengraph-image.tsx and app/twitter-image.tsx;
-  // icons from app/favicon.ico, icon.svg, apple-icon.png (scripts/icons.mjs).
-  openGraph: {
-    type: "website",
-    url: site.url,
-    siteName: `${site.name} ${site.endorsement}`,
-    title: site.title,
-    description: site.description,
-    locale: "en_US",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: site.title,
-    description: site.description,
-  },
-};
+// Shared shell for both sites. Each site's metadata (title, metadataBase, OG, JSON-LD)
+// lives in its own segment layout: app/va/layout.tsx (and app/dev/ from Phase C).
 
 // One theme-color tag; the head script and the toggle update it per theme.
 export const viewport: Viewport = {
@@ -112,7 +87,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </div>
         {children}
         <Cursor />
-        <JsonLd />
         {/* Vercel Web Analytics + Speed Insights: cookieless, so no consent banner (PLAN.md §2).
             Only rendered on Vercel builds (VERCEL=1); elsewhere /_vercel/* doesn't exist and
             the scripts would 404 (local `next start`, Lighthouse runs). */}

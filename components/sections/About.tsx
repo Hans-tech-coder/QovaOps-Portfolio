@@ -4,29 +4,19 @@ import { CountUp } from "@/components/motion/CountUp";
 import { Reveal } from "@/components/motion/Reveal";
 import { TypeCycler } from "@/components/motion/TypeCycler";
 import { Chip } from "@/components/ui/Chip";
+import { ToolLogo } from "@/components/ui/ToolLogo";
 import Image from "next/image";
 // Transparent cut-out exported from Canva DAHasTtTt6Y (2026-11-12)
 import hansPhoto from "@/public/brand/hans-photo.png";
-import type { SectionConfig } from "@/content/sections";
-import { site } from "@/content/site";
-import { heroTools } from "@/content/tools";
+import type { SectionProps } from "@/content/profile";
 
 // Photo tag, typed and backspaced in turn (components/motion/TypeCycler.tsx)
 const GREETINGS = ["Hi there!", "I'm Hans"] as const;
 
-// About blurb from BRAND_GUIDE §7.
-const BLURB =
-  "I'm Hans, a Computer Science graduate with Honors and 4+ years in web development, digital operations and AI automation. I help busy founders, digital agencies and eCommerce brands simplify operations, fix technical bottlenecks, and scale without juggling multiple hires. I take ownership of the work, not just the task list.";
-
-// Only real numbers (PLAN.md "Stats" + session log). Do not add more without Hans.
-// Counted up on scroll (components/motion/CountUp.tsx); the HTML holds the final value.
-const STATS = [
-  { value: 4, suffix: "+", label: "Years experience" },
-  { value: 10, suffix: "+", label: "Client websites managed" },
-  { value: 9, suffix: "", label: "Services" },
-] as const;
-
-export function About({ section }: { section: SectionConfig }) {
+/** Hero: copy, chips and stats come from the site profile (content/<site>/profile.ts). */
+export function About({ section, profile }: SectionProps) {
+  const { tagline, traits, blurb, photoAlt, heroToolRows, stats } = profile.about;
+  const { email, primaryCta } = profile.contact;
   return (
     <SectionCard
       section={section}
@@ -35,10 +25,10 @@ export function About({ section }: { section: SectionConfig }) {
       title={
         <>
           <span data-hero="line" className="block">
-            {site.tagline.line1}
+            {tagline.line1}
           </span>
           <span data-hero="line" className="block text-accent-text">
-            {site.tagline.line2}
+            {tagline.line2}
           </span>
         </>
       }
@@ -52,7 +42,7 @@ export function About({ section }: { section: SectionConfig }) {
           <div className="qo-portrait-fade relative aspect-[3/4] w-full">
             <Image
               src={hansPhoto}
-              alt="Hans Obena, virtual assistant with advanced technical skills"
+              alt={photoAlt}
               fill
               preload
               fetchPriority="high"
@@ -72,41 +62,58 @@ export function About({ section }: { section: SectionConfig }) {
           {/* Trait pill: dark pill with a lime dot in both themes (lime never small on light) */}
           <p data-hero="pill" className="qo-trait-pill qo-label inline-flex w-fit items-center gap-2.5 rounded-full border px-4 py-2">
             <span aria-hidden="true" className="size-2 rounded-full bg-lime" />
-            {site.traits.join(" | ")}
+            {traits.join(" | ")}
           </p>
 
           <p data-hero="blurb" className="max-w-2xl text-base leading-relaxed text-body sm:text-lg">
-            {BLURB}
+            {blurb}
           </p>
 
-          <ul data-hero="chips" aria-label="Tools I use" className="qo-chip-row flex flex-wrap gap-2">
-            {heroTools.map((tool) => (
-              <li key={tool}>
-                <Chip>{tool}</Chip>
-              </li>
+          <div className="flex flex-col gap-4">
+            {heroToolRows.map(({ label, tools }, i) => (
+              <ul
+                key={label ?? i}
+                data-hero="chips"
+                aria-label={label ? `${label} tools I use` : "Tools I use"}
+                className="qo-chip-row flex flex-wrap items-center gap-2"
+              >
+                {/* Optional row label (dev site: Ops / Dev). It sits in the list so it
+                    animates in with the chips (HeroIntro). */}
+                {label && (
+                  <li aria-hidden="true" className="qo-label basis-full whitespace-nowrap text-muted">
+                    {`// ${label}`}
+                  </li>
+                )}
+                {tools.map((tool) => (
+                  <li key={tool}>
+                    <Chip icon={<ToolLogo name={tool} />}>{tool}</Chip>
+                  </li>
+                ))}
+              </ul>
             ))}
-          </ul>
+          </div>
 
           <div data-hero="actions" className="flex flex-wrap items-center gap-3">
             <a
               href="#contact"
               className="qo-btn group inline-flex h-11 items-center gap-2 rounded-full bg-accent pr-4 pl-6 text-sm font-bold text-on-accent hover:bg-accent-hover"
             >
-              {site.cta.primary}
+              {primaryCta}
               <ArrowRight aria-hidden="true" className="qo-nudge size-4" />
             </a>
             <a
-              href={`mailto:${site.contact.email}`}
+              href={`mailto:${email}`}
               className="qo-btn inline-flex h-11 items-center rounded-full border border-line px-5 text-sm font-bold text-fg hover:bg-line"
             >
-              {site.contact.email}
+              {email}
             </a>
           </div>
         </div>
       </div>
 
       <Reveal className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {STATS.map(({ value, suffix, label }) => (
+        {/* Counted up on scroll (components/motion/CountUp.tsx); the HTML holds the final value. */}
+        {stats.map(({ value, suffix, label }) => (
           <div
             key={label}
             data-reveal
