@@ -5,13 +5,18 @@
 export type SocialLabel = "Facebook" | "Instagram" | "YouTube" | "LinkedIn" | "GitHub";
 export type SocialLink = { label: SocialLabel; handle: string; href: string };
 
+const DEV_URL = "https://hansobena.triqova.com";
+
 export const site = {
   owner: "Hans Obena",
   triqovaUrl: "https://triqova.com",
   bookingUrl: "https://bit.ly/3WlL3yg",
   /** Canonical origins of the two sites (DEV_FIRST_PLAN.md §1), used for cross-links. */
-  devUrl: "https://hansobena.triqova.com",
+  devUrl: DEV_URL,
   vaUrl: "https://qovaops.triqova.com",
+  /** JSON-LD @id of Hans's Person node. Defined on the dev site; the VA site's
+   *  ProfessionalService.founder points to the same @id, so both sites describe one person. */
+  personId: `${DEV_URL}/#person`,
 } as const;
 
 /** Every social profile; each site picks and orders the ones it shows. */

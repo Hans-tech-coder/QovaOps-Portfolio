@@ -16,9 +16,9 @@ import { heroToolRows, toolGroups } from "./tools";
 /** Dev-only copy used outside the page body (metadata, OG card, JSON-LD). */
 export const devMeta = {
   url: site.devUrl,
-  title: "Hans Obena — Full-Stack Web Developer (Next.js, React, WordPress, Shopify)",
+  title: "Hans Obena — Full-Stack Web Developer | Next.js, React",
   description:
-    "Full-stack web developer with 4+ years of agency experience. I build websites and web apps with Next.js, React and TypeScript, and WordPress and Shopify sites. Open to remote full-time, contract or part-time roles.",
+    "Full-stack web developer with 4+ years of agency experience: Next.js, React and TypeScript apps, plus WordPress and Shopify sites. Open to remote roles.",
   jobTitle: "Full-Stack Web Developer",
 } as const;
 

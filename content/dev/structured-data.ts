@@ -6,8 +6,8 @@ import { devMeta, devProfile } from "./profile";
 
 const { url, contact, socials, toolGroups, experience } = devProfile;
 
-/** The VA site's ProfessionalService can point its founder here (Phase D). */
-export const devPersonId = `${url}/#person`;
+/** The VA site's ProfessionalService.founder points to this same @id (content/site.ts). */
+export const devPersonId = site.personId;
 
 export const devStructuredData = {
   "@context": "https://schema.org",

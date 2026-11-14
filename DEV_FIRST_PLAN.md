@@ -1,6 +1,6 @@
 # Two sites, one app: developer portfolio + QovaOps VA
 
-Status: **proposed (updated 2026-11-14), build starts when Hans approves.**
+Status: **Phases B–D built and checked locally; Phase E local QA done (2026-11-14). Left: Hans's decisions, push, deploy (launch checklist at the end).**
 Context: Hans wants the portfolio to work mainly for **developer job applications**, with the QovaOps General VA service kept separate. Decided 2026-11-14: the developer portfolio gets its own subdomain, **`hansobena.triqova.com`**; the VA service stays on **`qovaops.triqova.com`**. Both are served by **this one repo and one Next.js app** (no copy of the project). Everything built so far (sections, motion, theme, Work browser, tool logos) is reused.
 
 Status legend: `[ ]` to do · `[!]` needs Hans · `[x]` done/decided
@@ -100,7 +100,7 @@ content/
 Components that read content directly (`About`, `Contact`, `Tools`, `Work`, `Experience`, `Header`, `Sidebar`, `MobileNav`, `JsonLd`) get the data through the profile/props instead.
 
 **SEO**
-- Dev: title *Hans Obena — Full-Stack Web Developer (Next.js, React, WordPress, Shopify)*; JSON-LD `Person` (jobTitle, `knowsAbout` = dev stack, `sameAs` GitHub + LinkedIn, `alumniOf`, email `obenahans@gmail.com`).
+- Dev: title *Hans Obena — Full-Stack Web Developer | Next.js, React*; JSON-LD `Person` (jobTitle, `knowsAbout` = dev stack, `sameAs` GitHub + LinkedIn, `alumniOf`, email `obenahans@gmail.com`).
 - VA: current QovaOps title/description; JSON-LD `ProfessionalService` with `founder` → the dev site's `Person` `@id`.
 - Separate canonical, sitemap, robots and OG/Twitter card per domain.
 
@@ -134,10 +134,29 @@ Components that read content directly (`About`, `Contact`, `Tools`, `Work`, `Exp
 - [x] Two Engineering rows from the dev resume kept: ClickUp forms dashboard, Event RSVP app (Hans, 2026-11-14)
 
 ### Phase D — SEO & sharing
-- [ ] Metadata, canonical, JSON-LD, sitemap, robots, OG card per domain (dev basics done in Phase C; left: VA `ProfessionalService.founder` → dev `Person` @id (`devPersonId`), review dev title/description with Hans, validate both in Rich Results / OG debuggers after deploy)
+- [x] One `Person` for both sites: `site.personId` = `https://hansobena.triqova.com/#person` (`content/site.ts`). Dev JSON-LD defines it in full (email, `sameAs` GitHub + LinkedIn); the VA graph repeats only shared facts under the same `@id` (no personal email, `sameAs` = GitHub + LinkedIn, `worksFor` → `qovaops.triqova.com/#service`) and `ProfessionalService.founder` points to it. One `Person` node per page, absolute IDs on the right domain (2026-11-14)
+- [x] Per-domain metadata checked on the production build through the host rewrites (`curl -H "Host: …" http://localhost:3005/…`): title, description, canonical, `og:url`, `og:image`/`twitter:image`, sitemap `<loc>`, robots `Sitemap:`, manifest, `/opengraph-image` (200 PNG). Fixed: `og:image` leaked the internal path (`…/dev/opengraph-image`, `…/va/opengraph-image`) → OG image is now a route handler per site (`app/<site>/opengraph-image/route.tsx`) linked from metadata as `/opengraph-image`, one image for OG + Twitter; the shared root `app/manifest.ts` gave the dev site the QovaOps name → per-site `app/<site>/manifest.webmanifest/route.ts`; non-site hosts (localhost, Vercel previews) now get the VA files too, not only `/` (2026-11-14)
+- [x] Dev title/description shortened to fit search results (Google cuts at ~60 / ~155; the old ones were 74 / 214 chars). Applied (Hans, 2026-11-14):
+  - Title (54): `Hans Obena — Full-Stack Web Developer | Next.js, React`
+  - Description (152): `Full-stack web developer with 4+ years of agency experience: Next.js, React and TypeScript apps, plus WordPress and Shopify sites. Open to remote roles.`
+- [ ] After deploy: Rich Results Test and Schema validator on both URLs, OG debuggers (see launch checklist)
 
 ### Phase E — QA & launch
-- [ ] Both sites at 1440 / 1024 / 768 / 390, dark + light, keyboard, reduced motion, no overflow; Lighthouse both
-- [ ] Docs: PLAN.md, CLAUDE.md, BRAND_GUIDE.md, guardrails email check
+- [x] Local QA on the production build with real host rewrites (headless Chrome, hostnames mapped to `next start` :3005), both sites: 1440 / 1024 / 768 / 390 × dark + light → no horizontal overflow, no console errors or failed requests on a fresh load; skip link → `#main`; Work tabs (ArrowRight switches + focus); Work pin present; resume modal (opens, focus inside, Esc closes, focus back to "View resume"); mobile menu (opens, links, Esc); loader once per visit (`qo-intro-seen` set, reload adds `qo-intro-skip`); reduced motion (no hidden content); cross-links (dev → `https://qovaops.triqova.com`, VA → `https://hansobena.triqova.com`); mailto per site (2026-11-14)
+- [x] Fixed in QA: (1) **keyboard/screen readers skipped every section that hadn't scrolled in** (Reveal hid items with `visibility`), so Tab went from the hero straight to the footer → Reveal animates opacity only and reveals an item when focus lands in it; (2) **nav links to sections below Work landed one section short** (inside the pin; e.g. VA "Experience" showed Work) → `scrollToSection` uses the scrollspy trigger position, which includes the pin, and plain `#section` links (header "Get in touch", hero buttons) take the same path (2026-11-14)
+- [x] Lighthouse both sites, mobile + desktop (scores in PLAN.md §8). Accessibility 100 dev / 97 VA (only the known "by triqova" logo contrast), Best Practices 100, SEO 100. Performance ranged widely on this machine (see PLAN.md); re-measure with PageSpeed Insights after deploy
+- [ ] Not watched (pane hidden / headless only): the loader + hero timeline and the scrubbed scroll motion as they look in real time; glance at both sites in a normal browser once before launch
+- [x] Docs: CLAUDE.md (two sites, per-site contacts), BRAND_GUIDE.md §10 (developer personal brand), guardrails: `obenahans@gmail.com` only in `app/dev` / `content/dev`; VA source always scanned + built VA page checked (2026-11-14)
 - [ ] Hans says "push the changes" → guardrails → commit → push
-- [ ] Vercel: one project, add both domains. GoDaddy (`triqova.com` DNS): CNAME `hansobena` and CNAME `qovaops` → the value Vercel shows
+- [ ] Deploy (Hans), see the launch checklist below
+
+### Launch checklist (Hans)
+1. Say **"push the changes"** → `npm run guardrails` → commit → push to `main`.
+2. **Vercel**: one project from `Hans-tech-coder/QovaOps-Portfolio` (production branch `main`). Settings → Domains → add **both** `hansobena.triqova.com` and `qovaops.triqova.com` to the same project (no redirect between them). Enable Analytics + Speed Insights.
+3. **GoDaddy** → `triqova.com` → DNS → add two CNAME records: `hansobena` → the value Vercel shows, and `qovaops` → the value Vercel shows (usually `cname.vercel-dns.com`; use what Vercel lists). Wait until Vercel shows "Valid Configuration" and SSL for both.
+4. **Check each live URL** (`https://hansobena.triqova.com`, `https://qovaops.triqova.com`):
+   - The right site loads at `/` over HTTPS; view source → canonical, `og:url`, `og:image` on that domain; `/robots.txt`, `/sitemap.xml`, `/manifest.webmanifest`, `/opengraph-image` load.
+   - `https://hansobena.triqova.com/va` → redirects to the VA site; `/dev` and `/va` paths on either domain redirect to their domain (production-only redirects).
+   - Cross-links: dev header "VA services" and the "Also offering" card → VA site; VA header "Developer portfolio" → dev site.
+5. **Validators**: Google Rich Results Test + validator.schema.org on both URLs (dev: `Person`; VA: `ProfessionalService` with `founder` → the dev `Person`). OG previews: LinkedIn Post Inspector, Facebook Sharing Debugger, and an X/Twitter post composer for each URL.
+6. **PageSpeed Insights** (mobile + desktop) on both URLs; compare with PLAN.md §8. Then Google Search Console: add both domains (or the `triqova.com` domain property) and submit each `/sitemap.xml`.

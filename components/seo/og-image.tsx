@@ -5,7 +5,7 @@ import { ImageResponse } from "next/og";
 import { devMeta, devProfile } from "@/content/dev/profile";
 import { vaProfile } from "@/content/va/profile";
 
-// Open Graph / Twitter cards for both sites (app/<site>/opengraph-image.tsx, twitter-image.tsx).
+// Open Graph / Twitter cards for both sites (app/<site>/opengraph-image/route.tsx; linked from app/<site>/metadata.ts).
 // Brand sheet look: #101010 + faint grid, logo lockup, two-tone headline, divider with lime tip.
 //   va:  QovaOps lockup (Q mark + "by triqova"), VA tagline
 //   dev: "Hans Obena / Full-Stack Web Developer" (personal brand, no Q mark)

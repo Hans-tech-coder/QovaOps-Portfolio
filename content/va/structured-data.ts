@@ -1,12 +1,14 @@
-// VA site structured data (PLAN.md §7): Person + ProfessionalService.
+// VA site structured data (PLAN.md §7): ProfessionalService + its founder.
 // Only facts already shown on the site. No ratings, reviews, prices, address or client claims.
+// The founder is the same Person the dev site defines (site.personId, an absolute
+// hansobena.triqova.com URL), so search engines see one person behind both sites. This page
+// repeats only shared facts for that node; the personal email stays on the dev site.
 
-import { site } from "@/content/site";
+import { site, socialLinks } from "@/content/site";
 import { vaMeta, vaProfile } from "./profile";
 import { services } from "./services";
 
 const { url, brand, contact, socials, about, toolGroups, experience } = vaProfile;
-const personId = `${url}/#person`;
 const serviceId = `${url}/#service`;
 
 export const vaStructuredData = {
@@ -14,17 +16,17 @@ export const vaStructuredData = {
   "@graph": [
     {
       "@type": "Person",
-      "@id": personId,
+      "@id": site.personId,
       name: site.owner,
       jobTitle: "General Virtual Assistant",
       description: "Virtual assistant with advanced technical skills.",
-      url,
-      email: `mailto:${contact.email}`,
+      url: site.devUrl,
       image: `${url}/brand/hans-photo.png`,
       worksFor: { "@id": serviceId },
       alumniOf: experience.education.map((e) => ({ "@type": "CollegeOrUniversity", name: e.org })),
       knowsAbout: toolGroups.flatMap((g) => g.tools),
-      sameAs: socials.map((s) => s.href),
+      // Personal profiles only (same as the dev site); the QovaOps pages belong to the service.
+      sameAs: [socialLinks.linkedin.href, socialLinks.github.href],
     },
     {
       "@type": "ProfessionalService",
@@ -37,7 +39,7 @@ export const vaStructuredData = {
       email: contact.email,
       logo: `${url}/icons/icon-512.png`,
       image: `${url}/opengraph-image`,
-      founder: { "@id": personId },
+      founder: { "@id": site.personId },
       sameAs: socials.map((s) => s.href),
       hasOfferCatalog: {
         "@type": "OfferCatalog",

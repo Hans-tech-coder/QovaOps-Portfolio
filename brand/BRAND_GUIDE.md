@@ -1,6 +1,6 @@
 # QovaOps Brand Guide — for the Portfolio Website
 
-Reference for building Hans Obena's portfolio / QovaOps website. Everything here comes from the official brand sheet (`qovaops-brand-template.pdf`, same folder) and the QovaOps social media brand guide (`C:\Users\user\Social Media\brand\BRAND_GUIDE.md`), adapted for web.
+Reference for building Hans Obena's portfolio / QovaOps website. Sections 1–9 are the **QovaOps VA site** (`qovaops.triqova.com`); section 10 covers the **developer site** (`hansobena.triqova.com`), which shares the visual system but not the brand name, contacts or framing. Everything here comes from the official brand sheet (`qovaops-brand-template.pdf`, same folder) and the QovaOps social media brand guide (`C:\Users\user\Social Media\brand\BRAND_GUIDE.md`), adapted for web.
 
 Values marked **(derived)** are not official tokens. They were read off the brand PDF or added for web needs (hover states, borders, accessible text). Adjust them if Hans decides otherwise.
 
@@ -50,6 +50,8 @@ The brand sheet groups the offer into three pillars, handy for a short "What I d
 ---
 
 ## 2. Contacts & links (use exactly these)
+
+VA site only. The developer site's contacts are in §10.
 
 | Channel | Display | Link |
 |---|---|---|
@@ -221,3 +223,30 @@ borderRadius: { card: "14px" },
 - [ ] Export SVG logo files from Canva `DAHaBth6Gns` page 2
 - [ ] Real photo of Hans (the founder graphics' photo looked like a stock image)
 - [ ] Real projects, case studies and testimonials to show (none are in the brand files)
+
+---
+
+## 10. Developer site — Hans Obena personal brand (`hansobena.triqova.com`)
+
+Same design system as QovaOps (dark-first, 60/30/10 palette, lime accent, Articulat CF, cards, sidebar, motion, §3–§8). What changes is who it is about and how it talks. Decided 2026-11-14 (DEV_FIRST_PLAN.md §1).
+
+| | |
+|---|---|
+| Who | **Hans Obena, Full-Stack Web Developer** (personal brand; QovaOps is not the brand here) |
+| Audience | Recruiters and hiring managers for **remote** developer roles: full-time, contract or part-time |
+| Wordmark | **Hans** solid + **Obena** outlined lime (same treatment as Qova**Ops**), no Q mark, no "by triqova" |
+| H1 | "I build fast, reliable / websites and web apps." (approved 2026-11-14) |
+| Role line | Full-Stack Web Developer · Next.js, React, TypeScript, WordPress, Shopify |
+| Primary CTA | **Get in touch** (→ Contact) · secondary: View projects, Download resume |
+| Email | `obenahans@gmail.com` (**dev site only**, never on the VA site) |
+| GitHub | `https://github.com/Hans-tech-coder` (profile link only, no per-project repo links) |
+| LinkedIn | `https://linkedin.com/in/hans-obena` |
+| Book a call | `https://bit.ly/3WlL3yg` |
+| Resume | `public/resume/hans-obena-developer-resume.pdf` (the VA site keeps `hans-obena-resume.pdf`) |
+| OG card | "Hans Obena / Full-Stack Web Developer", stack line, `hansobena.triqova.com` |
+
+Voice:
+- First person, plain and specific: what Hans built, with which stack, for whom. Engineer-to-engineer, not salesy.
+- Say "developer" / "full-stack web developer". The VA wording ("virtual assistant with advanced technical skills", "Delegate Your Operations") stays on the VA site; the dev site mentions QovaOps once, as the small "Also offering" card and header link.
+- Facts only from the confirmed resume and work data (CS with Honors, 4+ years, Skyrocket, Run As One, the projects in `content/work.ts`). Same rule as §7: **never invent results, metrics, testimonials or claims**.
+- Meta: title `Hans Obena — Full-Stack Web Developer | Next.js, React`; description in `content/dev/profile.ts` (`devMeta`).

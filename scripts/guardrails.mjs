@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { execSync, spawnSync } from "node:child_process";
-import { existsSync, readFileSync, statSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 
 const args = new Set(process.argv.slice(2));
@@ -92,6 +92,12 @@ const conflictMarkerRegex = /^(<<<<<<< |=======$|>>>>>>> )/m;
 const forbiddenBrandEmailRegex = /\b(triqova@gmail\.com|info@triqova\.com)\b/i;
 const brandCheckedDirs = new Set(["app", "components", "content", "public"]);
 
+// Two sites (DEV_FIRST_PLAN.md): Hans's personal email belongs to the developer site only.
+// In app/components/content/public it may appear only under app/dev/ or content/dev/;
+// VA content and shared code must not contain it (it would show on qovaops.triqova.com).
+const devOnlyEmailRegex = /\bobenahans@gmail\.com\b/i;
+const isDevOnlyPath = (key) => key.startsWith("app/dev/") || key.startsWith("content/dev/");
+
 const issues = [];
 
 for (const relPath of changedFiles) {
@@ -135,13 +141,42 @@ for (const relPath of changedFiles) {
   }
 }
 
+// The VA site's own source is always checked in full, changed or not.
+function listFiles(dir) {
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+    const full = path.join(dir, entry.name);
+    return entry.isDirectory() ? listFiles(full) : [full];
+  });
+}
+const scanned = new Set();
+for (const relPath of [...changedFiles, ...listFiles("app/va"), ...listFiles("content/va")]) {
+  const key = relPath.split(path.sep).join("/");
+  if (scanned.has(key)) continue;
+  scanned.add(key);
+  const topDir = key.split("/")[0];
+  if (!brandCheckedDirs.has(topDir) || isDevOnlyPath(key)) continue;
+  if (/\.(png|jpe?g|gif|webp|ico|pdf|woff2?|ttf|eot|mp4|webm)$/i.test(key)) continue;
+  let content = "";
+  try {
+    content = readFileSync(relPath, "utf8");
+  } catch {
+    continue;
+  }
+  if (devOnlyEmailRegex.test(content)) {
+    issues.push(
+      `${key}: contains obenahans@gmail.com, which is for the developer site only (app/dev, content/dev). The VA site uses qovaops@gmail.com.`
+    );
+  }
+}
+
 if (issues.length > 0) {
   for (const issue of issues) {
     console.error(`  - ${issue}`);
   }
   fail(`Found ${issues.length} file/content violation(s).`);
 }
-pass("No secrets, conflict markers, or brand contact violations found.");
+pass("No secrets, conflict markers, or brand contact violations found (dev email stays out of VA content).");
 
 // 3. TypeScript typecheck
 logStep("3/5", "Running TypeScript typecheck (tsc --noEmit)...");
@@ -157,6 +192,14 @@ if (skipBuild) {
 } else {
   logStep("5/5", "Running Next.js production build (npm run build)...");
   runCmd("npm", ["run", "build"], "Next.js build");
+
+  // The built VA page must not contain the dev email either (catches it arriving through
+  // a shared component or import, not only in VA source files).
+  const vaHtml = [".next/server/app/va.html", ".next/server/app/va.rsc"].filter((f) => existsSync(f));
+  if (!vaHtml.length) fail("Built VA page not found (.next/server/app/va.html). Check the build output.");
+  const leaks = vaHtml.filter((f) => devOnlyEmailRegex.test(readFileSync(f, "utf8")));
+  if (leaks.length) fail(`Built VA page contains obenahans@gmail.com (${leaks.join(", ")}). It is for the developer site only.`);
+  pass("Built VA page does not contain the developer email.");
 }
 
 console.log(`\n${GREEN}✔ All guardrails passed! Ready to commit and push.${RESET}\n`);

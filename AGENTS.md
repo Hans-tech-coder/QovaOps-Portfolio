@@ -15,6 +15,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
   1. Execute `npm run guardrails` (`node scripts/guardrails.mjs`). This verifies:
      - Working tree has changes
      - No sensitive files (`.env*`, keys, local settings), merge conflict markers, secrets, or forbidden contact emails (`triqova@gmail.com`, `info@triqova.com`) in app/components/content/public
+     - `obenahans@gmail.com` only in developer-site files (`app/dev`, `content/dev`): never in VA source (`app/va` and `content/va` are always scanned in full) or in the built VA page
      - TypeScript (`npx tsc --noEmit`)
      - ESLint (`npm run lint`)
      - Next.js production build (`npm run build`)

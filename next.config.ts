@@ -5,7 +5,7 @@ import type { NextConfig } from "next";
 //   qovaops.triqova.com/*   → /va/*   (QovaOps VA site)
 //   hansobena.triqova.com/* → /dev/*  (developer portfolio)
 // Pages stay static: rewrites/redirects are routing rules, no request-time code.
-const VA_HOST = "qovaops.triqova.com";
+const VA_HOST = "qovaops.triqova.com"; // redirect target; every non-dev host serves the VA site
 const DEV_HOST = "hansobena.triqova.com";
 const host = (value: string) => [{ type: "host" as const, value: value.replace(/\./g, "\\.") }];
 
@@ -30,12 +30,13 @@ const nextConfig: NextConfig = {
         { source: "/", has: host(DEV_HOST), destination: "/dev" },
         { source: "/", missing: host(DEV_HOST), destination: "/va" },
       ],
-      // Everything else per domain (sitemap.xml, robots.txt, opengraph-image…), after
-      // public files and _next assets, so shared assets (icons, resume, work thumbnails)
-      // are served as-is on both domains.
+      // Everything else per domain (sitemap.xml, robots.txt, manifest.webmanifest,
+      // opengraph-image…), after public files and _next assets, so shared assets (icons,
+      // resume, work thumbnails) are served as-is on both domains. Like `/`, other hosts
+      // get the VA files, so the VA page's manifest/OG links also work on localhost.
       afterFiles: [
         { source: "/:path*", has: host(DEV_HOST), destination: "/dev/:path*" },
-        { source: "/:path*", has: host(VA_HOST), destination: "/va/:path*" },
+        { source: "/:path*", missing: host(DEV_HOST), destination: "/va/:path*" },
       ],
     };
   },

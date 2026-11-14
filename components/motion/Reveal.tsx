@@ -32,7 +32,9 @@ function staggerFor(count: number) {
  * batches (ScrollTrigger.batch), so items entering together stagger together.
  * Items are pre-hidden by CSS (`.qo-js [data-reveal]` in globals.css) to avoid a
  * visible→hidden flash; under reduced motion nothing is hidden or moved.
- * Animates opacity/transform only (gsap-performance).
+ * Animates opacity/transform only (gsap-performance). Opacity, not autoAlpha: hidden
+ * items stay in the tab order and the accessibility tree, so Tab and screen readers
+ * reach sections that haven't scrolled in yet; focusing one reveals it at once.
  */
 export function Reveal({ children, className, items = "[data-reveal]", y = DIST.medium }: RevealProps) {
   const root = useRef<HTMLDivElement>(null);
@@ -47,14 +49,14 @@ export function Reveal({ children, className, items = "[data-reveal]", y = DIST.
         if (!targets.length) return;
 
         if (reduceMotion) {
-          gsap.set(targets, { autoAlpha: 1, y: 0 });
+          gsap.set(targets, { opacity: 1, y: 0 });
           return;
         }
 
-        gsap.set(targets, { autoAlpha: 0, y });
+        gsap.set(targets, { opacity: 0, y });
         const show = (batch: Element[]) =>
           gsap.to(batch, {
-            autoAlpha: 1,
+            opacity: 1,
             y: 0,
             duration: DUR.verySlow,
             stagger: staggerFor(batch.length),
@@ -70,6 +72,15 @@ export function Reveal({ children, className, items = "[data-reveal]", y = DIST.
           onLeave: show,
           onEnterBack: show,
         });
+
+        // Keyboard focus can land in an item before it scrolls into the trigger zone.
+        const onFocusIn = (e: FocusEvent) => {
+          const item = targets.find((t) => t.contains(e.target as Node));
+          if (item && Number(gsap.getProperty(item, "opacity")) < 1) show([item]);
+        };
+        const el = root.current;
+        el?.addEventListener("focusin", onFocusIn);
+        return () => el?.removeEventListener("focusin", onFocusIn);
       });
 
       return () => mm.revert();

@@ -31,6 +31,23 @@ function topOffset() {
   return barH + (barH ? 16 : 24);
 }
 
+/** Scrollspy line: a section is active while its top is above 40% of the viewport. */
+const SPY_LINE = 0.4;
+
+/** The scrollspy trigger per section id (set by ScrollSpyProvider). */
+const spyTriggers = new Map<string, ScrollTrigger>();
+
+/**
+ * Scroll position that puts a section's top just under the top bar. Read from the
+ * section's scrollspy trigger, which (through `pinnedContainer`) includes the Work
+ * pin's extra scroll; the element's own offset doesn't, so links to sections below
+ * Work would land inside the pin, one section short.
+ */
+function sectionY(st: ScrollTrigger) {
+  const y = st.start + window.innerHeight * SPY_LINE - topOffset();
+  return gsap.utils.clamp(0, ScrollTrigger.maxScroll(window), y);
+}
+
 /**
  * Smooth-scrolls to a section (ScrollToPlugin), then moves focus to its heading
  * so keyboard and screen-reader users land in the section. Instant under
@@ -40,6 +57,7 @@ export function scrollToSection(id: string) {
   const section = document.getElementById(id);
   if (!section) return;
   const focusTarget = section.querySelector<HTMLElement>("[data-section-focus]") ?? section;
+  const spy = spyTriggers.get(id);
 
   const done = () => {
     focusTarget.focus({ preventScroll: true });
@@ -49,7 +67,9 @@ export function scrollToSection(id: string) {
   gsap.to(window, {
     duration: prefersReducedMotion() ? 0 : 0.8,
     ease: "power3.inOut",
-    scrollTo: { y: section, offsetY: topOffset(), autoKill: true },
+    scrollTo: spy
+      ? { y: sectionY(spy), autoKill: true }
+      : { y: section, offsetY: topOffset(), autoKill: true },
     overwrite: true,
     onComplete: done,
     onInterrupt: done,
@@ -81,16 +101,15 @@ export function ScrollSpyProvider({ items, children }: { items: NavItem[]; child
       for (const { id } of items) {
         const el = document.getElementById(id);
         if (!el) continue;
-        triggers.push({
-          id,
-          st: ScrollTrigger.create({
-            trigger: el,
-            pinnedContainer: pinnedContainerOf(el),
-            start: "top 40%",
-            end: "bottom 40%",
-            onToggle: recompute,
-          }),
+        const st = ScrollTrigger.create({
+          trigger: el,
+          pinnedContainer: pinnedContainerOf(el),
+          start: `top ${SPY_LINE * 100}%`,
+          end: `bottom ${SPY_LINE * 100}%`,
+          onToggle: recompute,
         });
+        triggers.push({ id, st });
+        spyTriggers.set(id, st);
       }
 
       // Direct position check: a ScrollTrigger ending at "max" reports
@@ -101,6 +120,19 @@ export function ScrollSpyProvider({ items, children }: { items: NavItem[]; child
         atBottom = next;
         recompute();
       };
+      // Plain in-page links to a section (header CTA, hero buttons) take the same path
+      // as the nav: a native #hash jump uses the element's own offset and would land
+      // inside the Work pin for sections below it.
+      const onLinkClick = (e: MouseEvent) => {
+        if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        const link = (e.target as Element | null)?.closest?.<HTMLAnchorElement>('a[href^="#"]');
+        const id = link?.getAttribute("href")?.slice(1);
+        if (!id || !spyTriggers.has(id)) return;
+        e.preventDefault();
+        scrollToSection(id);
+      };
+      document.addEventListener("click", onLinkClick);
+
       window.addEventListener("scroll", checkBottom, { passive: true });
       window.addEventListener("resize", checkBottom);
       ScrollTrigger.addEventListener("refresh", checkBottom);
@@ -108,7 +140,11 @@ export function ScrollSpyProvider({ items, children }: { items: NavItem[]; child
       checkBottom();
       recompute();
       return () => {
-        triggers.forEach((t) => t.st.kill());
+        triggers.forEach((t) => {
+          t.st.kill();
+          if (spyTriggers.get(t.id) === t.st) spyTriggers.delete(t.id);
+        });
+        document.removeEventListener("click", onLinkClick);
         window.removeEventListener("scroll", checkBottom);
         window.removeEventListener("resize", checkBottom);
         ScrollTrigger.removeEventListener("refresh", checkBottom);
