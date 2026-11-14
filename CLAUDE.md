@@ -3,7 +3,7 @@
 One Next.js app that serves **two sites** (host rewrites in `next.config.ts`, one Vercel project):
 - **`hansobena.triqova.com`** → `app/dev/*`, `content/dev/*`: **Hans Obena, Full-Stack Web Developer** (personal brand, for remote developer roles).
 - **`qovaops.triqova.com`** → `app/va/*`, `content/va/*`: **QovaOps by triqova**, Hans's tech-enabled General VA service.
-Shared page shell `components/layout/PortfolioPage.tsx` + typed `SiteProfile` (`content/profile.ts`); shared data in `content/site.ts`. Locally, `localhost:3000/dev` and `/va` open each site (any other host gets the VA site at `/`).
+Shared page shell `components/layout/PortfolioPage.tsx` + typed `SiteProfile` (`content/profile.ts`); shared data in `content/site.ts`. Locally, `localhost:3000` (and any `*.vercel.app` URL) shows a site picker at `/` (`app/select`, `noindex`, redirected away on both real domains); `/dev` and `/va` open each site directly. Other paths on those hosts still fall back to the VA files.
 
 **Build status, decisions and what's on hold live in [PLAN.md](PLAN.md)** (whole project) **and [DEV_FIRST_PLAN.md](DEV_FIRST_PLAN.md)** (the two-site split, phases A–E, launch checklist). Read them at the start of a session and update their status boxes and session log as work lands.
 

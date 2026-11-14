@@ -4,8 +4,9 @@ import type { NextConfig } from "next";
 // own route segment, so visitors only ever see `/`:
 //   qovaops.triqova.com/*   → /va/*   (QovaOps VA site)
 //   hansobena.triqova.com/* → /dev/*  (developer portfolio)
+//   any other host (localhost, *.vercel.app) → `/` is the site picker (app/select)
 // Pages stay static: rewrites/redirects are routing rules, no request-time code.
-const VA_HOST = "qovaops.triqova.com"; // redirect target; every non-dev host serves the VA site
+const VA_HOST = "qovaops.triqova.com";
 const DEV_HOST = "hansobena.triqova.com";
 const host = (value: string) => [{ type: "host" as const, value: value.replace(/\./g, "\\.") }];
 
@@ -27,15 +28,17 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return {
       // `/` exists on no route, so it is mapped before the filesystem check. Any other host
-      // (localhost, Vercel preview URLs) gets the VA site at `/` for now.
+      // (localhost, Vercel preview URLs) gets the site picker, which links to /dev and /va.
       beforeFiles: [
         { source: "/", has: host(DEV_HOST), destination: "/dev" },
-        { source: "/", missing: host(DEV_HOST), destination: "/va" },
+        { source: "/", has: host(VA_HOST), destination: "/va" },
+        { source: "/", missing: [...host(DEV_HOST), ...host(VA_HOST)], destination: "/select" },
       ],
       // Everything else per domain (sitemap.xml, robots.txt, manifest.webmanifest,
       // opengraph-image…), after public files and _next assets, so shared assets (icons,
-      // resume, work thumbnails) are served as-is on both domains. Like `/`, other hosts
-      // get the VA files, so the VA page's manifest/OG links also work on localhost.
+      // resume, work thumbnails) are served as-is on both domains. Other hosts (localhost,
+      // previews) still fall back to the VA files, so the VA page's relative manifest link
+      // works there; only `/` is the picker.
       // A path neither site has falls through to app/global-not-found.tsx (404, branded per host).
       afterFiles: [
         { source: "/:path*", has: host(DEV_HOST), destination: "/dev/:path*" },
@@ -53,9 +56,17 @@ const nextConfig: NextConfig = {
     const oldVaPaths = [
       { source: "/:p(va|gva)", has: host(DEV_HOST), destination: `https://${VA_HOST}/`, permanent: true },
     ];
-    if (process.env.VERCEL_ENV !== "production") return oldVaPaths;
+    // The site picker is only for localhost and *.vercel.app; on the real domains it goes home.
+    const pickerOnDomains = [DEV_HOST, VA_HOST].map((h) => ({
+      source: "/select",
+      has: host(h),
+      destination: "/",
+      permanent: false,
+    }));
+    if (process.env.VERCEL_ENV !== "production") return [...oldVaPaths, ...pickerOnDomains];
     return [
       ...oldVaPaths,
+      ...pickerOnDomains,
       { source: "/va", destination: `https://${VA_HOST}/`, permanent: true },
       { source: "/dev", destination: `https://${DEV_HOST}/`, permanent: true },
     ];

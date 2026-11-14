@@ -83,7 +83,7 @@ next.config.ts            rewrites with `has: [{ type: "host", value: … }]`
 - `hansobena.triqova.com/*` → `/dev/*`, `qovaops.triqova.com/*` → `/va/*` (including `/sitemap.xml`, `/robots.txt`, `/opengraph-image`). Visitors only ever see `/`.
 - Pages stay static (rewrites in `next.config.ts`, no request-time logic). `proxy.ts` (Next 16's name for middleware) only if rules get more complex.
 - The internal `/dev` and `/va` paths redirect to the right domain if opened directly, so each page has a single canonical URL.
-- Local dev: `localhost:3000/dev` and `/va` open each site directly; a `?site=` or host-alias tip goes in the README.
+- Local dev: `localhost:3000/dev` and `/va` open each site directly; `/` on localhost and `*.vercel.app` is a site picker (`app/select`, 2026-11-14).
 - Shared assets (`public/`, icons, resume, work thumbnails) work on both domains.
 
 **Shared page shell.** Move what `app/page.tsx` does today (loader, hero intro, skip link, mobile nav, header, sidebar, sections loop, footer, back to top) into `components/layout/PortfolioPage.tsx`. It takes a *profile*: nav/sections, section components, header wordmark + CTA, contact email, cross-link.

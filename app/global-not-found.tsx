@@ -16,6 +16,7 @@ import "./globals.css";
  * Next answers it with this page and status 404 (adding `noindex`), without any layout,
  * hence the shared <SiteDocument> and globals.css here. The host picks the site, like the
  * rewrites: hansobena.triqova.com → dev, any other host (qovaops, localhost, previews) → VA.
+ * On localhost and previews "Back to home" (`/`) opens the site picker (app/select).
  *
  * Why not the alternatives (tried on a prod build, Next 16 + cacheComponents):
  * - app/<site>/not-found.tsx + a catch-all calling notFound(): a thrown notFound() is

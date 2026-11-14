@@ -9,7 +9,7 @@ Stack: Next.js (App Router) + TypeScript + Tailwind CSS v4 + GSAP.
 
 ```bash
 npm install
-npm run dev     # http://localhost:3000
+npm run dev     # http://localhost:3000 → site picker; /dev and /va open each site
 npm run build
 npm run lint
 ```

@@ -7,7 +7,8 @@ import type { Brand } from "@/content/profile";
  * The letters rise in as part of the hero timeline (components/motion/HeroIntro.tsx,
  * targets data-wordmark-letter / data-wordmark-endorse). CSS pre-hides them when
  * JS runs (globals.css), so there is no flash; under reduced motion they are never hidden.
- * `animate={false}` (404 page, no hero timeline) leaves out those hooks so it shows at once.
+ * `animate={false}` (404 and site picker, no hero timeline) leaves out those hooks so it shows at once.
+ * `href={null}` renders it without its own link, for use inside a larger link (site picker cards).
  */
 export function Wordmark({
   brand,
@@ -15,15 +16,16 @@ export function Wordmark({
   animate = true,
 }: {
   brand: Brand;
-  href?: string;
+  href?: string | null;
   animate?: boolean;
 }) {
   const { solid, outline, spaced } = brand.wordmark;
   const letter = animate ? { "data-wordmark-letter": "" } : {};
+  const Link = href === null ? "span" : "a";
   return (
     <div {...(animate ? { "data-hero-wordmark": "" } : {})} className="inline-flex flex-col">
-      <a
-        href={href}
+      <Link
+        {...(href === null ? {} : { href })}
         className="rounded-lg text-[1.75rem] leading-none font-bold tracking-tight sm:text-4xl lg:text-[2.75rem]"
       >
         <span className="sr-only">
@@ -47,7 +49,7 @@ export function Wordmark({
             </span>
           ))}
         </span>
-      </a>
+      </Link>
       {brand.endorsement && (
         <span
           {...(animate ? { "data-wordmark-endorse": "" } : {})}
