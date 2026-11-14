@@ -7,13 +7,23 @@ import type { Brand } from "@/content/profile";
  * The letters rise in as part of the hero timeline (components/motion/HeroIntro.tsx,
  * targets data-wordmark-letter / data-wordmark-endorse). CSS pre-hides them when
  * JS runs (globals.css), so there is no flash; under reduced motion they are never hidden.
+ * `animate={false}` (404 page, no hero timeline) leaves out those hooks so it shows at once.
  */
-export function Wordmark({ brand }: { brand: Brand }) {
+export function Wordmark({
+  brand,
+  href = "#top",
+  animate = true,
+}: {
+  brand: Brand;
+  href?: string;
+  animate?: boolean;
+}) {
   const { solid, outline, spaced } = brand.wordmark;
+  const letter = animate ? { "data-wordmark-letter": "" } : {};
   return (
-    <div data-hero-wordmark className="inline-flex flex-col">
+    <div {...(animate ? { "data-hero-wordmark": "" } : {})} className="inline-flex flex-col">
       <a
-        href="#top"
+        href={href}
         className="rounded-lg text-[1.75rem] leading-none font-bold tracking-tight sm:text-4xl lg:text-[2.75rem]"
       >
         <span className="sr-only">
@@ -21,14 +31,14 @@ export function Wordmark({ brand }: { brand: Brand }) {
         </span>
         <span aria-hidden="true">
           {solid.split("").map((ch, i) => (
-            <span key={`s${i}`} data-wordmark-letter className="inline-block text-fg">
+            <span key={`s${i}`} {...letter} className="inline-block text-fg">
               {ch}
             </span>
           ))}
           {outline.split("").map((ch, i) => (
             <span
               key={`o${i}`}
-              data-wordmark-letter
+              {...letter}
               className={`text-outline inline-block [-webkit-text-stroke-width:1px] sm:[-webkit-text-stroke-width:1.25px] lg:[-webkit-text-stroke-width:1.5px] ${
                 spaced && i === 0 ? "ml-[0.22em]" : ""
               }`}
@@ -40,7 +50,7 @@ export function Wordmark({ brand }: { brand: Brand }) {
       </a>
       {brand.endorsement && (
         <span
-          data-wordmark-endorse
+          {...(animate ? { "data-wordmark-endorse": "" } : {})}
           aria-hidden="true"
           className="mt-0.5 self-end text-xs font-medium text-endorse sm:text-sm lg:text-base"
         >

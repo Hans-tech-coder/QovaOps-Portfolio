@@ -147,6 +147,7 @@ Components that read content directly (`About`, `Contact`, `Tools`, `Work`, `Exp
 - [x] Lighthouse both sites, mobile + desktop (scores in PLAN.md §8). Accessibility 100 dev / 97 VA (only the known "by triqova" logo contrast), Best Practices 100, SEO 100. Performance ranged widely on this machine (see PLAN.md); re-measure with PageSpeed Insights after deploy
 - [ ] Not watched (pane hidden / headless only): the loader + hero timeline and the scrubbed scroll motion as they look in real time; glance at both sites in a normal browser once before launch
 - [x] Docs: CLAUDE.md (two sites, per-site contacts), BRAND_GUIDE.md §10 (developer personal brand), guardrails: `obenahans@gmail.com` only in `app/dev` / `content/dev`; VA source always scanned + built VA page checked (2026-11-14)
+- [x] Branded 404 per site (`app/global-not-found.tsx`, host → dev or VA page; status 404, `noindex`, per-site title). Live check after deploy: `https://hansobena.triqova.com/nope` and `https://qovaops.triqova.com/nope` (2026-11-14)
 - [ ] Hans says "push the changes" → guardrails → commit → push
 - [ ] Deploy (Hans), see the launch checklist below
 

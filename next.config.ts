@@ -13,6 +13,8 @@ const nextConfig: NextConfig = {
   /* config options here */
   cacheComponents: true,
   partialPrefetching: true,
+  // app/global-not-found.tsx: one branded 404 per host for unmatched paths.
+  experimental: { globalNotFound: true },
   turbopack: {
     rules: {
       "*.css": {
@@ -34,6 +36,7 @@ const nextConfig: NextConfig = {
       // opengraph-image…), after public files and _next assets, so shared assets (icons,
       // resume, work thumbnails) are served as-is on both domains. Like `/`, other hosts
       // get the VA files, so the VA page's manifest/OG links also work on localhost.
+      // A path neither site has falls through to app/global-not-found.tsx (404, branded per host).
       afterFiles: [
         { source: "/:path*", has: host(DEV_HOST), destination: "/dev/:path*" },
         { source: "/:path*", missing: host(DEV_HOST), destination: "/va/:path*" },
@@ -45,9 +48,10 @@ const nextConfig: NextConfig = {
   // Production deploys only (VERCEL_ENV is set by Vercel), so localhost:3000/va and /dev,
   // `next start` and preview URLs still open each site directly.
   async redirects() {
-    // The old /va idea (DEV_FIRST_PLAN.md §1): on the dev domain, /va and /gva go to the VA site.
+    // The old /va idea (DEV_FIRST_PLAN.md §1): on the dev domain, /va and /gva go to the VA site
+    // for good (308), like the other domain redirects.
     const oldVaPaths = [
-      { source: "/:p(va|gva)", has: host(DEV_HOST), destination: `https://${VA_HOST}/`, permanent: false },
+      { source: "/:p(va|gva)", has: host(DEV_HOST), destination: `https://${VA_HOST}/`, permanent: true },
     ];
     if (process.env.VERCEL_ENV !== "production") return oldVaPaths;
     return [
