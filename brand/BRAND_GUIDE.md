@@ -235,6 +235,7 @@ Same design system as QovaOps (dark-first, 60/30/10 palette, lime accent, Articu
 | Who | **Hans Obena, Full-Stack Web Developer** (personal brand; QovaOps is not the brand here) |
 | Audience | Recruiters and hiring managers for **remote** developer roles: full-time, contract or part-time |
 | Wordmark | **Hans** solid + **Obena** outlined lime (same treatment as Qova**Ops**), no Q mark, no "by triqova" |
+| Mark | **HO ligature** (Concept A, picked 2026-11-14): monoline lime H whose right stem is also the left side of the O ring. Sister of the QovaOps Q mark (same lime, stroke feel and dark rounded tile, radius ≈ 22%). Files: `public/brand/hans-obena-mark.svg` (tile), `hans-obena-logo.svg` (dark lockup, transparent bg), `hans-obena-logo-light.svg` (light lockup, mark in black tile, wordmark `#101010`). Editable vector source: Canva `DAHa4u_lM2E` "Hans Obena logo (HO mark)". Same don'ts as §5. On the site: favicon/app icons only (`scripts/icons.mjs`, `public/icons/hans-obena-*`). Header, top bar and site picker show the **Hans Obena** wordmark alone, no mark (Hans, 2026-11-14). |
 | H1 | "I build fast, reliable / websites and web apps." (approved 2026-11-14) |
 | Role line | Full-Stack Web Developer · Next.js, React, TypeScript, WordPress, Shopify |
 | Primary CTA | **Get in touch** (→ Contact) · secondary: View projects, Download resume |

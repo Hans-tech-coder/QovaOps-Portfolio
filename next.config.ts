@@ -33,6 +33,10 @@ const nextConfig: NextConfig = {
         { source: "/", has: host(DEV_HOST), destination: "/dev" },
         { source: "/", has: host(VA_HOST), destination: "/va" },
         { source: "/", missing: [...host(DEV_HOST), ...host(VA_HOST)], destination: "/select" },
+        // No root app/favicon.ico (it would be the same on both domains): each host gets its
+        // own mark's .ico (scripts/icons.mjs, components/seo/icons.ts).
+        { source: "/favicon.ico", has: host(DEV_HOST), destination: "/icons/hans-obena-favicon.ico" },
+        { source: "/favicon.ico", missing: host(DEV_HOST), destination: "/icons/qovaops-favicon.ico" },
       ],
       // Everything else per domain (sitemap.xml, robots.txt, manifest.webmanifest,
       // opengraph-image…), after public files and _next assets, so shared assets (icons,

@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { Suspense } from "react";
 import { NotFoundPage } from "@/components/layout/NotFoundPage";
 import { SiteDocument } from "@/components/layout/SiteDocument";
+import { siteIcons } from "@/components/seo/icons";
 import { DEFAULT_THEME, THEME_COLORS } from "@/components/layout/theme";
 import { devProfile } from "@/content/dev/profile";
 import type { SiteProfile } from "@/content/profile";
@@ -62,12 +63,14 @@ export const viewport: Viewport = {
 };
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { brand } = copyFor(await siteFromHost()).profile;
+  const which = await siteFromHost();
+  const { brand } = copyFor(which).profile;
   const name = brand.endorsement ? `${brand.name} ${brand.endorsement}` : brand.name;
   return {
     title: `Page not found | ${name}`,
     // Relative: served per host by the rewrites, like the home pages' manifest link.
     manifest: "/manifest.webmanifest",
+    icons: siteIcons(which),
   };
 }
 

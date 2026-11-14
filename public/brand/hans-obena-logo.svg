@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Hans Obena, Full-Stack Web Developer. HO ligature mark (Concept A, 2026-11-14): H and O share one stem, monoline lime. Same paths as the Canva source design. Wordmark is live text (Articulat CF, Inter fallback), not outlined. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="20 40 740 120" width="740" height="120" role="img" aria-label="Hans Obena">
+  <g fill="#C6FF00">
+    <path d="M36.7 66 A5.95 5.95 0 0 1 48.6 66 L48.6 134 A5.95 5.95 0 0 1 36.7 134 Z"/>
+    <path d="M83.45 66 A5.95 5.95 0 0 1 95.35 66 L95.35 134 A5.95 5.95 0 0 1 83.45 134 Z"/>
+    <path d="M45 94.05 H89.4 V105.95 H45 Z"/>
+    <path d="M83.45 100 A39.95 39.95 0 1 1 163.35 100 A39.95 39.95 0 1 1 83.45 100 Z M95.35 100 A28.05 28.05 0 1 0 151.45 100 A28.05 28.05 0 1 0 95.35 100 Z"/>
+  </g>
+  <text x="192" y="136" font-size="100" font-weight="700" letter-spacing="-2" font-family="'Articulat CF', articulat-cf, Inter, 'Helvetica Neue', Arial, sans-serif"><tspan fill="#FFFFFF">Hans</tspan><tspan dx="22" fill="none" stroke="#C6FF00" stroke-width="3">Obena</tspan></text>
+</svg>

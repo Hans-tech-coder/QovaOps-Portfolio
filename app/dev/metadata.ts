@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
+import { siteIcons } from "@/components/seo/icons";
 import { devOgAlt, ogSize } from "@/components/seo/og-image";
 import { devMeta, devProfile } from "@/content/dev/profile";
 
 // Developer site metadata (app/dev/layout.tsx). One OG/Twitter image for both cards:
-// app/dev/opengraph-image/route.tsx; icons from the app root.
+// app/dev/opengraph-image/route.tsx. Icons: HO mark (components/seo/icons.ts).
 // Relative to metadataBase, so it renders as https://<this domain>/opengraph-image.
 const ogImage = { url: "/opengraph-image", ...ogSize, alt: devOgAlt, type: "image/png" };
 
@@ -16,6 +17,7 @@ export const devMetadata: Metadata = {
   creator: devProfile.brand.name,
   alternates: { canonical: "/" },
   manifest: "/manifest.webmanifest",
+  icons: siteIcons("dev"),
   robots: { index: true, follow: true },
   openGraph: {
     type: "profile",

@@ -1,36 +1,45 @@
-// Builds the site icons from the real Q mark (public/brand/qovaops-mark.svg).
-// Run after changing the mark:  node scripts/icons.mjs
+// Builds each site's icons from its mark:
+//   QovaOps (VA site, also localhost/previews): public/brand/qovaops-mark.svg (Q)
+//   Hans Obena (dev site):                      public/brand/hans-obena-mark.svg (HO ligature)
+// Run after changing a mark:  node scripts/icons.mjs
 //
-// Writes:
-//   app/icon.svg                     rounded dark square + lime Q (modern browsers)
-//   app/favicon.ico                  16/32/48 PNGs packed in one .ico (legacy + /favicon.ico requests)
-//   app/apple-icon.png               180×180, full-bleed #101010 (iOS rounds the corners itself)
-//   public/icons/icon-192.png        manifest, rounded square
-//   public/icons/icon-512.png        manifest, rounded square
-//   public/icons/icon-maskable-512.png  manifest maskable, full bleed, Q inside the 80% safe zone
+// Per site, in public/icons/ (prefix "qovaops" or "hans-obena"):
+//   <prefix>-icon.svg            rounded dark square + lime mark (modern browsers)
+//   <prefix>-favicon.ico         16/32/48 PNGs in one .ico; /favicon.ico is rewritten to it per host (next.config.ts)
+//   <prefix>-apple-icon.png      180×180, full-bleed #101010 (iOS rounds the corners itself)
+// Manifest icons (rounded square 192/512, maskable 512 with the mark inside the 80% safe zone):
+//   VA keeps the original names icon-192.png, icon-512.png, icon-maskable-512.png
+//   (the VA JSON-LD logo points at icon-512.png); dev uses hans-obena-192.png, -512.png, -maskable-512.png.
+// Links: components/seo/icons.ts (metadata + manifest).
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import sharp from "sharp";
 
 const root = new URL("..", import.meta.url);
-const markSvg = await readFile(new URL("public/brand/qovaops-mark.svg", root), "utf8");
 
-// The four Q paths, reused for the full-bleed variants.
-const paths = [...markSvg.matchAll(/<path d="[^"]+"\/>/g)].map((m) => m[0]).join("\n    ");
-if (!paths) throw new Error("No <path> found in qovaops-mark.svg");
-
-// Same artwork as the mark, without the XML prolog/comment/aria (it's an icon file).
-const iconSvg = markSvg
-  .replace(/<\?xml[^>]*>\s*/, "")
-  .replace(/<!--[\s\S]*?-->\s*/, "")
-  .replace(/ role="img" aria-label="QovaOps"/, "");
-
-/** Full-bleed square, Q scaled by `scale` around the center. */
-const fullBleed = (scale) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
-  <rect width="200" height="200" fill="#101010"/>
-  <g fill="#C6FF00" transform="translate(100 100) scale(${scale}) translate(-100 -102)">
-    ${paths}
-  </g>
-</svg>`;
+const SITES = [
+  {
+    prefix: "qovaops",
+    mark: "public/brand/qovaops-mark.svg",
+    label: "QovaOps",
+    center: [100, 102], // the Q's optical center in its 200 grid
+    apple: 0.72,
+    maskable: 0.6,
+    manifest: { s192: "icon-192.png", s512: "icon-512.png", maskable: "icon-maskable-512.png" },
+  },
+  {
+    prefix: "hans-obena",
+    mark: "public/brand/hans-obena-mark.svg",
+    label: "Hans Obena",
+    center: [100, 100],
+    apple: 0.85,
+    maskable: 0.7,
+    manifest: {
+      s192: "hans-obena-192.png",
+      s512: "hans-obena-512.png",
+      maskable: "hans-obena-maskable-512.png",
+    },
+  },
+];
 
 const png = (svg, size) =>
   sharp(Buffer.from(svg), { density: Math.max(72, (72 * size) / 200) * 4 })
@@ -61,18 +70,39 @@ function ico(images) {
   return Buffer.concat([header, dir, ...images.map((i) => i.data)]);
 }
 
+const out = (name) => new URL(`public/icons/${name}`, root);
 await mkdir(new URL("public/icons/", root), { recursive: true });
 
-await writeFile(new URL("app/icon.svg", root), iconSvg);
+for (const s of SITES) {
+  const markSvg = await readFile(new URL(s.mark, root), "utf8");
 
-const icoSizes = [16, 32, 48];
-const icoImages = await Promise.all(icoSizes.map(async (size) => ({ size, data: await png(iconSvg, size) })));
-await writeFile(new URL("app/favicon.ico", root), ico(icoImages));
+  // The mark's lime paths (raw, without the tile's own scale), reused for the full-bleed variants.
+  const group = markSvg.match(/<g fill="#C6FF00"[^>]*>([\s\S]*?)<\/g>/);
+  if (!group) throw new Error(`No lime <g> found in ${s.mark}`);
+  const paths = group[1].trim();
 
-await writeFile(new URL("app/apple-icon.png", root), await png(fullBleed(0.72), 180));
-await writeFile(new URL("public/icons/icon-192.png", root), await png(iconSvg, 192));
-await writeFile(new URL("public/icons/icon-512.png", root), await png(iconSvg, 512));
-// Maskable: launchers crop to a circle/squircle, so keep the Q well inside the center 80%.
-await writeFile(new URL("public/icons/icon-maskable-512.png", root), await png(fullBleed(0.6), 512));
+  // Same artwork as the mark, without the XML prolog/comment/aria (it's an icon file).
+  const iconSvg = markSvg
+    .replace(/<\?xml[^>]*>\s*/, "")
+    .replace(/<!--[\s\S]*?-->\s*/, "")
+    .replace(` role="img" aria-label="${s.label}"`, "");
 
-console.log("Icons written: app/icon.svg, app/favicon.ico, app/apple-icon.png, public/icons/*");
+  /** Full-bleed square, mark scaled by `scale` around its center (moved to the middle). */
+  const [cx, cy] = s.center;
+  const fullBleed = (scale) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <rect width="200" height="200" fill="#101010"/>
+  <g fill="#C6FF00" transform="translate(100 100) scale(${scale}) translate(${-cx} ${-cy})">
+    ${paths}
+  </g>
+</svg>`;
+
+  await writeFile(out(`${s.prefix}-icon.svg`), iconSvg);
+  const icoImages = await Promise.all([16, 32, 48].map(async (size) => ({ size, data: await png(iconSvg, size) })));
+  await writeFile(out(`${s.prefix}-favicon.ico`), ico(icoImages));
+  await writeFile(out(`${s.prefix}-apple-icon.png`), await png(fullBleed(s.apple), 180));
+  await writeFile(out(s.manifest.s192), await png(iconSvg, 192));
+  await writeFile(out(s.manifest.s512), await png(iconSvg, 512));
+  // Maskable: launchers crop to a circle/squircle, so keep the mark well inside the center 80%.
+  await writeFile(out(s.manifest.maskable), await png(fullBleed(s.maskable), 512));
+  console.log(`Icons written for ${s.label}: public/icons/${s.prefix}-*, ${Object.values(s.manifest).join(", ")}`);
+}

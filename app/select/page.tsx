@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ArrowRight } from "lucide-react";
 import { Wordmark } from "@/components/layout/Wordmark";
+import { siteIcons } from "@/components/seo/icons";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { devProfile } from "@/content/dev/profile";
 import type { SiteProfile } from "@/content/profile";
@@ -19,6 +20,8 @@ export const metadata: Metadata = {
   title: "Choose a site | Hans Obena · QovaOps",
   description: "Local and preview entry point for the developer and VA sites.",
   robots: { index: false, follow: false },
+  // Same fallback as /favicon.ico on non-site hosts (next.config.ts): the Q mark.
+  icons: siteIcons("va"),
 };
 
 // html.qo-js locks scroll until `qo-intro-done` (globals.css); there is no intro here.

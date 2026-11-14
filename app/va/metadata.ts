@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { siteIcons } from "@/components/seo/icons";
 import { ogAlt, ogSize } from "@/components/seo/og-image";
 import { vaMeta, vaProfile } from "@/content/va/profile";
 
@@ -6,8 +7,7 @@ const { brand } = vaProfile;
 const siteName = `${brand.name} ${brand.endorsement}`;
 
 // VA site metadata (app/va/layout.tsx). One OG/Twitter image for both cards:
-// app/va/opengraph-image/route.tsx; icons from the app root
-// (favicon.ico, icon.svg, apple-icon.png, scripts/icons.mjs).
+// app/va/opengraph-image/route.tsx. Icons: Q mark (components/seo/icons.ts, scripts/icons.mjs).
 // Relative to metadataBase, so it renders as https://<this domain>/opengraph-image.
 const ogImage = { url: "/opengraph-image", ...ogSize, alt: ogAlt, type: "image/png" };
 
@@ -20,6 +20,7 @@ export const vaMetadata: Metadata = {
   creator: "Hans Obena",
   alternates: { canonical: "/" },
   manifest: "/manifest.webmanifest",
+  icons: siteIcons("va"),
   robots: { index: true, follow: true },
   openGraph: {
     type: "website",
