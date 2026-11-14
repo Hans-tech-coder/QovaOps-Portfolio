@@ -1,17 +1,21 @@
 import { SectionCard } from "@/components/layout/SectionCard";
 import { Reveal } from "@/components/motion/Reveal";
 import type { SectionProps } from "@/content/profile";
-import { publishedProjects, workCategoryLabels } from "@/content/work";
+import { publishedProjects, type Project } from "@/content/work";
 import { WorkTabs } from "./WorkTabs";
 
 export function Work({ section, profile }: SectionProps) {
-  // Tab order comes from the profile; tabs with no published projects are left out
-  // (hidden-until-real rule).
-  const tabs = profile.workTabs.map((id) => ({
-    id,
-    label: workCategoryLabels[id],
-    projects: publishedProjects.filter((p) => p.category === id),
-  })).filter((t) => t.projects.length > 0);
+  // Tabs, their order and their projects come from the profile (project ids in
+  // content/work.ts). Unpublished projects and empty tabs are left out (hidden-until-real rule).
+  const byId = new Map(publishedProjects.map((p) => [p.id, p]));
+  const tabs = profile.workTabs
+    .map(({ id, label, layout, projects }) => ({
+      id,
+      label,
+      layout,
+      projects: projects.map((pid) => byId.get(pid)).filter((p): p is Project => !!p),
+    }))
+    .filter((t) => t.projects.length > 0);
 
   return (
     <SectionCard section={section}>

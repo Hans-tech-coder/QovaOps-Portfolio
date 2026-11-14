@@ -52,7 +52,7 @@ export function PortfolioPage({ profile }: { profile: SiteProfile }) {
 
       <MobileNav
         brand={brand}
-        contact={{ bookingUrl: contact.bookingUrl, bookingCta: contact.bookingCta }}
+        header={profile.header}
         socials={socials}
         resume={resume}
       />

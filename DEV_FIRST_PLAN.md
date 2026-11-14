@@ -30,7 +30,7 @@ Nav: About · Projects · Stack · Experience · Contact
 |---|---|---|---|
 | 0 | Header | Hans Obena wordmark, socials (**GitHub, LinkedIn** first), theme toggle, lime **Get in touch** button, small "VA services" link | `Header`, `Wordmark` (new variant), `SocialIcons` (+ GitHub icon) |
 | 1 | About / hero | H1 draft: **"I build fast, reliable websites and web apps."** Role line: *Full-Stack Web Developer · Next.js, React, TypeScript, WordPress, Shopify*. Short bio from real facts (CS with Honors; 4+ years; agency developer at Skyrocket; built Run As One). Dev tool chips. Stats: 4+ years · 10+ client websites managed · CS With Honors. Buttons: **View projects** + **Download resume**. | `About` (props for copy/chips/stats), `CountUp`, `TypeCycler`, portrait |
-| 2 | Projects | Tabs **Websites** (current pinned WorkBrowser, Run As One + triqova first) and **Engineering** (n8n → BigQuery reporting pipeline, Meta Ads connector on Cloud Run + Gemini, Retell AI voice agent, Claude skills / MCP servers, Cresendo custom WP plugins, Kubota dealer locator). Each row shows stack, what Hans built, and a **GitHub link where the repo is public** (see §2.1). | `Work`, `WorkTabs`, `content/work.ts` (+ `repo` field, per-site project lists) |
+| 2 | Projects | Tabs **Websites** (current pinned WorkBrowser, Run As One + triqova first) and **Engineering** (n8n → BigQuery reporting pipeline, Meta Ads connector on Cloud Run + Gemini, Retell AI voice agent, Claude skills / MCP servers, Cresendo custom WP plugins, Kubota dealer locator). Each row shows stack and what Hans built. **No per-project GitHub links** (Hans, 2026-11-14); the GitHub profile link lives in the header and Contact. | `Work`, `WorkTabs`, `content/work.ts` (per-site project lists) |
 | 3 | Stack | Grouped logo chips: Frontend · Backend & Data · CMS & eCommerce · Hosting & DevOps · AI & Automation · Tools (VS Code, Git, GitHub, Figma) | `Tools`, `ToolLogo`, `toolLogos` (all 44 logos exist) |
 | 4 | Experience | Same timeline, dev-first wording: Skyrocket **Mid-Level Developer** leads; self-employed entry reframed as *Independent Developer & Founder (Run As One, triqova, QovaOps)*; DigitYza; education + certifications | `Experience`, dev variant of `content/experience.ts` |
 | 5 | QovaOps card | "Also offering: virtual assistant services with advanced technical skills → qovaops.triqova.com" | new, small |
@@ -42,7 +42,7 @@ Rules that still apply: never invent results, numbers or testimonials; every cla
 
 ### 2.1 GitHub (checked 2026-11-14: 71 public repos, ~45 of them forks)
 
-Public repos that match projects already on the site, candidates for **repo links + profile pins**:
+Public repos that match projects already on the site, for reference only (not linked on the site; useful when Hans pins repos on his profile):
 
 | Repo | Matches | Language |
 |---|---|---|
@@ -52,7 +52,7 @@ Public repos that match projects already on the site, candidates for **repo link
 | `sr-forms-dashboard` | Skyrocket ClickUp forms dashboard? | TypeScript |
 | `ppc-web-app`, `rsvp-app`, `trading-signal-app`, `sr-speedcheck-app`, `agency-dashboard` | not on the site yet | TS / Python / JS |
 
-- [!] Hans confirms which repos may be linked. `sr-*` and `agency-dashboard` look like Skyrocket work: OK to show publicly? Is `run-as-one` meant to be public (it's a live product handling payments)?
+- [x] Decided 2026-11-14: **no per-project repo links**, GitHub profile only. Open for Hans on GitHub itself: `sr-*` / `agency-dashboard` look like Skyrocket work, and `run-as-one` (live product with payments) is public; worth reviewing their visibility.
 - [!] Recommended before sending the link to recruiters (done by Hans on GitHub, not on this site): pin the 4–6 best repos, add short descriptions/READMEs to them, and make private or archive old tutorial repos and unrelated forks. They crowd the profile.
 
 ## 3. VA site (`qovaops.triqova.com`)
@@ -95,7 +95,7 @@ content/
   dev/  profile.ts (email obenahans@gmail.com) sections.ts tools.ts work.ts experience.ts
   va/   profile.ts (email qovaops@gmail.com)   sections.ts tools.ts …  (today's files, moved)
   tool-logos.ts    shared (unchanged)
-  work.ts          shared project data (+ optional `repo` URL); each site picks and orders
+  work.ts          shared project data; each site picks and orders
 ```
 Components that read content directly (`About`, `Contact`, `Tools`, `Work`, `Experience`, `Header`, `Sidebar`, `MobileNav`, `JsonLd`) get the data through the profile/props instead.
 
@@ -114,10 +114,10 @@ Components that read content directly (`About`, `Contact`, `Tools`, `Work`, `Exp
 - [x] Subdomains: `hansobena.triqova.com` (dev) + `qovaops.triqova.com` (VA), one app
 - [x] GitHub `Hans-tech-coder`, dev email `obenahans@gmail.com`
 - [!] Approve this plan and the personal-brand dev header
-- [!] Target roles: full-stack? front-end? WordPress/Shopify developer? Remote, full-time or contract? (shapes the hero line and project order)
-- [!] Developer resume PDF (current one is the General VA version)
-- [!] Which repos may be linked (§2.1)
-- [!] Approve the dev hero copy and the reworded Experience entries (drafted in Phase C)
+- [x] Target role: **Full-stack developer, remote; open to full-time, contract or part-time** (Hans, 2026-11-14)
+- [!] Developer resume PDF: Hans adds it as a **new file** in `public/resume/` (e.g. `hans-obena-developer-resume.pdf`); the VA site keeps `hans-obena-resume.pdf`. Then render modal pages with `scripts/resume-pages.py`
+- [x] Repo links: none, GitHub profile only (§2.1)
+- [x] Dev hero copy and reworded Experience entries approved (Hans, 2026-11-14)
 
 ### Phase B — Restructure, no visual change
 - [x] `PortfolioPage` shell + `SiteProfile` type (`content/profile.ts`); VA content moved to `content/va/`; VA hero chips back to Ops only (2026-11-14)
@@ -125,12 +125,16 @@ Components that read content directly (`About`, `Contact`, `Tools`, `Work`, `Exp
 - [x] tsc, lint, build pass; text/head diff vs the old page and DOM checks at 1440/375 match (2026-11-14). Still to watch with the browser pane visible: loader + hero timeline and scroll motion
 
 ### Phase C — Developer site
-- [ ] `content/dev/*` (copy only from confirmed facts), name wordmark variant, GitHub icon, `repo` links
-- [ ] Hero, Projects (Websites + Engineering), Stack groups, Experience wording, QovaOps card, Contact
-- [ ] Cross-links in both headers and mobile menus; loader once per visit
+- [x] `content/dev/*` (copy only from confirmed facts: brand guide, VA experience, developer resume PDF), **Hans Obena** wordmark (`spaced`), GitHub icon + profile link (header, contact, JSON-LD `sameAs`) (2026-11-14)
+- [x] Hero, Projects (Websites browser + Engineering rows, per-site project ids in `SiteProfile.workTabs`), Stack (6 groups, all 44 logos), Experience wording, QovaOps "Also offering" card, Contact "Let's build something" (2026-11-14)
+- [x] Cross-links in both headers and mobile menus; loader once per visit (sessionStorage `qo-intro-seen`, head script adds `qo-intro-skip`) (2026-11-14)
+- [x] Dev resume: `public/resume/hans-obena-developer-resume.pdf` → `dev-page-1/2.webp` (`scripts/resume-pages.py` renders both PDFs); `resume.enabled` flag hides every resume button if a PDF is missing (2026-11-14)
+- [x] Basics of Phase D for dev: `app/dev/layout.tsx` (metadata, Person JSON-LD), OG/Twitter card, sitemap, robots; `/va` and `/gva` on the dev host redirect to `qovaops.triqova.com` (2026-11-14)
+- [x] Hero copy (`content/dev/profile.ts`) and Experience wording (`content/dev/experience.ts`) approved (Hans, 2026-11-14)
+- [x] Two Engineering rows from the dev resume kept: ClickUp forms dashboard, Event RSVP app (Hans, 2026-11-14)
 
 ### Phase D — SEO & sharing
-- [ ] Metadata, canonical, JSON-LD, sitemap, robots, OG card per domain
+- [ ] Metadata, canonical, JSON-LD, sitemap, robots, OG card per domain (dev basics done in Phase C; left: VA `ProfessionalService.founder` → dev `Person` @id (`devPersonId`), review dev title/description with Hans, validate both in Rich Results / OG debuggers after deploy)
 
 ### Phase E — QA & launch
 - [ ] Both sites at 1440 / 1024 / 768 / 390, dark + light, keyboard, reduced motion, no overflow; Lighthouse both

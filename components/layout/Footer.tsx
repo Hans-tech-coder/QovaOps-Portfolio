@@ -10,13 +10,13 @@ async function CopyrightYear() {
   return <>{new Date().getFullYear()}</>;
 }
 
-/** Footer strip from the brand sheet (BRAND_GUIDE §6). */
+/** Footer strip from the brand sheet (BRAND_GUIDE §6). Dev: "Hans Obena | co-founder of triqova | …". */
 export function Footer({ brand }: { brand: Brand }) {
   return (
     <footer className="mt-8 border-t border-dashed border-line py-8">
       <div className="flex flex-col items-center gap-2 text-center sm:flex-row sm:justify-between sm:text-left">
         <p className="qo-label text-muted">
-          {brand.name} by{" "}
+          {brand.name} {brand.endorsement ? "by" : <><span aria-hidden="true">|</span> co-founder of</>}{" "}
           <a
             href={site.triqovaUrl}
             target="_blank"

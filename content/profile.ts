@@ -1,10 +1,9 @@
 // The typed "profile" that drives components/layout/PortfolioPage.tsx.
-// One profile per site: content/va/profile.ts today, content/dev/profile.ts in Phase C
-// (DEV_FIRST_PLAN.md §4). Data only (serializable), so slices can be passed to client components.
+// One profile per site: content/va/profile.ts (qovaops.triqova.com) and content/dev/profile.ts
+// (hansobena.triqova.com), DEV_FIRST_PLAN.md §4. Data only (serializable), so slices can be passed to client components.
 
 import type { StaticImageData } from "next/image";
 import type { SocialLink } from "./site";
-import type { WorkCategory } from "./work";
 
 /** Which section component renders a section (components/layout/section-registry.ts). */
 export type SectionKind =
@@ -54,7 +53,8 @@ export type Brand = {
   name: string;
   /** Small gray line under the wordmark, e.g. "by triqova" (optional for a personal brand) */
   endorsement?: string;
-  wordmark: { solid: string; outline: string };
+  /** `spaced`: a small gap between the parts (two-word names like "Hans Obena"). */
+  wordmark: { solid: string; outline: string; spaced?: boolean };
   /** Footer line after the brand */
   secondaryLine: string;
 };
@@ -62,13 +62,33 @@ export type Brand = {
 export type Contact = {
   email: string;
   bookingUrl: string;
-  /** Primary CTA (hero + lime contact band), e.g. "Delegate Your Operations" */
+  /** Primary CTA (lime contact band; VA hero button), e.g. "Delegate Your Operations" */
   primaryCta: string;
-  /** Booking CTA (header, menu, contact band), e.g. "Book a call" */
+  /** Booking CTA (contact band + pills), e.g. "Book a call" */
   bookingCta: string;
+  /** Line under the CTA in the lime contact band (defaults to brand.secondaryLine). */
+  bandLine?: string;
+};
+
+/** A link with a label. `href` starting with "#" scrolls within the page; others open in a new tab. */
+export type LinkItem = { label: string; href: string };
+
+/** Header + mobile menu: lime CTA pill and the small link to the other site. */
+export type HeaderContent = {
+  cta: LinkItem;
+  crossLink: LinkItem;
+};
+
+/** Small "Also offering…" card at the end of Contact (dev site → QovaOps). */
+export type CrossSell = {
+  eyebrow: string;
+  text: string;
+  link: LinkItem;
 };
 
 export type Resume = {
+  /** False hides every resume button (e.g. while a site's PDF isn't ready). */
+  enabled: boolean;
   href: string;
   downloadName: string;
   /** Shown after the owner's name in the resume modal title */
@@ -79,13 +99,19 @@ export type Resume = {
 
 export type AboutContent = {
   tagline: { line1: string; line2: string };
-  traits: readonly string[];
+  /** Text in the dark pill with the lime dot (VA: traits; dev: availability). */
+  pill: string;
   blurb: string;
   photoAlt: string;
   /** Hero chips; a row with a label shows `// Label` above its chips. */
   heroToolRows: { label?: string; tools: string[] }[];
-  /** Only real numbers, approved by Hans. */
+  /** Only real numbers, approved by Hans. A "Computer Science / With Honors" card follows them. */
   stats: Stat[];
+  /**
+   * Hero buttons: a lime primary link, then either the email pill (VA) or the
+   * resume buttons (dev; hidden when the resume is disabled).
+   */
+  actions: { primary: LinkItem; secondary: "email" | "resume" };
 };
 
 export type ExperienceContent = {
@@ -94,12 +120,23 @@ export type ExperienceContent = {
   certifications: string[];
 };
 
+/** One Work/Projects tab: project ids from content/work.ts, in order. */
+export type WorkTabConfig = {
+  id: string;
+  label: string;
+  /** "browser": list + detail view with the pinned scroll switching (lg+); "rows": plain rows. */
+  layout: "browser" | "rows";
+  projects: string[];
+};
+
 export type SiteProfile = {
   id: "va" | "dev";
   /** Canonical origin, e.g. https://qovaops.triqova.com */
   url: string;
   brand: Brand;
+  header: HeaderContent;
   contact: Contact;
+  crossSell?: CrossSell;
   socials: readonly SocialLink[];
   resume: Resume;
   /** Published sections only, in page order */
@@ -107,8 +144,8 @@ export type SiteProfile = {
   navItems: NavItem[];
   about: AboutContent;
   toolGroups: ToolGroup[];
-  /** Work tabs in order; tabs with no published projects are dropped. */
-  workTabs: WorkCategory[];
+  /** Work tabs in order; unpublished projects and empty tabs are dropped. */
+  workTabs: WorkTabConfig[];
   experience: ExperienceContent;
 };
 

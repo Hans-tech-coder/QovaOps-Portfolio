@@ -509,6 +509,10 @@ html {
   html.qo-js:not(.qo-intro-done) {
     overflow: hidden;
   }
+  /* Already played this visit (head script): never paint the panel. */
+  html.qo-intro-skip .qo-loader {
+    display: none;
+  }
 }
 /* "LOADING..." dots: reveal one dot at a time. They hang off the word so
    "LOADING" itself stays centered and still. */

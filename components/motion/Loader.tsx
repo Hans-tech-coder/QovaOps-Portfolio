@@ -1,11 +1,13 @@
 "use client";
 
 import { useRef } from "react";
+import { INTRO_SEEN_KEY } from "@/components/layout/theme";
 import {
   DIST,
   DUR,
   gsap,
   INTRO,
+  introSkipped,
   MOTION_CONDITIONS,
   startIntro,
   useGSAP,
@@ -22,6 +24,8 @@ import {
  * straight away; if the motion code never loads, the head-script failsafe drops
  * `qo-js` after 4s and the panel goes with it. Skipped under reduced motion.
  * Length is fixed (INTRO in gsap.ts) so the rest of the page can plan around it.
+ * Once per visit: after it plays, sessionStorage marks it seen and the head script
+ * skips it on later loads in the same tab (`qo-intro-skip`; the hero still animates).
  */
 export function Loader() {
   const root = useRef<HTMLDivElement>(null);
@@ -34,7 +38,15 @@ export function Loader() {
       const finish = () => {
         el.style.display = "none";
         html.classList.add("qo-intro-done");
+        // Once per visit: later loads in this tab skip the loader (head script).
+        try {
+          sessionStorage.setItem(INTRO_SEEN_KEY, "1");
+        } catch {}
       };
+      if (introSkipped()) {
+        finish();
+        return;
+      }
 
       const mm = gsap.matchMedia();
       mm.add(MOTION_CONDITIONS, (ctx) => {

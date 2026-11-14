@@ -4,6 +4,7 @@ import { CountUp } from "@/components/motion/CountUp";
 import { Reveal } from "@/components/motion/Reveal";
 import { TypeCycler } from "@/components/motion/TypeCycler";
 import { Chip } from "@/components/ui/Chip";
+import { ResumeButtons } from "@/components/ui/ResumeButtons";
 import { ToolLogo } from "@/components/ui/ToolLogo";
 import Image from "next/image";
 // Transparent cut-out exported from Canva DAHasTtTt6Y (2026-11-12)
@@ -15,8 +16,9 @@ const GREETINGS = ["Hi there!", "I'm Hans"] as const;
 
 /** Hero: copy, chips and stats come from the site profile (content/<site>/profile.ts). */
 export function About({ section, profile }: SectionProps) {
-  const { tagline, traits, blurb, photoAlt, heroToolRows, stats } = profile.about;
-  const { email, primaryCta } = profile.contact;
+  const { tagline, pill, blurb, photoAlt, heroToolRows, stats, actions } = profile.about;
+  const { email } = profile.contact;
+  const { resume } = profile;
   return (
     <SectionCard
       section={section}
@@ -62,7 +64,7 @@ export function About({ section, profile }: SectionProps) {
           {/* Trait pill: dark pill with a lime dot in both themes (lime never small on light) */}
           <p data-hero="pill" className="qo-trait-pill qo-label inline-flex w-fit items-center gap-2.5 rounded-full border px-4 py-2">
             <span aria-hidden="true" className="size-2 rounded-full bg-lime" />
-            {traits.join(" | ")}
+            {pill}
           </p>
 
           <p data-hero="blurb" className="max-w-2xl text-base leading-relaxed text-body sm:text-lg">
@@ -95,23 +97,29 @@ export function About({ section, profile }: SectionProps) {
 
           <div data-hero="actions" className="flex flex-wrap items-center gap-3">
             <a
-              href="#contact"
+              href={actions.primary.href}
               className="qo-btn group inline-flex h-11 items-center gap-2 rounded-full bg-accent pr-4 pl-6 text-sm font-bold text-on-accent hover:bg-accent-hover"
             >
-              {primaryCta}
+              {actions.primary.label}
               <ArrowRight aria-hidden="true" className="qo-nudge size-4" />
             </a>
-            <a
-              href={`mailto:${email}`}
-              className="qo-btn inline-flex h-11 items-center rounded-full border border-line px-5 text-sm font-bold text-fg hover:bg-line"
-            >
-              {email}
-            </a>
+            {actions.secondary === "email" ? (
+              <a
+                href={`mailto:${email}`}
+                className="qo-btn inline-flex h-11 items-center rounded-full border border-line px-5 text-sm font-bold text-fg hover:bg-line"
+              >
+                {email}
+              </a>
+            ) : (
+              resume.enabled && <ResumeButtons resume={resume} className="flex flex-wrap gap-3 [&>a]:h-11 [&>button]:h-11" />
+            )}
           </div>
         </div>
       </div>
 
-      <Reveal className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <Reveal
+        className={`mt-10 grid grid-cols-2 gap-3 ${stats.length === 2 ? "sm:grid-cols-3" : "sm:grid-cols-4"}`}
+      >
         {/* Counted up on scroll (components/motion/CountUp.tsx); the HTML holds the final value. */}
         {stats.map(({ value, suffix, label }) => (
           <div

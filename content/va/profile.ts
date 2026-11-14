@@ -29,6 +29,10 @@ export const vaProfile: SiteProfile = {
     wordmark: { solid: "Qova", outline: "Ops" },
     secondaryLine: "Human execution. Powered by smarter systems.",
   },
+  header: {
+    cta: { label: "Book a call", href: site.bookingUrl },
+    crossLink: { label: "Developer portfolio", href: site.devUrl },
+  },
   contact: {
     email: "qovaops@gmail.com",
     bookingUrl: site.bookingUrl,
@@ -39,6 +43,7 @@ export const vaProfile: SiteProfile = {
   // Resume PDF (copy of brand/Hans Christian A. Obena - Resume (General Virtual Assistant).pdf).
   // Replace the file in public/resume/ to update it; the link stays the same.
   resume: {
+    enabled: true,
     href: "/resume/hans-obena-resume.pdf",
     downloadName: "Hans-Obena-Resume.pdf",
     title: "General Virtual Assistant",
@@ -48,7 +53,7 @@ export const vaProfile: SiteProfile = {
   navItems,
   about: {
     tagline: { line1: "Your Daily Operations.", line2: "Our Execution." },
-    traits: ["Intelligent", "Creative", "Confident"],
+    pill: "Intelligent | Creative | Confident",
     // About blurb from BRAND_GUIDE §7.
     blurb:
       "I'm Hans, a Computer Science graduate with Honors and 4+ years in web development, digital operations and AI automation. I help busy founders, digital agencies and eCommerce brands simplify operations, fix technical bottlenecks, and scale without juggling multiple hires. I take ownership of the work, not just the task list.",
@@ -60,8 +65,31 @@ export const vaProfile: SiteProfile = {
       { value: 10, suffix: "+", label: "Client websites managed" },
       { value: 9, suffix: "", label: "Services" },
     ],
+    actions: { primary: { label: "Delegate Your Operations", href: "#contact" }, secondary: "email" },
   },
   toolGroups,
-  workTabs: ["websites", "automation", "operations"],
+  // Project ids from content/work.ts (same order as before the per-site picks).
+  workTabs: [
+    {
+      id: "websites",
+      label: "Websites",
+      layout: "browser",
+      projects: [
+        "runasone",
+        "triqova",
+        "cresendo",
+        "kubota",
+        "buildershome",
+        "bestkept",
+        "wyla",
+        "cosplayfabrics",
+        "techstack",
+        "phinma",
+        "issy",
+        "ottlite",
+      ],
+    },
+    { id: "automation", label: "Automation", layout: "rows", projects: ["ad-reporting", "voice-agent", "claude-tooling"] },
+  ],
   experience: { education, work, certifications },
 };

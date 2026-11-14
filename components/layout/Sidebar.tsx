@@ -105,10 +105,12 @@ export function Sidebar({ email, resume }: { email: string; resume: Resume }) {
           </a>
         </div>
 
-        <div className="mt-6 border-t border-dashed border-line pt-5">
-          <p className="qo-label text-muted">{"// Resume"}</p>
-          <ResumeButtons resume={resume} className="mt-3 flex flex-col gap-2" />
-        </div>
+        {resume.enabled && (
+          <div className="mt-6 border-t border-dashed border-line pt-5">
+            <p className="qo-label text-muted">{"// Resume"}</p>
+            <ResumeButtons resume={resume} className="mt-3 flex flex-col gap-2" />
+          </div>
+        )}
       </div>
     </aside>
   );

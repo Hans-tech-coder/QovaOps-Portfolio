@@ -1,12 +1,12 @@
 "use client";
 
-import { Menu, X } from "lucide-react";
+import { ArrowUpRight, Menu, X } from "lucide-react";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { SocialLinks } from "@/components/ui/SocialIcons";
 import { ResumeButtons } from "@/components/ui/ResumeButtons";
 import { Tooltip } from "@/components/ui/Tooltip";
-import type { Brand, Contact, Resume } from "@/content/profile";
+import type { Brand, HeaderContent, Resume } from "@/content/profile";
 import type { SocialLink } from "@/content/site";
 import { useScrollSpy } from "./ScrollSpy";
 
@@ -19,12 +19,12 @@ const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1
  */
 export function MobileNav({
   brand,
-  contact,
+  header,
   socials,
   resume,
 }: {
   brand: Brand;
-  contact: Pick<Contact, "bookingUrl" | "bookingCta">;
+  header: HeaderContent;
   socials: readonly SocialLink[];
   resume: Resume;
 }) {
@@ -88,7 +88,11 @@ export function MobileNav({
             aria-label={`${brand.endorsement ? `${brand.name} ${brand.endorsement}` : brand.name}, back to top`}
           >
             <span className="text-fg">{brand.wordmark.solid}</span>
-            <span className="text-outline [-webkit-text-stroke-width:1px]">{brand.wordmark.outline}</span>
+            <span
+              className={`text-outline [-webkit-text-stroke-width:1px] ${brand.wordmark.spaced ? "ml-[0.22em]" : ""}`}
+            >
+              {brand.wordmark.outline}
+            </span>
           </a>
           {activeLabel && (
             <span className="qo-label hidden truncate text-muted min-[420px]:block" aria-hidden="true">
@@ -184,24 +188,53 @@ export function MobileNav({
             </ul>
           </nav>
 
-          <div className="mt-5 border-t border-dashed border-line pt-4">
-            <p className="qo-label text-muted" aria-hidden="true">
-              {"// Resume"}
-            </p>
-            <ResumeButtons resume={resume} className="mt-3 grid grid-cols-2 gap-2" />
-          </div>
+          {resume.enabled && (
+            <div className="mt-5 border-t border-dashed border-line pt-4">
+              <p className="qo-label text-muted" aria-hidden="true">
+                {"// Resume"}
+              </p>
+              <ResumeButtons resume={resume} className="mt-3 grid grid-cols-2 gap-2" />
+            </div>
+          )}
 
           <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
+            {header.cta.href.startsWith("#") ? (
+              <a
+                href={header.cta.href}
+                onClick={(e) => {
+                  e.preventDefault();
+                  closeMenu();
+                  goTo(header.cta.href.slice(1));
+                }}
+                className="qo-btn inline-flex h-11 items-center rounded-full bg-accent px-6 text-sm font-bold text-on-accent hover:bg-accent-hover"
+              >
+                {header.cta.label}
+              </a>
+            ) : (
+              <a
+                href={header.cta.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="qo-btn inline-flex h-11 items-center rounded-full bg-accent px-6 text-sm font-bold text-on-accent hover:bg-accent-hover"
+              >
+                {header.cta.label}
+                <span className="sr-only"> (opens in a new tab)</span>
+              </a>
+            )}
+            <SocialLinks socials={socials} className="-mr-2" tooltipSide="top" />
+          </div>
+
+          <div className="mt-4 border-t border-dashed border-line pt-4">
             <a
-              href={contact.bookingUrl}
+              href={header.crossLink.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="qo-btn inline-flex h-11 items-center rounded-full bg-accent px-6 text-sm font-bold text-on-accent hover:bg-accent-hover"
+              className="qo-label group inline-flex items-center gap-1 text-muted hover:text-fg"
             >
-              {contact.bookingCta}
+              {header.crossLink.label}
+              <ArrowUpRight aria-hidden="true" className="size-3.5 qo-nudge-ne" />
               <span className="sr-only"> (opens in a new tab)</span>
             </a>
-            <SocialLinks socials={socials} className="-mr-2" tooltipSide="top" />
           </div>
         </div>
       </dialog>

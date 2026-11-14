@@ -22,9 +22,10 @@ import {
   ScrollTrigger,
   useGSAP,
 } from "@/components/motion/gsap";
-import type { Project, WorkCategory } from "@/content/work";
+import type { WorkTabConfig } from "@/content/profile";
+import type { Project } from "@/content/work";
 
-export type WorkTab = { id: WorkCategory; label: string; projects: Project[] };
+export type WorkTab = Pick<WorkTabConfig, "id" | "label" | "layout"> & { projects: Project[] };
 
 const STATUS_CLASS: Record<NonNullable<Project["status"]>, string> = {
   // A legend of three: solid lime, solid inverse, outline. Brand colors only, both themes.
@@ -44,11 +45,9 @@ const STEP_VH = 0.15;
  */
 const PIN_GAP = 24;
 
-/**
- * Tabs that use the name list + detail view with scroll switching (they have
- * screenshots). Every other tab keeps the plain project rows (WorkRows).
- */
-const BROWSER_TABS: WorkCategory[] = ["websites"];
+// Tab layout comes from the profile (WorkTabConfig.layout): "browser" tabs (with
+// screenshots) get the name list + detail view with scroll switching; "rows" tabs keep
+// the plain project rows (WorkRows).
 
 /** Shared between WorkTabs and the WorkBrowser it re-mounts on every tab switch. */
 type PinShared = {
@@ -156,7 +155,7 @@ export function WorkTabs({ tabs }: { tabs: WorkTab[] }) {
   return (
     <div>
       <div data-reveal className="-mx-1 overflow-x-auto px-1 py-1">
-        <div ref={barRef} role="tablist" aria-label="Work categories" className="qo-tabs">
+        <div ref={barRef} role="tablist" aria-label="Project categories" className="qo-tabs">
           <span ref={pillRef} className="qo-tabs-pill" aria-hidden="true" />
           {tabs.map((tab, i) => (
             <button
@@ -191,7 +190,7 @@ export function WorkTabs({ tabs }: { tabs: WorkTab[] }) {
       >
         {/* key: remount on tab change so the selection resets and the CSS fade-in replays */}
         <div key={current.id} className="qo-panel-in">
-          {BROWSER_TABS.includes(current.id) ? (
+          {current.layout === "browser" ? (
             <>
               <div className="hidden lg:block">
                 <WorkBrowser

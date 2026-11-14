@@ -72,13 +72,18 @@ export function startIntro() {
   return (performance.now() - introStartedAt) / 1000;
 }
 
+/** True when the loader is skipped: already played this visit (head script, components/layout/theme.ts). */
+export function introSkipped() {
+  return typeof document !== "undefined" && document.documentElement.classList.contains("qo-intro-skip");
+}
+
 /**
  * Seconds until the hero timeline should start: as the loader panel is about
  * halfway up, so the page builds while it is being uncovered. 0 under reduced
- * motion (no loader then).
+ * motion or when the loader was skipped (already played this visit).
  */
 export function heroStartDelay() {
-  if (prefersReducedMotion()) return 0;
+  if (prefersReducedMotion() || introSkipped()) return 0;
   const { count, hold, fadeOut, slide } = INTRO;
   return Math.max(0, count + hold + fadeOut + slide * 0.45 - startIntro());
 }
