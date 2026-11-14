@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowUpRight } from "lucide-react";
+import Image from "next/image";
 import {
   useCallback,
   useEffect,
@@ -16,10 +17,11 @@ import type { Project, WorkCategory } from "@/content/work";
 export type WorkTab = { id: WorkCategory; label: string; projects: Project[] };
 
 const STATUS_CLASS: Record<NonNullable<Project["status"]>, string> = {
-  // Lime only as a fill behind black text (valid in both themes)
-  Live: "border-transparent bg-accent text-on-accent",
-  "Agency work": "border-line text-body",
-  Personal: "border-line text-body",
+  // A legend of three: solid lime, solid inverse, outline. Brand colors only, both themes.
+  // Lime only as a fill behind black text; outline uses accent-text (lime on dark, black on light).
+  "Own product": "border-transparent bg-accent text-on-accent",
+  "Agency work": "border-transparent bg-fg text-bg",
+  Personal: "border-accent-text text-accent-text",
 };
 
 /**
@@ -143,6 +145,25 @@ export function WorkTabs({ tabs }: { tabs: WorkTab[] }) {
               className="grid gap-3 border-b border-dashed border-line py-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] md:gap-8"
             >
               <div className="flex flex-col items-start gap-2">
+                {p.image && (
+                  <a
+                    href={p.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    tabIndex={-1}
+                    aria-hidden="true"
+                    className="qo-thumb mb-2 block w-full overflow-hidden rounded-card border border-line bg-line"
+                  >
+                    <Image
+                      src={p.image}
+                      alt=""
+                      width={1200}
+                      height={750}
+                      sizes="(min-width: 1280px) 340px, (min-width: 768px) 40vw, 100vw"
+                      className="aspect-[16/10] h-auto w-full object-cover object-top"
+                    />
+                  </a>
+                )}
                 <div className="flex flex-wrap items-center gap-2">
                   <h3 className="text-lg font-bold text-fg sm:text-xl">{p.name}</h3>
                   {p.status && (
@@ -153,7 +174,10 @@ export function WorkTabs({ tabs }: { tabs: WorkTab[] }) {
                     </span>
                   )}
                 </div>
-                <p className="font-mono text-xs text-muted">{p.role}</p>
+                <p className="font-mono text-xs text-muted">
+                  {p.role}
+                  {p.stack && <span> · {p.stack}</span>}
+                </p>
                 {p.href && (
                   <a
                     href={p.href}

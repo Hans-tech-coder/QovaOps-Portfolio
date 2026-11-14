@@ -4,6 +4,7 @@
 export const site = {
   name: "QovaOps",
   endorsement: "by triqova",
+  triqovaUrl: "https://triqova.com",
   owner: "Hans Obena",
   url: "https://qovaops.triqova.com",
   title: "QovaOps by triqova — Tech-Enabled Virtual Assistant | Hans Obena",

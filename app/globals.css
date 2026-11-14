@@ -602,7 +602,21 @@ html {
   transform: none;
 }
 
+/* Work thumbnails: the screenshot zooms in slightly while its row is hovered */
+.qo-thumb img {
+  transition: transform var(--duration-fast) var(--ease-smooth-out);
+}
+@media (hover: hover) {
+  li:hover > div > .qo-thumb img {
+    transform: scale(1.03);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .qo-thumb img {
+    transition: none !important;
+    transform: none !important;
+  }
   .qo-btn,
   .qo-nudge,
   .qo-nudge-ne,

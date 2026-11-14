@@ -15,7 +15,17 @@ export function Footer() {
     <footer className="mt-8 border-t border-dashed border-line py-8">
       <div className="flex flex-col items-center gap-2 text-center sm:flex-row sm:justify-between sm:text-left">
         <p className="qo-label text-muted">
-          {`${site.name} ${site.endorsement}`} <span aria-hidden="true">|</span>{" "}
+          {site.name} by{" "}
+          <a
+            href={site.triqovaUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline decoration-dashed underline-offset-4 transition-colors hover:text-fg"
+          >
+            triqova
+            <span className="sr-only"> (opens in a new tab)</span>
+          </a>{" "}
+          <span aria-hidden="true">|</span>{" "}
           {site.secondaryLine}
         </p>
         <p className="font-mono text-xs text-muted">

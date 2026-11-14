@@ -27,7 +27,7 @@ export const work: TimelineEntry[] = [
     period: "2021 – Present",
     points: [
       "Websites, integrations and technical SEO for small-business clients.",
-      "Built and runs RunAsOne (race registration); now offers General VA services as QovaOps.",
+      "Built and runs Run As One (race registration); now offers General VA services as QovaOps.",
     ],
   },
   {
@@ -40,7 +40,7 @@ export const work: TimelineEntry[] = [
       "Set up a Retell AI voice agent that answers service and hiring inquiries, with call data sent through Make into reports.",
       "Built a ClickUp-connected forms dashboard so the team could manage submissions in one place.",
       "Managed Shopify stores and apps (Klaviyo, product reviews), including a Shopify Plus store.",
-      "Built custom website features where no plugin existed, such as a Kubota Philippines dealer locator.",
+      "Built custom website features, such as the first Kubota Philippines dealer locator.",
       "Managed hosting, email deliverability (SPF/DKIM) and security for 10+ client websites, including removing a credential-stealing fake plugin.",
       "Built a Meta Ads connector on Google Cloud Run so the team could ask Gemini Enterprise about ad data.",
     ],
