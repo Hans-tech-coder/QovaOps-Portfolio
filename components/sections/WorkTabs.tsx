@@ -432,8 +432,9 @@ function WorkBrowser({
 const LIST_PREVIEW = 4;
 
 /**
- * Below lg: compact rows (small thumbnail, points behind a disclosure), the
- * first few only until "Show all". Hidden rows stay in the HTML.
+ * Below lg, the first few only until "Show all" (hidden rows stay in the HTML),
+ * points behind a disclosure. Below md: one column, full-width 16:10 thumbnail
+ * above the details. md to lg: compact rows with a 144px thumbnail beside them.
  */
 function WorkList({ projects }: { projects: Project[] }) {
   const [expanded, setExpanded] = useState(false);
@@ -459,7 +460,7 @@ function WorkList({ projects }: { projects: Project[] }) {
             key={p.name}
             data-work-item
             hidden={!expanded && i >= LIST_PREVIEW}
-            className="flex gap-4 border-b border-dashed border-line py-5"
+            className="flex flex-col gap-4 border-b border-dashed border-line py-5 md:flex-row"
           >
             {p.image && (
               <a
@@ -468,14 +469,14 @@ function WorkList({ projects }: { projects: Project[] }) {
                 rel="noopener noreferrer"
                 tabIndex={-1}
                 aria-hidden="true"
-                className="qo-thumb block w-24 shrink-0 self-start overflow-hidden rounded-lg border border-line bg-line sm:w-36"
+                className="qo-thumb block w-full shrink-0 self-start overflow-hidden rounded-lg border border-line bg-line md:w-36"
               >
                 <Image
                   src={p.image}
                   alt=""
                   width={1200}
                   height={750}
-                  sizes="(min-width: 640px) 144px, 96px"
+                  sizes="(min-width: 768px) 144px, 100vw"
                   className="aspect-[16/10] h-auto w-full object-cover object-top"
                 />
               </a>
