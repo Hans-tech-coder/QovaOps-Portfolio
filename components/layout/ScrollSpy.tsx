@@ -1,7 +1,13 @@
 "use client";
 
 import { createContext, useContext, useState, type ReactNode } from "react";
-import { gsap, prefersReducedMotion, ScrollTrigger, useGSAP } from "@/components/motion/gsap";
+import {
+  gsap,
+  pinnedContainerOf,
+  prefersReducedMotion,
+  ScrollTrigger,
+  useGSAP,
+} from "@/components/motion/gsap";
 import type { NavItem } from "@/content/sections";
 
 type ScrollSpyValue = {
@@ -79,6 +85,7 @@ export function ScrollSpyProvider({ items, children }: { items: NavItem[]; child
           id,
           st: ScrollTrigger.create({
             trigger: el,
+            pinnedContainer: pinnedContainerOf(el),
             start: "top 40%",
             end: "bottom 40%",
             onToggle: recompute,

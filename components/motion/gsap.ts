@@ -100,4 +100,18 @@ export function heroDelay(overlap = 0.25) {
   return Math.max(0, (heroEndsAt - performance.now()) / 1000 - overlap);
 }
 
+// ---------- Pinned page column ----------
+// The Work section pins the whole <main> column while its projects switch (see
+// components/sections/WorkTabs.tsx), so the screen freezes on a real slice of
+// the page instead of showing empty background around a short card. Position-
+// tracking triggers inside <main> (scrollspy, scrubbed lines) pass
+// `pinnedContainer` so their start/end account for that pin. One-shot reveals
+// (Reveal, CountUp) deliberately don't: content visible during the pin (e.g.
+// Experience under the card) then reveals on arrival instead of staying hidden.
+
+/** The pinned column an element sits in (for `pinnedContainer`), or undefined. */
+export function pinnedContainerOf(el: Element | null | undefined) {
+  return el?.closest<HTMLElement>("main#main") ?? undefined;
+}
+
 export { gsap, ScrollToPlugin, ScrollTrigger, useGSAP };

@@ -16,10 +16,9 @@ export function Work({ section }: { section: SectionConfig }) {
 
   return (
     <SectionCard section={section}>
+      {/* WorkTabs marks its own [data-reveal] items (tab bar, panel). */}
       <Reveal>
-        <div data-reveal>
-          <WorkTabs tabs={tabs} />
-        </div>
+        <WorkTabs tabs={tabs} />
       </Reveal>
     </SectionCard>
   );

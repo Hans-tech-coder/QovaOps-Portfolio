@@ -1,7 +1,13 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap, MOTION_CONDITIONS, useGSAP, type MotionConditions } from "./gsap";
+import {
+  gsap,
+  MOTION_CONDITIONS,
+  pinnedContainerOf,
+  useGSAP,
+  type MotionConditions,
+} from "./gsap";
 
 type ScrollLineProps = {
   axis: "x" | "y";
@@ -35,7 +41,11 @@ export function ScrollLine({ axis, className = "", start = "top 80%", end = "bot
       gsap.fromTo(
         el,
         { [prop]: 0 },
-        { [prop]: 1, ease: "none", scrollTrigger: { trigger, start, end, scrub: 0.6 } },
+        {
+          [prop]: 1,
+          ease: "none",
+          scrollTrigger: { trigger, pinnedContainer: pinnedContainerOf(trigger), start, end, scrub: 0.6 },
+        },
       );
     });
     return () => mm.revert();
